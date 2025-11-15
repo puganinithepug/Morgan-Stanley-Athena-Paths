@@ -16,6 +16,8 @@ import CommunityGoals from "../components/CommunityGoals";
 import FirstTimeVisitorModal from "../components/FirstTimeVisitorModal";
 import { checkAndAwardBadges } from "../components/BadgeChecker";
 import VolunteerCard from "../components/VolunteerCard";
+import PathTransitionSection from "../components/PathTransitionSection";
+
 
 export default function Landing() {
   const { t, language } = useLanguage();
@@ -201,8 +203,8 @@ export default function Landing() {
         donation={lastDonation}
       />
 
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <motion.div
+      {/* <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+        <motion.div 
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
           transition={{ duration: 10, ease: "easeOut" }}
@@ -252,8 +254,12 @@ export default function Landing() {
             </Button>
           </motion.div>
         </div>
-      </section>
-      <section id="ways-to-help" className="py-20 bg-background">
+      </section> */}
+
+      {/*  >>> TEST THE NEW ANIMATION HERE <<< */}
+      <PathTransitionSection />
+
+      <section id="ways-to-help" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-foreground mb-4">
