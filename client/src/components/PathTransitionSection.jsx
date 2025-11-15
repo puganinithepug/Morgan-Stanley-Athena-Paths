@@ -2,6 +2,8 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "./ui/Button";
 import { ArrowRight } from "lucide-react";
+import wisdomImg from "../assets/hero_wisdom.jpg";
+import protectionImg from "../assets/hero_protection.jpg";
 
 export default function PathTransitionSection() {
   const sectionRef = useRef(null);
@@ -61,22 +63,18 @@ export default function PathTransitionSection() {
           pointer-events-none
         "
       >
-        {/*TODO: Support mobile view (currently not implemented) */}
+        {/*TODO: 
+        - Support mobile view (currently not implemented)*/}
         {/* LEFT – Wisdom */}
         <div
           className="relative w-[24rem] md:w-[130rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[100px] translate-y-[-40px]"
           style={{
             clipPath: "polygon(0% 30%, 21% 0, 100% 100%, 4% 75%)",
-            background:
-              "linear-gradient(180deg, #fb923c 0%, #f97316 40%, #ea580c 100%)",
+            backgroundImage: `url(${wisdomImg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "40% center",
           }}
         >
-          <div className="absolute inset-x-0 top-8 text-center text-white px-4">
-            <p className="text-[10px] uppercase tracking-[0.25em] opacity-80 mb-1">
-              Path
-            </p>
-            <p className="text-xl font-semibold">Wisdom</p>
-          </div>
         </div>
 
         {/* MIDDLE – Courage */}
@@ -84,16 +82,11 @@ export default function PathTransitionSection() {
           className="relative w-[18rem] md:w-[110rem] h-[24rem] md:h-[28rem] shadow-2xl origin-bottom z-10"
           style={{
             clipPath: "polygon(16% 0%, 84% 0%, 100% 24%, 50% 100%, 2% 24%)",
-            background:
-              "linear-gradient(180deg, #fb7185 0%, #f43f5e 40%, #e11d48 100%)",
+            backgroundImage: `url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         >
-          <div className="absolute inset-x-0 top-8 text-center text-white px-4">
-            <p className="text-[10px] uppercase tracking-[0.25em] opacity-80 mb-1">
-              Path
-            </p>
-            <p className="text-xl font-semibold">Courage</p>
-          </div>
         </div>
 
         {/* RIGHT – Protection */}
@@ -101,16 +94,11 @@ export default function PathTransitionSection() {
           className="relative w-[24rem] md:w-[130rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[-100px] translate-y-[-40px]"
           style={{
             clipPath: "polygon(100% 30%, 79% 0, 0% 100%, 96% 75%)",
-            background:
-              "linear-gradient(180deg, #818cf8 0%, #6366f1 40%, #4f46e5 100%)",
+            backgroundImage: `url(${protectionImg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "15% center",
           }}
         >
-          <div className="absolute inset-x-0 top-8 text-center text-white px-4">
-            <p className="text-[10px] uppercase tracking-[0.25em] opacity-80 mb-1">
-              Path
-            </p>
-            <p className="text-xl font-semibold">Protection</p>
-          </div>
         </div>
       </motion.div>
 
