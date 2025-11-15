@@ -89,7 +89,7 @@ export default function ImpactStories() {
   const isLiked = user && reactions.some(r => r.story_id === currentStoryData.id && r.user_id === user.id);
 
   return (
-    <section className="py-20 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 text-white overflow-hidden relative">
+    <section className="py-20 bg-gradient-to-br from-primary to-accent text-white overflow-hidden relative">
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl" />
