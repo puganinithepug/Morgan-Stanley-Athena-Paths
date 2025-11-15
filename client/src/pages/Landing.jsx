@@ -359,9 +359,12 @@ export default function Landing() {
                                   setDonationAmount(e.target.value);
                                   setSelectedPath(path);
                                 }}
-                                className="border-foreground/20 focus:border-primary focus:ring-primary/30 text-center"
+                                className="border-foreground/20 focus:border-primary focus:ring-primary/30"
                                 min="1"
                               />
+                              <span className="absolute right-10 top-1/2 -translate-y-1/2 text-foreground/50">
+                                hours
+                              </span>
                             </div>
                             <Button
                               onClick={() =>
