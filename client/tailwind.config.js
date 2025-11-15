@@ -30,6 +30,20 @@ module.exports = {
                 highlight: "#e8bb40", // yellow
                 muted: "#ab9b8e", // brownn
             },
+            boxShadow: {
+                'primary-glow': '0 0 10px rgba(111,106,168,0.6)', // #6f6aa8-ish
+                'primary-glow-strong': '0 0 20px rgba(111,106,168,0.9)',
+                'secondary-glow': '0 0 10px rgba(127,139,163,0.6)', // #7f8ba3-ish
+                'secondary-glow-strong': '0 0 20px rgba(127,139,163,0.9)',
+                'muted-glow': '0 0 10px rgba(171,155,142,0.6)', // #ab9b8e-ish
+                'muted-glow-strong': '0 0 20px rgba(171,155,142,0.9)',
+                'highlight-glow': '0 0 10px rgba(232,187,64,0.6)', // #e8bb40-ish
+                'highlight-glow-strong': '0 0 20px rgba(232,187,64,0.9)',
+                'accent-glow': '0 0 10px rgba(189,209,211,0.6)', // #bdd1d3-ish
+                'accent-glow-strong': '0 0 20px rgba(189,209,211,0.9)',
+                'primary-dark-glow': '0 0 10px rgba(56,54,90,0.6)', // #38365a-ish
+                'primary-dark-glow-strong': '0 0 20px rgba(56,54,90,0.9)',
+            },
         },
     },
     plugins: [require("@tailwindcss/forms")],
