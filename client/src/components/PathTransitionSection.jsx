@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "./ui/Button";
-import { ArrowRight, Phone, Heart, Home } from "lucide-react";
+import { ArrowRight, Phone, Heart, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";
@@ -158,7 +158,7 @@ export default function PathTransitionSection() {
             <div className="absolute inset-x-0 top-8 flex flex-col items-center gap-3 translate-x-[20px] translate-y-[430px]">
             {/* Icon circle */}
             <div className="flex items-center justify-center w-14 h-14 rounded-full bg-white/90 shadow-sm">
-                <Home className="w-7 h-7 text-blue-600" />
+                <Shield className="w-7 h-7 text-blue-600" />
             </div>
 
             {/* Text box */}
