@@ -21,8 +21,8 @@ export default function PathTransitionSection() {
   };
 
   // Triangles fade + move down as you scroll past hero
-  const trianglesOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
-  const trianglesY = useTransform(scrollYProgress, [0, 0.4], [0, 80]);
+  const trianglesOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const trianglesY = useTransform(scrollYProgress, [0, 0.8], [0, 80]);
 
   // Stripes fade + slide in, then stay visible
   const stripesOpacity = useTransform(scrollYProgress, [0.15, 0.45], [0, 1]);
