@@ -46,9 +46,6 @@ const PATHS = [
   },
 ];
 
-
-
-
 export default function PathTransitionSection() {
   const sectionRef = useRef(null);
   const navigate = useNavigate();
