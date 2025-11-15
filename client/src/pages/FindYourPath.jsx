@@ -10,11 +10,11 @@ export default function FindYourPath() {
   // --- VIDEO MODAL STATE ---
   const [openVideo, setOpenVideo] = useState(null);
 
-  // Path to your real video files
+  // YouTube video IDs
   const videoSources = {
-    wisdom: "/videos/Wisdom_path_explainer.mp4",
-    courage: "/videos/courage_path_explainer.mp4",
-    protection: "/videos/protection_path_explainer.mp4",
+    wisdom: "WxY3-D_Bjyg",       // Wisdom
+    courage: "JN8YED-0dH0",      // Courage
+    protection: "3bZxdTKNLmg",   // Protection
   };
 
   return (
@@ -56,7 +56,7 @@ export default function FindYourPath() {
           </p>
         </motion.div>
 
-        {/* 3 BOXES (NOW CLICKABLE) */}
+        {/* 3 BOXES */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -165,12 +165,17 @@ export default function FindYourPath() {
                 ×
               </button>
 
-              <video
-                src={videoSources[openVideo]}
-                controls
-                autoPlay
-                className="rounded-lg w-full"
-              />
+              {/* YOUTUBE EMBED */}
+              <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+                <iframe
+                  src={`https://www.youtube.com/embed/${videoSources[openVideo]}?autoplay=1`}
+                  title="YouTube video"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="absolute top-0 left-0 w-full h-full rounded-lg"
+                />
+              </div>
             </div>
           </div>
         )}
