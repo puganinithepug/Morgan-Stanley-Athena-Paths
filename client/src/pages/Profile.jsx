@@ -107,7 +107,7 @@ export default function Profile() {
             <Card className="bg-gradient-to-br from-primary-dark to-primary text-white overflow-hidden">
               <CardContent className="p-6 text-center relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
-                <Award className="w-8 h-8 mx-auto mb-2 opacity-90 relative z-10" />
+                <Award className="mt-6 w-8 h-8 mx-auto mb-2 opacity-90 relative z-10" />
                 <div className="text-3xl font-bold mb-1 relative z-10">{user.total_points || 0}</div>
                 <div className="text-sm opacity-90 relative z-10">
                   {language === 'fr' ? 'Points d\'Impact' : 'Impact Points'}
@@ -124,7 +124,7 @@ export default function Profile() {
             <Card className="bg-gradient-to-br from-muted to-primary text-white overflow-hidden">
               <CardContent className="p-6 text-center relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
-                <Heart className="w-8 h-8 mx-auto mb-2 opacity-90 relative z-10" />
+                <Heart className="mt-6 w-8 h-8 mx-auto mb-2 opacity-90 relative z-10" />
                 <div className="text-3xl font-bold mb-1 relative z-10">{donations.length}</div>
                 <div className="text-sm opacity-90 relative z-10">
                   {language === 'fr' ? 'Dons Totaux' : 'Total Donations'}
@@ -144,7 +144,7 @@ export default function Profile() {
             <Card className="bg-gradient-to-br from-highlight to-secondary text-white overflow-hidden">
               <CardContent className="p-6 text-center relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
-                <Trophy className="w-8 h-8 mx-auto mb-2 opacity-90 relative z-10" />
+                <Trophy className="mt-6 w-8 h-8 mx-auto mb-2 opacity-90 relative z-10" />
                 <div className="text-3xl font-bold mb-1 relative z-10">{earnedBadges.length}</div>
                 <div className="text-sm opacity-90 relative z-10">
                   {language === 'fr' ? 'Badges' : 'Badges'}

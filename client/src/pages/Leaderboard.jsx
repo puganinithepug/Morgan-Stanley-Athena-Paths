@@ -77,10 +77,10 @@ export default function Leaderboard() {
   };
 
   const filters = [
-    { id: 'ALL', label: language === 'fr' ? 'Tous les Parcours' : 'All Paths' },
-    { id: 'WISDOM', label: language === 'fr' ? 'Sagesse' : 'Wisdom' },
-    { id: 'COURAGE', label: language === 'fr' ? 'Courage' : 'Courage' },
-    { id: 'PROTECTION', label: language === 'fr' ? 'Protection' : 'Protection' },
+    { id: 'ALL', label: language === 'fr' ? 'Tous les Parcours' : 'All Paths', color: 'bg-primary', hover: 'hover:bg-primary/30' },
+    { id: 'WISDOM', label: language === 'fr' ? 'Sagesse' : 'Wisdom', color: 'bg-highlight', hover: 'hover:bg-highlight/30' },
+    { id: 'COURAGE', label: language === 'fr' ? 'Courage' : 'Courage', color: 'bg-muted', hover: 'hover:bg-muted/30' },
+    { id: 'PROTECTION', label: language === 'fr' ? 'Protection' : 'Protection', color: 'bg-secondary', hover: 'hover:bg-secondary/30' },
   ];
 
   return (
@@ -116,8 +116,8 @@ export default function Leaderboard() {
               onClick={() => setSelectedPath(filter.id)}
               className={`px-6 py-2 rounded-lg font-semibold transition-all ${
                 selectedPath === filter.id
-                  ? 'bg-primary text-white shadow-md'
-                  : 'bg-background text-foreground/80 hover:bg-background-dark border border-foreground/10'
+                  ? `${filter.color} text-white shadow-md`
+                  : `bg-background text-foreground/80 ${filter.hover} border border-foreground/10`
               }`}
             >
               {filter.label}
@@ -132,7 +132,7 @@ export default function Leaderboard() {
         >
           <Card className="bg-background border-2 border-foreground/10">
             <CardContent className="p-6">
-              <div className="flex items-center gap-2 mb-6">
+              <div className="flex items-center gap-2 mb-6 mt-6">
                 <Trophy className="w-5 h-5 text-primary" />
                 <h2 className="text-xl font-bold text-foreground">
                   {language === 'fr' ? 'Meilleurs Soutiens' : 'Top Supporters'}

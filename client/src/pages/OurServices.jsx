@@ -25,7 +25,7 @@ export default function OurServices() {
   const stats = [
     {
       icon: Users,
-      value: '5,000+',
+      value: '1,000+',
       description: language === 'fr' ? 'Femmes et enfants aidés chaque année' : 'Women and children helped each year',
       color: 'text-primary'
     },
@@ -37,7 +37,7 @@ export default function OurServices() {
     },
     {
       icon: Home,
-      value: '40+',
+      value: '30+',
       description: language === 'fr' ? 'Années de service' : 'Years of service',
       color: 'text-primary'
     },
@@ -55,7 +55,7 @@ export default function OurServices() {
       title: language === 'fr' ? 'Ligne de Crise 24/7' : '24/7 Crisis Line',
       description: language === 'fr'
         ? 'Soutien téléphonique immédiat pour les femmes en crise. Disponible jour et nuit, notre ligne de crise offre écoute, information et planification de sécurité.'
-        : 'Immediate phone support for women in crisis. Available day and night, our crisis line provides listening, information, and safety planning.',
+        : 'Immediate, confidential phone support for women in crisis. Available day and night, our crisis line provides listening, information, and safety planning.',
       stat: language === 'fr' ? '3,500+ appels annuellement' : '3,500+ calls annually',
       statColor: 'text-highlight',
       iconBg: 'bg-highlight/20',
@@ -67,7 +67,7 @@ export default function OurServices() {
       description: language === 'fr'
         ? 'Logement sûr et confidentiel pour les femmes et leurs enfants fuyant la violence. Comprend les repas, la sécurité et un espace pour respirer.'
         : 'Safe, confidential housing for women and their children fleeing violence. Includes meals, security, and a space to breathe.',
-      stat: language === 'fr' ? '200+ familles hébergées annuellement' : '200+ families sheltered annually',
+      stat: language === 'fr' ? '100+ familles hébergées annuellement' : '100+ families sheltered annually',
       statColor: 'text-secondary',
       iconBg: 'bg-secondary/20',
       iconColor: 'text-secondary'
@@ -78,7 +78,7 @@ export default function OurServices() {
       description: language === 'fr'
         ? 'Soutien thérapeutique professionnel pour les femmes et les enfants. Nos conseillers aident à traiter le traumatisme, développer des stratégies d\'adaptation et reconstruire la confiance.'
         : 'Professional therapeutic support for women and children. Our counselors help process trauma, develop coping strategies, and rebuild confidence.',
-      stat: language === 'fr' ? '1,000+ heures de counseling annuellement' : '1,000+ counseling hours annually',
+      stat: language === 'fr' ? '2,000+ heures de counseling annuellement' : '2,000+ counseling hours annually',
       statColor: 'text-muted',
       iconBg: 'bg-muted/20',
       iconColor: 'text-muted'
@@ -89,7 +89,7 @@ export default function OurServices() {
       description: language === 'fr'
         ? 'Réunions de groupe hebdomadaires où les survivantes partagent leurs expériences, apprennent les unes des autres et construisent une communauté.'
         : 'Weekly group meetings where survivors share experiences, learn from each other, and build community.',
-      stat: language === 'fr' ? '15 groupes actifs' : '15 active groups',
+      stat: language === 'fr' ? '3 groupes actifs' : '3 active groups',
       statColor: 'text-primary',
       iconBg: 'bg-primary/15',
       iconColor: 'text-primary'
@@ -103,7 +103,7 @@ export default function OurServices() {
       description: language === 'fr'
         ? 'Information sur les droits juridiques, références aux services juridiques et soutien dans les processus judiciaires. Nous aidons les femmes à naviguer dans le système.'
         : 'Information about legal rights, referrals to legal services, and support through court processes. We help women navigate the system.',
-      stat: language === 'fr' ? '500+ femmes informées annuellement' : '500+ women informed annually',
+      stat: language === 'fr' ? '2000+ femmes informées annuellement' : '2000+ women informed annually',
       statColor: 'text-accent',
       iconBg: 'bg-accent/30',
       iconColor: 'text-accent'
@@ -125,7 +125,7 @@ export default function OurServices() {
       description: language === 'fr'
         ? 'Ateliers sur la violence familiale, les relations saines, la parentalité et le développement personnel pour les survivantes.'
         : 'Workshops on family violence, healthy relationships, parenting, and personal development for survivors.',
-      stat: language === 'fr' ? '50+ ateliers annuellement' : '50+ workshops annually',
+      stat: language === 'fr' ? '40+ ateliers annuellement' : '40+ workshops annually',
       statColor: 'text-primary',
       iconBg: 'bg-primary/15',
       iconColor: 'text-primary'
@@ -277,7 +277,7 @@ export default function OurServices() {
             <Link to="/find-your-path">
               <Button
                 size="lg"
-                className="bg-highlight text-foreground hover:bg-highlight/95 flex items-center gap-2 shadow-[0_0_18px_rgba(210,194,150,0.6)] hover:shadow-[0_0_24px_rgba(210,194,150,0.9)] hover:scale-[1.02] transition-all"
+                className="bg-highlight text-foreground hover:bg-highlight/95 flex items-center gap-2 shadow-primary-dark-glow hover:shadow-primary-dark-glow border-2 border-primary-dark hover:scale-[1.02] transition-all"
               >
                 {language === 'fr' ? 'Trouvez Votre Parcours' : 'Find Your Path'}
                 <ArrowRight className="w-5 h-5" />

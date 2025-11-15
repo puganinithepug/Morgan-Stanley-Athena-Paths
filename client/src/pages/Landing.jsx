@@ -142,19 +142,34 @@ export default function Landing() {
   const pathConfig = {
     WISDOM: {
       icon: Phone,
-      color: "bg-secondary", // calm blue
+      color: "bg-gradient-to-br from-highlight/20 to-highlight/10", // calm blue
+      border: 'border-highlight/40',
+      iconColor: 'text-highlight',
+      iconBg: 'bg-highlight/30',
+      shadowColor: 'shadow-highlight-glow',
+      hoverColor: 'hover:shadow-highlight-glow-strong',
       image:
         "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=600&fit=crop",
     },
     COURAGE: {
       icon: Heart,
-      color: "bg-muted", // warm brown
+      color: "bg-gradient-to-br from-muted/20 to-muted/10", // warm brown
+      border: 'border-muted/40',
+      iconColor: 'text-muted',
+      iconBg: 'bg-muted/30',
+      shadowColor: 'shadow-muted-glow',
+      hoverColor: 'hover:shadow-muted-glow-strong',
       image:
         "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop",
     },
     PROTECTION: {
-      icon: Home,
-      color: "bg-primary", // brand purple
+      icon: Shield,
+      color: "bg-gradient-to-br from-secondary/20 to-secondary/10", // brand purple
+      border: 'border-secondary/40',
+      iconColor: 'text-secondary',
+      iconBg: 'bg-secondary/30',
+      shadowColor: 'shadow-secondary-glow',
+      hoverColor: 'hover:shadow-secondary-glow-strong',
       image:
         "https://images.unsplash.com/photo-1560264280-88b68371db39?w=800&h=600&fit=crop",
     },
@@ -269,8 +284,10 @@ export default function Landing() {
                       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60" />
                       <div className="absolute bottom-4 left-4 right-4">
                         <div className="flex items-center gap-2 mb-2">
-                          <div className={`${config.color} p-2 rounded-lg`}>
-                            <Icon className="w-5 h-5 text-white" />
+                          <div className={`bg-white rounded-full`}>
+                            <div className={`${config.iconBg} p-2 rounded-full`}>
+                              <Icon className={`w-5 h-5 ${config.iconColor}`}/>
+                            </div>
                           </div>
                           <h3 className="text-2xl font-bold text-white">
                             {t(`paths.${path.toLowerCase()}.name`)}
@@ -378,7 +395,7 @@ export default function Landing() {
                                 variant="unstyled"
                                 onClick={() => handleDonate(item)}
                                 disabled={processing}
-                                className={`w-full ${config.color} text-white shadow-md hover:brightness-80 hover:shadow-[0_0_20px_rgba(111,106,168,0.6)] hover:scale-[1.02]  transition-all duration-200`}
+                                className={`w-full ${config.color} text-foreground/70 shadow-md hover:brightness-80 ${config.shadowColor} ${config.hoverColor} transition-all hover:scale-[1.02] border-2 ${config.border}  transition-all duration-200`}
                               >
                                 Donate ${item.suggested_amount}
                               </Button>
@@ -466,7 +483,7 @@ export default function Landing() {
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-4 border border-primary/30">
                   <div className="text-3xl font-bold text-primary mb-1">
-                    5,000+
+                    2,000+
                   </div>
                   <div className="text-sm text-foreground/70">
                     {language === "fr"
@@ -482,7 +499,7 @@ export default function Landing() {
                 </div>
                 <div className="bg-gradient-to-br from-highlight/20 to-highlight/10 rounded-lg p-4 border border-highlight/40">
                   <div className="text-3xl font-bold text-highlight mb-1">
-                    40+
+                    30+
                   </div>
                   <div className="text-sm text-foreground/70">
                     {language === "fr"
