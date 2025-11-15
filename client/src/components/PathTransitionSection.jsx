@@ -57,14 +57,15 @@ export default function PathTransitionSection() {
       <motion.div
         style={{ opacity: trianglesOpacity, y: trianglesY }}
         className="
-          relative w-full mt-10
+          relative w-full -mt-10
           flex items-end justify-center gap-[1vw]
           pointer-events-none
         "
       >
+        {/*TODO: Support mobile view (currently not implemented) */}
         {/* LEFT – Wisdom (bigger, pushed left) */}
         <div
-          className="relative w-[24rem] md:w-[30rem] h-[30rem] md:h-[36rem] shadow-2xl origin-bottom"
+          className="relative w-[24rem] md:w-[50rem] h-[30rem] md:h-[36rem] shadow-2xl origin-bottom translate-x-[40%]"
           style={{
             clipPath: "polygon(0% 30%, 21% 0, 100% 100%, 4% 75%)",
             background:
@@ -81,7 +82,7 @@ export default function PathTransitionSection() {
 
         {/* MIDDLE – Courage (slightly smaller + lower) */}
         <div
-          className="relative w-[18rem] md:w-[21rem] h-[24rem] md:h-[28rem] shadow-2xl origin-bottoms z-10"
+          className="relative w-[18rem] md:w-[50rem] h-[24rem] md:h-[28rem] shadow-2xl origin-bottoms z-10"
           style={{
             clipPath: "polygon(16% 0%, 84% 0%, 100% 24%, 50% 100%, 2% 24%)",
             background:
@@ -98,7 +99,7 @@ export default function PathTransitionSection() {
 
         {/* RIGHT – Protection (bigger, pushed right) */}
         <div
-          className="relative w-[24rem] md:w-[30rem] h-[30rem] md:h-[36rem] shadow-2xl origin-bottom"
+          className="relative w-[24rem] md:w-[50rem] h-[30rem] md:h-[36rem] shadow-2xl origin-bottom translate-x-[-40%]"
           style={{
             clipPath: "polygon(100% 30%, 79% 0, 0% 100%, 96% 75%)",
             background:
