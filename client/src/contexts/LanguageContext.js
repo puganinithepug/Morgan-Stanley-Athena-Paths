@@ -22,9 +22,7 @@ const translations = {
     'common.login': 'Log In',
     'common.logout': 'Log Out',
     'common.loading': 'Loading...',
-    'common.close': 'Close',
-    'common.points': 'points',
-    'common.badges': 'badges',
+    'common.close': 'Close'
   },
   fr: {
     'nav.home': 'Accueil',
@@ -47,9 +45,7 @@ const translations = {
     'common.login': 'Se connecter',
     'common.logout': 'Se déconnecter',
     'common.loading': 'Chargement...',
-    'common.close': 'Fermer',
-    'common.points': 'points',
-    'common.badges': 'badges',
+    'common.close': 'Fermer'
   }
 };
 
