@@ -24,8 +24,8 @@ export default function Footer() {
               </div>
               <p className="text-white/80 text-sm leading-relaxed">
                 {language === "fr"
-                  ? "Offrant sécurité, guérison et espoir aux femmes et enfants fuyant la violence familiale depuis plus de 40 ans."
-                  : "Providing safety, healing, and hope to women and children fleeing family violence for over 40 years."}
+                  ? "Offrant sécurité, guérison et espoir aux femmes et enfants fuyant la violence familiale depuis plus de 30 ans."
+                  : "Providing safety, healing, and hope to women and children fleeing family violence for over 30 years."}
               </p>
             </div>
 
