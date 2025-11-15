@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { Globe, ChevronDown } from "lucide-react";
 import { Button } from "./ui/Button";
 import GoogleTranslate from "./GoogleTranslate";
+import ProfileDropdown from "./ProfileDropdown";
 
 // Language options with Google Translate language codes
 const languages = [
@@ -42,7 +43,6 @@ const languages = [
 
 export default function Header() {
   const { t } = useLanguage();
-  const { user, login, logout } = useAuth();
   const translateRef = useRef(null);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
@@ -57,10 +57,6 @@ export default function Header() {
       }
     }
   }, []);
-
-  const handleLogin = () => {
-    login({ email: "demo@example.com", full_name: "Demo User" });
-  };
 
   const handleLanguageChange = (langCode) => {
     setSelectedLanguage(langCode);
@@ -138,14 +134,14 @@ export default function Header() {
             >
               {t("nav.leaderboard")}
             </Link>
-            {user && (
+            {/* {user && (
               <Link
                 to="/profile"
                 className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
               >
                 {t("nav.profile")}
               </Link>
-            )}
+            )} */}
             <Link
               to="/support-wall"
               className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
@@ -202,24 +198,8 @@ export default function Header() {
               )}
             </div>
 
-            {user ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={logout}
-                className="border-secondary/60 text-foreground/80 hover:border-primary hover:text-primary"
-              >
-                {t("common.logout")}
-              </Button>
-            ) : (
-              <Button
-                size="sm"
-                onClick={handleLogin}
-                className="bg-primary text-white hover:bg-primary/90 font-semibold"
-              >
-                {t("common.login")}
-              </Button>
-            )}
+            {/* Profile Dropdown */}
+            <ProfileDropdown />
           </div>
         </div>
       </div>
