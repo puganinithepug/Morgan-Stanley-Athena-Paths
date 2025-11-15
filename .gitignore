@@ -55,6 +55,32 @@ Thumbs.db
 *.temp
 .cache/
 
-# Package manager locks (keep package-lock.json for consistency)
+# Package manager locks
+# Note: package-lock.json should be committed for npm projects
 yarn.lock
 pnpm-lock.yaml
+
+# React / Create React App
+.eslintcache
+.stylelintcache
+*.local
+
+# Deployment
+.vercel/
+.netlify/
+.firebase/
+.aws-sam/
+
+# Cache directories
+.npm/
+.yarn/
+.pnpm-store/
+.turbo/
+.parcel-cache/
+
+# Service workers and PWA
+sw.js
+sw.js.map
+workbox-*.js
+precache-manifest.*.js
+service-worker.js
