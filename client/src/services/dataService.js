@@ -386,7 +386,7 @@ const DEFAULT_MESSAGES = [
   {
     id: 'default-msg-3',
     display_name: 'Community Supporter',
-    message: 'We stand with you. Your story matters, and your future is bright.',
+    message: 'We stand with you. Your story matters, and your future holds so much hope.',
     language: 'en',
     created_date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
   },

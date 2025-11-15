@@ -5,7 +5,7 @@ import dataService from "../services/dataService";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Card, CardContent } from "../components/ui/Card";
-import { ArrowRight, Heart, Shield, Phone } from "lucide-react";
+import { ArrowRight, Heart, Shield, Phone, Home } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import ImpactMetrics from "../components/ImpactMetrics";
@@ -385,7 +385,7 @@ export default function Landing() {
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-4 border border-primary/30">
                   <div className="text-3xl font-bold text-primary mb-1">
-                    5,000+
+                    2,000+
                   </div>
                   <div className="text-sm text-foreground/70">
                     {language === "fr"
