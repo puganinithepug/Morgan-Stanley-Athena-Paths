@@ -5,7 +5,7 @@ import dataService from "../services/dataService";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Card, CardContent } from "../components/ui/Card";
-import { ArrowRight, Heart, Shield, Phone, Home, Clock, Quote, Users } from "lucide-react";
+import { ArrowRight, Heart, Shield, Phone, Home, Clock, Quote, Users, HandHeart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import ImpactMetrics from "../components/ImpactMetrics";
@@ -174,7 +174,7 @@ export default function Landing() {
         "https://images.unsplash.com/photo-1560264280-88b68371db39?w=800&h=600&fit=crop",
     },
     SERVICE: {
-      icon: Clock,
+      icon: HandHeart,
       color: "bg-gradient-to-br from-accent/20 to-accent/10", // mint color
       border: 'border-accent/40',
       iconColor: 'text-accent',
