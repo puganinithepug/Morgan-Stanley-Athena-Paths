@@ -93,17 +93,22 @@ const Login = ({ open, onClose, onSuccess }) => {
   return (
     <Dialog open={open} onOpenChange={(openState) => !openState && onClose && onClose()}>
       <DialogContent className="p-0 border-none bg-transparent shadow-none">
-        <Card className="w-full max-w-md mx-auto bg-white/95 backdrop-blur shadow-2xl border border-primary/20">
-          <CardHeader className="bg-gradient-to-r from-primary-dark to-primary text-white rounded-t-lg pb-4">
-            <CardTitle className="flex items-center justify-between text-xl">
-              <span>{mode === "login" ? "Welcome back" : "Create your account"}</span>
+        <Card className="w-full max-w-md sm:max-w-lg mx-auto bg-white shadow-xl border-2 border-primary-dark rounded-2xl overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-primary-dark to-primary text-white pb-5 pt-5 px-6">
+            <CardTitle className="text-xl font-semibold flex items-center justify-between">
+              <span>{mode === "login" ? "Welcome back" : "Join the community"}</span>
             </CardTitle>
-            <div className="mt-3 inline-flex gap-2 bg-white/10 rounded-full p-1">
+            <p className="mt-1 text-xs text-white/80">
+              {mode === "login"
+                ? "Log in to track your impact, referrals and badges."
+                : "Create an account to save your progress and earn rewards."}
+            </p>
+            {/* <div className="mt-4 inline-flex gap-1 bg-black/10 rounded-full p-1 text-xs">
               <Button
                 type="button"
                 variant={mode === "login" ? "default" : "ghost"}
                 size="sm"
-                className="px-3 py-1 h-8 rounded-full"
+                className="px-3 py-1 h-8 rounded-full min-w-[80px] justify-center"
                 onClick={() => setMode("login")}
               >
                 Login
@@ -112,14 +117,14 @@ const Login = ({ open, onClose, onSuccess }) => {
                 type="button"
                 variant={mode === "signup" ? "default" : "ghost"}
                 size="sm"
-                className="px-3 py-1 h-8 rounded-full"
+                className="px-3 py-1 h-8 rounded-full min-w-[80px] justify-center"
                 onClick={() => setMode("signup")}
               >
                 Sign up
               </Button>
-            </div>
+            </div> */}
           </CardHeader>
-          <CardContent className="pt-6 pb-6 px-6 space-y-4">
+          <CardContent className="pt-6 pb-6 px-6 sm:px-7 space-y-5 bg-background">
             <form onSubmit={handleSubmit} className="space-y-4">
               {mode === "signup" && (
                 <div className="grid grid-cols-2 gap-3">
@@ -148,8 +153,8 @@ const Login = ({ open, onClose, onSuccess }) => {
                 </div>
               )}
 
-              <div>
-                <label className="block text-xs font-medium text-foreground/70 mb-1">
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-foreground/70">
                   Email
                 </label>
                 <Input
@@ -157,12 +162,13 @@ const Login = ({ open, onClose, onSuccess }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
+                  className="bg-white/90"
                   required
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-medium text-foreground/70 mb-1">
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-foreground/70">
                   Password
                 </label>
                 <Input
@@ -170,13 +176,14 @@ const Login = ({ open, onClose, onSuccess }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
+                  className="bg-white/90"
                   required
                 />
               </div>
 
               {mode === "signup" && (
-                <div>
-                  <label className="block text-xs font-medium text-foreground/70 mb-1">
+                <div className="space-y-1">
+                  <label className="block text-xs font-medium text-foreground/70">
                     Confirm password
                   </label>
                   <Input
@@ -184,26 +191,31 @@ const Login = ({ open, onClose, onSuccess }) => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="••••••••"
+                    className="bg-white/90"
                     required
                   />
                 </div>
               )}
 
-              <Button type="submit" className="w-full mt-2 h-10 font-semibold">
+              <Button
+                type="submit"
+                variant="unstyled"
+                className="w-full mt-3 h-10 font-semibold bg-highlight/80 shadow-highlight-glow hover:bg-highlight  hover:shadow-highlight-glow-strong"
+              >
                 {mode === "login" ? "Login" : "Sign up"}
               </Button>
             </form>
 
             {error && (
-              <p className="mt-2 text-xs text-red-600">{error}</p>
+              <p className="mt-2 text-xs text-red-600 text-center">{error}</p>
             )}
             {success && (
-              <p className="mt-2 text-xs text-green-600">
+              <p className="mt-2 text-xs text-green-600 text-center">
                 {mode === "login" ? "Login successful!" : "Signup successful!"}
               </p>
             )}
 
-            <div className="mt-4 text-xs text-foreground/60 text-center">
+            <div className="mt-2 text-xs text-foreground/60 text-center">
               {mode === "login" ? (
                 <span>
                   Don&apos;t have an account?{" "}
