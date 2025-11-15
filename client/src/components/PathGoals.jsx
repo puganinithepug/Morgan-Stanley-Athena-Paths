@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent } from "./ui/Card";
-import { Phone, Heart, Home } from "lucide-react";
+import { Phone, Heart, Home, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "../contexts/LanguageContext";
 import dataService from "../services/dataService";
@@ -49,6 +49,19 @@ export default function PathGoals() {
           ? "nuits d'hébergement fournies"
           : "shelter nights provided",
     },
+    {
+      path: "SERVICE",
+      name: t("paths.service.name"),
+      icon: Clock,
+      color: "from-accent to-primary",
+      bgColor: "bg-accent/15",
+      iconColor: "text-accent",
+      goal: 800,
+      unit:
+        language === "fr"
+          ? "heures de bénévolat"
+          : "volunteer hours",
+    },
   ];
 
   const getPathProgress = (path, goal) => {
@@ -56,6 +69,7 @@ export default function PathGoals() {
       WISDOM: 180,
       COURAGE: 120,
       PROTECTION: 250,
+      SERVICE: 100,
     };
 
     if (!donations || donations.length === 0) {
@@ -74,8 +88,10 @@ export default function PathGoals() {
       current = pathDonations.length * 2;
     } else if (path === "COURAGE") {
       current = Math.floor(totalAmount / 50);
-    } else {
+    } else if (path === "PROTECTION") {
       current = Math.floor(totalAmount / 20);
+    } else {
+      current = 100;
     }
 
     return Math.min((current / goal) * 100, 100);
@@ -102,14 +118,14 @@ export default function PathGoals() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {goals.map((goal, idx) => {
             const Icon = goal.icon;
             const progress = getPathProgress(goal.path, goal.goal);
 
             let current;
             if (!donations || donations.length === 0) {
-              const defaults = { WISDOM: 180, COURAGE: 120, PROTECTION: 250 };
+              const defaults = { WISDOM: 180, COURAGE: 120, PROTECTION: 250, SERVICE: 100 };
               current = defaults[goal.path] || 0;
             } else {
               const pathDonations = donations.filter(
@@ -139,7 +155,7 @@ export default function PathGoals() {
               >
                 <Card className="overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all">
                   <CardContent className="p-6">
-                    <div className="flex items-center gap-3 mb-4">
+                    <div className="flex items-center gap-3 mb-4 mt-4">
                       <div className={`${goal.bgColor} p-3 rounded-lg`}>
                         <Icon className={`w-6 h-6 ${goal.iconColor}`} />
                       </div>

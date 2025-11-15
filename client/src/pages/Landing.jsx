@@ -5,7 +5,7 @@ import dataService from "../services/dataService";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Card, CardContent } from "../components/ui/Card";
-import { ArrowRight, Heart, Shield, Phone, Home } from "lucide-react";
+import { ArrowRight, Heart, Shield, Phone, Home, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import ImpactMetrics from "../components/ImpactMetrics";
@@ -15,6 +15,7 @@ import DonationSuccessModal from "../components/DonationSuccessModal";
 import CommunityGoals from "../components/CommunityGoals";
 import FirstTimeVisitorModal from "../components/FirstTimeVisitorModal";
 import { checkAndAwardBadges } from "../components/BadgeChecker";
+import VolunteerCard from "../components/VolunteerCard";
 
 export default function Landing() {
   const { t, language } = useLanguage();
@@ -123,6 +124,21 @@ export default function Landing() {
     }
   };
 
+  const handleVolunteer = (hours = null) => {
+    if (!user) {
+      login({});
+      return;
+    }
+    
+    if (hours) {
+      // Track volunteer hours
+      console.log(`Volunteering for ${hours} hours`);
+    }
+    
+    // Navigate to volunteer schedule page
+    window.location.href = "/volunteer-schedule";
+  };
+
   const pathConfig = {
     WISDOM: {
       icon: Phone,
@@ -156,6 +172,16 @@ export default function Landing() {
       hoverColor: 'hover:shadow-secondary-glow-strong',
       image:
         "https://images.unsplash.com/photo-1560264280-88b68371db39?w=800&h=600&fit=crop",
+    },
+    SERVICE: {
+      icon: Clock,
+      color: "bg-gradient-to-br from-accent/20 to-accent/10", // mint color
+      border: 'border-accent/50',
+      iconColor: 'text-accent',
+      iconBg: 'bg-accent/30',
+      shadowColor: 'shadow-accent-glow',
+      hoverColor: 'hover:shadow-accent-glow-strong',
+      image: "https://images.unsplash.com/photo-1543269865-cbf427effbad?w=800&h=600&fit=crop",
     },
   };
 
@@ -231,7 +257,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-foreground mb-4">
-              Choose How You Want to Help
+              Choose Your Path to Make a Difference
             </h2>
             <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
               Every contribution directly supports women and children on their
@@ -239,8 +265,8 @@ export default function Landing() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {["WISDOM", "COURAGE", "PROTECTION"].map((path, idx) => {
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {["WISDOM", "COURAGE", "PROTECTION", "SERVICE"].map((path, idx) => {
               const config = pathConfig[path];
               const Icon = config.icon;
               const pathItems = impactItems.filter(
@@ -255,9 +281,9 @@ export default function Landing() {
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.6, delay: idx * 0.15 }}
                 >
-                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300">
+                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full flex flex-col">
                     <div
-                      className="h-48 bg-cover bg-center relative overflow-hidden"
+                      className="h-48 bg-cover bg-center relative overflow-hidden flex-shrink-0"
                       style={{ backgroundImage: `url(${config.image})` }}
                     >
                       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60" />
@@ -275,13 +301,89 @@ export default function Landing() {
                       </div>
                     </div>
 
-                    <CardContent className="p-6">
-                      <p className="text-foreground/70 mt-5 mb-6 leading-relaxed">
+                    <CardContent className="p-6 flex-1 flex flex-col">
+                      <p className="text-foreground/70 mt-6 mb-3 leading-relaxed flex-1 min-h-[80px]">
                         {t(`paths.${path.toLowerCase()}.desc`)}
                       </p>
 
-                      {pathItems.length > 0 && (
-                        <div className="space-y-4">
+                      {path === "SERVICE" ? ( // SPECIAL HANDLING FOR SERVICE PATH
+                      <div className="space-y-4">
+                        {/* One Hour Volunteer Session */}
+                        <div className="mb-4">
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="text-sm font-medium text-foreground/80">
+                              Volunteer Session
+                            </span>
+                            <span className="text-lg font-bold text-foreground/80">
+                              1 hour
+                            </span>
+                          </div>
+                          <Button
+                            variant="unstyled"
+                            onClick={() => handleVolunteer(1)}
+                            className={`w-full ${config.color} text-foreground/70 shadow-md hover:brightness-80 ${config.shadowColor} ${config.hoverColor} transition-all hover:scale-[1.02] border-2 ${config.border}  transition-all duration-200`}
+                          >
+                            Volunteer 1 Hour
+                          </Button>
+                        </div>
+
+                        {/* Three Hour Volunteer Session */}
+                        <div className="mb-4">
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="text-sm font-medium text-foreground/80">
+                              Volunteer Session
+                            </span>
+                            <span className="text-lg font-bold text-foreground/80">
+                              3 hours
+                            </span>
+                          </div>
+                          <Button
+                            variant="unstyled"
+                            onClick={() => handleVolunteer(3)}
+                            className={`w-full ${config.color} text-foreground/70 shadow-md hover:brightness-80 ${config.shadowColor} ${config.hoverColor} transition-all hover:scale-[1.02] border-2 ${config.border}  transition-all duration-200`}
+                          >
+                            Volunteer 3 Hours
+                          </Button>
+                        </div>
+                        <div className="pt-4 border-t border-foreground/10">
+                          <label className="text-sm font-medium text-foreground/80 block mb-2">
+                            Or choose custom hours:
+                          </label>
+                          <div className="flex gap-2">
+                            <div className="relative flex-1">
+                              <Input
+                                type="number"
+                                placeholder="0"
+                                value={selectedPath === path ? donationAmount : ""}
+                                onChange={(e) => {
+                                  setDonationAmount(e.target.value);
+                                  setSelectedPath(path);
+                                }}
+                                className="border-foreground/20 focus:border-primary focus:ring-primary/30 text-center"
+                                min="1"
+                              />
+                            </div>
+                            <Button
+                              onClick={() =>
+                                donationAmount &&
+                                handleVolunteer(parseInt(donationAmount))
+                              }
+                              disabled={
+                                processing ||
+                                !donationAmount ||
+                                selectedPath !== path
+                              }
+                              variant="outline"
+                              className="whitespace-nowrap min-w-[100px]"
+                            >
+                              Volunteer
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      // REGULAR DONATION PATHS (WISDOM, COURAGE, PROTECTION)
+                      <div className="space-y-4">
                           {pathItems.slice(0, 2).map((item) => (
                             <div key={item.id} className="mb-4">
                               <div className="flex justify-between items-start mb-2">
@@ -290,7 +392,7 @@ export default function Landing() {
                                     ? item.title_fr
                                     : item.title_en}
                                 </span>
-                                <span className="text-lg font-bold text-gray-900">
+                                <span className="text-lg font-bold text-foreground/80">
                                   ${item.suggested_amount}
                                 </span>
                               </div>
@@ -343,6 +445,7 @@ export default function Landing() {
                                   selectedPath !== path
                                 }
                                 variant="outline"
+                                className="whitespace-nowrap min-w-[100px]"
                               >
                                 Give Now
                               </Button>
