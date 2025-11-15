@@ -29,9 +29,11 @@ export default function PathTransitionSection() {
   const stripesX = useTransform(scrollYProgress, [0.15, 0.45], [-80, 0]);
 
   // Stripes grow and then keep full height
-  const stripe1Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 120]);
-  const stripe2Height = useTransform(scrollYProgress, [0.2, 0.8], [24, 160]);
-  const stripe3Height = useTransform(scrollYProgress, [0.2, 0.8], [12, 110]);
+  const stripe1Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 90]);
+  const stripe2Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 90]);
+  const stripe3Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 90]);
+  const stripe4Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 90]);
+
 
   const scrollToWaysToHelp = () => {
     const el = document.getElementById("ways-to-help");
@@ -176,7 +178,7 @@ export default function PathTransitionSection() {
       >
         <div className="flex flex-col gap-3">
           <motion.div
-            className="w-2 bg-orange-500 rounded-full"
+            className="w-2 bg-amber-600 rounded-full"
             style={{ height: stripe1Height }}
           />
           <motion.div
@@ -184,8 +186,12 @@ export default function PathTransitionSection() {
             style={{ height: stripe2Height }}
           />
           <motion.div
-            className="w-2 bg-indigo-500 rounded-full"
+            className="w-2 bg-blue-500 rounded-full"
             style={{ height: stripe3Height }}
+          />
+          <motion.div
+            className="w-2 bg-green-500 rounded-full"
+            style={{ height: stripe4Height }}
           />
         </div>
       </motion.div>
