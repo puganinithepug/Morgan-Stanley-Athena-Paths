@@ -23,6 +23,8 @@ const translations = {
     'common.logout': 'Log Out',
     'common.loading': 'Loading...',
     'common.close': 'Close',
+    'common.points': 'points',
+    'common.badges': 'badges',
   },
   fr: {
     'nav.home': 'Accueil',
@@ -46,6 +48,8 @@ const translations = {
     'common.logout': 'Se déconnecter',
     'common.loading': 'Chargement...',
     'common.close': 'Fermer',
+    'common.points': 'points',
+    'common.badges': 'badges',
   }
 };
 

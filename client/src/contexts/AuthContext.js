@@ -18,11 +18,12 @@ export function AuthProvider({ children }) {
     
     if (!currentUser) {
       currentUser = dataService.createUser({
-        email: userData.email || 'demo@example.com',
-        full_name: userData.full_name || 'Demo User',
-        referral_code: `DEMO${Date.now().toString(36)}`,
+        email: userData.email || 'alex.thompson@example.com',
+        full_name: userData.full_name || 'Alex Thompson',
+        referral_code: `ALEX${Date.now().toString(36)}`,
         is_anonymous: false,
         preferred_language: 'en',
+        avatar_url: userData.avatar_url || null,
       });
     }
     
