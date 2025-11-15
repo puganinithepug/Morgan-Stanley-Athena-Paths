@@ -29,10 +29,10 @@ export default function PathTransitionSection() {
   const stripesX = useTransform(scrollYProgress, [0.15, 0.45], [-80, 0]);
 
   // Stripes grow and then keep full height
-  const stripe1Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 90]);
-  const stripe2Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 90]);
-  const stripe3Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 90]);
-  const stripe4Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 90]);
+  const stripe1Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 80]);
+  const stripe2Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 80]);
+  const stripe3Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 80]);
+  const stripe4Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 80]);
 
 
   const scrollToWaysToHelp = () => {
