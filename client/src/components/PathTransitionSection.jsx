@@ -56,15 +56,15 @@ export default function PathTransitionSection() {
       <motion.div
         style={{ opacity: trianglesOpacity, y: trianglesY }}
         className="
-          relative w-full -mt-48
-          flex items-end justify-center gap-[1vw]
+          relative w-full -mt-56
+          flex items-end justify-center -gap-[1vw]
           pointer-events-none
         "
       >
         {/*TODO: Support mobile view (currently not implemented) */}
-        {/* LEFT – Wisdom (bigger, pushed left) */}
+        {/* LEFT – Wisdom */}
         <div
-          className="relative w-[24rem] md:w-[90rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[25%]"
+          className="relative w-[24rem] md:w-[130rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[100px] translate-y-[-40px]"
           style={{
             clipPath: "polygon(0% 30%, 21% 0, 100% 100%, 4% 75%)",
             background:
@@ -79,9 +79,9 @@ export default function PathTransitionSection() {
           </div>
         </div>
 
-        {/* MIDDLE – Courage (slightly smaller + lower) */}
+        {/* MIDDLE – Courage */}
         <div
-          className="relative w-[18rem] md:w-[70rem] h-[24rem] md:h-[28rem] shadow-2xl origin-bottoms z-10"
+          className="relative w-[18rem] md:w-[110rem] h-[24rem] md:h-[28rem] shadow-2xl origin-bottom z-10"
           style={{
             clipPath: "polygon(16% 0%, 84% 0%, 100% 24%, 50% 100%, 2% 24%)",
             background:
@@ -96,9 +96,9 @@ export default function PathTransitionSection() {
           </div>
         </div>
 
-        {/* RIGHT – Protection (bigger, pushed right) */}
+        {/* RIGHT – Protection */}
         <div
-          className="relative w-[24rem] md:w-[90rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[-25%]"
+          className="relative w-[24rem] md:w-[130rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[-100px] translate-y-[-40px]"
           style={{
             clipPath: "polygon(100% 30%, 79% 0, 0% 100%, 96% 75%)",
             background:
