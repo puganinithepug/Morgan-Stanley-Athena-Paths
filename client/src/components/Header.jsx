@@ -41,7 +41,7 @@ const languages = [
   { code: 'fa', name: 'فارسی', flag: '🇮🇷' },
 ];
 
-export default function Header() {
+export default function Header({hide}) {
   const { t } = useLanguage();
   const translateRef = useRef(null);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
@@ -86,11 +86,16 @@ export default function Header() {
       <div style={{ display: 'none' }}>
         <GoogleTranslate ref={translateRef} />
       </div>
-      
-      <header className="sticky top-0 z-50 shadow-sm bg-background border-b border-secondary/2">
-        {/* bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+      <header
+        className={`
+          sticky top-0 z-50 shadow-sm
+          bg-background border-b border-secondary/2
+          transition-transform duration-300
+          ${hide ? '-translate-y-full' : 'translate-y-0'}
+        `}
+      >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
           <Link to="/landing" className="flex items-center gap-3 group">
             <div className="relative flex-shrink-0">
               <img

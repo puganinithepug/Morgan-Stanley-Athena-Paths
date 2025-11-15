@@ -16,6 +16,8 @@ import CommunityGoals from "../components/CommunityGoals";
 import FirstTimeVisitorModal from "../components/FirstTimeVisitorModal";
 import { checkAndAwardBadges } from "../components/BadgeChecker";
 import VolunteerCard from "../components/VolunteerCard";
+import PathTransitionSection from "../components/PathTransitionSection";
+
 
 export default function Landing() {
   const { t, language } = useLanguage();
@@ -201,59 +203,9 @@ export default function Landing() {
         donation={lastDonation}
       />
 
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <motion.div
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 10, ease: "easeOut" }}
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage:
-              "url(https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1600&h=900&fit=crop)",
-            filter: "brightness(0.4)",
-          }}
-        />
+      <PathTransitionSection />
 
-        <div className="relative z-10 text-center max-w-4xl mx-auto px-4">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight"
-          >
-            {t("hero.title")}
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl text-white/90 mb-8 max-w-2xl mx-auto"
-          >
-            {t("hero.subtitle")}
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            <Button
-              variant="unstyled"
-              size="lg"
-              onClick={() =>
-                document
-                  .getElementById("ways-to-help")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              // className="bg-highlight !text-gray-900 hover:bg-white hover:shadow-highlight text-lg px-8 py-6"
-              className="relative overflow-hidden bg-highlight text-foreground text-lg px-8 py-6 font-semibold rounded-full shadow-[0_0_25px_rgba(210,194,150,0.65)] hover:shadow-[0_0_35px_rgba(210,194,150,0.9)] hover:bg-highlight/95 hover:scale-[1.03] transition-all duration-500 ease-out"
-            >
-              {t("hero.cta")}
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </motion.div>
-        </div>
-      </section>
-      <section id="ways-to-help" className="py-20 bg-background">
+      <section id="ways-to-help" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-foreground mb-4">
