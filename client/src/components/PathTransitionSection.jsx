@@ -156,7 +156,7 @@ export default function PathTransitionSection() {
             <div className="absolute inset-x-0 top-8 flex flex-col items-center gap-3 translate-x-[20px] translate-y-[430px]">
             {/* Icon circle */}
             <div className="flex items-center justify-center w-14 h-14 rounded-full bg-white/90 shadow-sm">
-                <Phone className="w-7 h-7 text-blue-600" />
+                <Home className="w-7 h-7 text-blue-600" />
             </div>
 
             {/* Text box */}
