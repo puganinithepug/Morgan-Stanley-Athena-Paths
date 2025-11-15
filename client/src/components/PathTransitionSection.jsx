@@ -2,16 +2,21 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "./ui/Button";
 import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";
 
 export default function PathTransitionSection() {
   const sectionRef = useRef(null);
+  const navigate = useNavigate();
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
   });
+  const handlePathClick = (path) => {
+    navigate(`/path-results?path=${path}`);
+  };
 
   // Triangles fade + move down as you scroll past hero
   const trianglesOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
@@ -49,8 +54,8 @@ export default function PathTransitionSection() {
           onClick={scrollToWaysToHelp}
           className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-5 rounded-full shadow-lg flex items-center gap-2"
         >
-          Start your path
-          <ArrowRight className="w-5 h-5" />
+          Donate
+          {/* <ArrowRight className="w-5 h-5" /> */}
         </Button>
       </div>
 
@@ -60,45 +65,65 @@ export default function PathTransitionSection() {
         className="
           relative w-full -mt-56
           flex items-end justify-center -gap-[1vw]
-          pointer-events-none
         "
       >
         {/*TODO: 
         - Support mobile view (currently not implemented)*/}
         {/* LEFT – Wisdom */}
         <div
-          className="relative w-[24rem] md:w-[130rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[100px] translate-y-[-40px]"
-          style={{
-            clipPath: "polygon(0% 30%, 21% 0, 100% 100%, 4% 75%)",
-            backgroundImage: `url(${wisdomImg})`,
-            backgroundSize: "cover",
-            backgroundPosition: "40% center",
-          }}
-        >
+            onClick={() => handlePathClick("WISDOM")}
+            onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") handlePathClick("WISDOM");
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label="View Wisdom path"
+            className="relative w-[24rem] md:w-[130rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[100px] translate-y-[-40px]"
+            style={{
+                clipPath: "polygon(0% 30%, 21% 0, 100% 100%, 4% 75%)",
+                backgroundImage: `url(${wisdomImg})`,
+                backgroundSize: "cover",
+                backgroundPosition: "40% center",
+            }}
+            >
         </div>
 
         {/* MIDDLE – Courage */}
         <div
-          className="relative w-[18rem] md:w-[110rem] h-[24rem] md:h-[28rem] shadow-2xl origin-bottom z-10"
-          style={{
-            clipPath: "polygon(16% 0%, 84% 0%, 100% 24%, 50% 100%, 2% 24%)",
-            backgroundImage: `url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop')`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
+            onClick={() => handlePathClick("COURAGE")}
+            onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") handlePathClick("COURAGE");
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label="View Courage path"
+            className="relative w-[18rem] md:w-[110rem] h-[24rem] md:h-[28rem] shadow-2xl origin-bottom z-10"
+            style={{
+                clipPath: "polygon(16% 0%, 84% 0%, 100% 24%, 50% 100%, 2% 24%)",
+                backgroundImage: `url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+            }}
         >
         </div>
 
         {/* RIGHT – Protection */}
         <div
-          className="relative w-[24rem] md:w-[130rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[-100px] translate-y-[-40px]"
-          style={{
-            clipPath: "polygon(100% 30%, 79% 0, 0% 100%, 96% 75%)",
-            backgroundImage: `url(${protectionImg})`,
-            backgroundSize: "cover",
-            backgroundPosition: "15% center",
-          }}
-        >
+            onClick={() => handlePathClick("PROTECTION")}
+            onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") handlePathClick("PROTECTION");
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label="View Protection path"
+            className="relative w-[24rem] md:w-[130rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[-100px] translate-y-[-40px]"
+            style={{
+                clipPath: "polygon(100% 30%, 79% 0, 0% 100%, 96% 75%)",
+                backgroundImage: `url(${protectionImg})`,
+                backgroundSize: "cover",
+                backgroundPosition: "15% center",
+                }}
+            >
         </div>
       </motion.div>
 
