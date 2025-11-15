@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import FastAPI, HTTPException, Response, Cookie
 from fastapi.middleware.cors import CORSMiddleware
 
 import hashlib, base64, re, time, secrets, bcrypt
@@ -71,28 +71,23 @@ def login(data: dict, response: Response):
     email = data.get("email")
     password = data.get("password")
 
-    # user = check_user_exists(email, password)
     df = load_users()
-    user = df[(df["email"] == email)]
+    user_df = df[(df["email"] == email)]
 
-    stored_password = user["password"].iloc[0] if not user.empty else None
+    stored_password = user_df["password"].iloc[0] if not user_df.empty else None
     if stored_password is not None:
         try:
             if not bcrypt.checkpw(
                 password.encode("utf-8"), stored_password.encode("utf-8")
             ):
                 return {"status": "error", "message": "Invalid password"}
-        except:
+        except Exception:
             return {"status": "error", "message": "Invalid password"}
 
-    if user.empty:
-        user = None
-    else:
-        user = user.iloc[0].to_dict()
-
-    if user is None:
-        # raise HTTPException(status_code=401, detail="Invalid email or password")
+    if user_df.empty:
         return {"status": "error", "message": "Invalid email or password"}
+
+    user = user_df.iloc[0].to_dict()
 
     # Set a simple session cookie
     response.set_cookie(
@@ -102,12 +97,15 @@ def login(data: dict, response: Response):
         max_age=3600,
     )
 
-    return {"status": "ok", "message": "Logged in!"}
+    # Do not expose password hash to the client
+    user_sanitized = {k: v for k, v in user.items() if k != "password"}
+
+    return {"status": "ok", "message": "Logged in!", "user": user_sanitized}
 
 
 # Signup route
 @app.post("/signup")
-def signup(data: dict):
+def signup(data: dict, response: Response):
     email = data.get("email")
     password = data.get("password")
     confirmpass = data.get("confirmpass")
@@ -139,7 +137,17 @@ def signup(data: dict):
     df = pd.concat([df, new_user_df], ignore_index=True)
     df.to_csv("users.csv", index=False)
 
-    return {"status": "ok", "message": "User registered successfully"}
+    # Set session cookie so the user is logged in right after signup
+    response.set_cookie(
+        key="session",
+        value=new_user["uuid"],
+        httponly=True,
+        max_age=3600,
+    )
+
+    user_sanitized = {k: v for k, v in new_user.items() if k != "password"}
+
+    return {"status": "ok", "message": "User registered successfully", "user": user_sanitized}
 
 
 @app.post("/logout")
@@ -149,9 +157,21 @@ def logout(response: Response):
 
 
 @app.get("/me")
-def me(session: str | None = None):
-    # This gets the cookie automatically
+def me(session: Optional[str] = Cookie(default=None)):
+    """Return the current logged in user based on the session cookie.
+
+    If no valid session is found, returns logged_in: False.
+    """
     if not session:
         return {"logged_in": False}
 
-    return {"logged_in": True, "uuid": session}
+    df = load_users()
+    user_df = df[df["uuid"] == session]
+
+    if user_df.empty:
+        return {"logged_in": False}
+
+    user = user_df.iloc[0].to_dict()
+    user_sanitized = {k: v for k, v in user.items() if k != "password"}
+
+    return {"logged_in": True, "user": user_sanitized}
