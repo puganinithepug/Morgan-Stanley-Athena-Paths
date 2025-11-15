@@ -1,10 +1,12 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "./ui/Button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Phone, Heart, Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";
+import courageImg from "../assets/hero_courage.jpeg";
+
 
 export default function PathTransitionSection() {
   const sectionRef = useRef(null);
@@ -86,6 +88,19 @@ export default function PathTransitionSection() {
                 backgroundPosition: "40% center",
             }}
             >
+            <div className="absolute inset-x-0 top-8 flex flex-col items-center gap-3 -translate-x-[20px] translate-y-[430px]">
+            {/* Icon circle */}
+            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-white/90 shadow-sm">
+                <Phone className="w-7 h-7 text-amber-600" />
+            </div>
+
+            {/* Text box */}
+            <div className="px-4 py-1 rounded-full bg-white/90 shadow-sm">
+                <span className="text-sm font-semibold text-amber-600">
+                Wisdom
+                </span>
+            </div>
+            </div>
         </div>
 
         {/* MIDDLE – Courage */}
@@ -100,11 +115,25 @@ export default function PathTransitionSection() {
             className="relative w-[18rem] md:w-[110rem] h-[24rem] md:h-[28rem] shadow-2xl origin-bottom z-10 cursor-pointer transition-transform duration-300 hover:scale-105"
             style={{
                 clipPath: "polygon(16% 0%, 84% 0%, 100% 24%, 50% 100%, 2% 24%)",
-                backgroundImage: `url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop')`,
+                backgroundImage: `url(${courageImg})`,
                 backgroundSize: "cover",
-                backgroundPosition: "center",
-            }}
+                backgroundPosition: "60% center",
+            }}           
         >
+            <div className="absolute inset-x-0 top-8 flex flex-col items-center gap-3">
+            {/* Icon circle */}
+            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-white/90 shadow-sm">
+                <Heart className="w-7 h-7 text-rose-500" />
+            </div>
+
+            {/* Text box */}
+            <div className="px-4 py-1 rounded-full bg-white/90 shadow-sm">
+                <span className="text-sm font-semibold text-rose-600">
+                Courage
+                </span>
+            </div>
+            </div>
+
         </div>
 
         {/* RIGHT – Protection */}
@@ -124,6 +153,19 @@ export default function PathTransitionSection() {
                 backgroundPosition: "15% center",
                 }}
             >
+            <div className="absolute inset-x-0 top-8 flex flex-col items-center gap-3 translate-x-[20px] translate-y-[430px]">
+            {/* Icon circle */}
+            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-white/90 shadow-sm">
+                <Phone className="w-7 h-7 text-blue-600" />
+            </div>
+
+            {/* Text box */}
+            <div className="px-4 py-1 rounded-full bg-white/90 shadow-sm">
+                <span className="text-sm font-semibold text-blue-600">
+                Protection
+                </span>
+            </div>
+            </div>
         </div>
       </motion.div>
 
