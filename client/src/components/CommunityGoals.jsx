@@ -98,16 +98,16 @@ export default function CommunityGoals({ onDonate }) {
                   </div>
 
                   <CardContent className="p-6 space-y-4">
-                    <p className="text-gray-600 text-sm leading-relaxed">
+                    <p className="text-foreground/80 text-sm leading-relaxed mt-4">
                       {description}
                     </p>
 
                     <div className="space-y-2">
                       <div className="flex justify-between items-baseline">
-                        <span className="text-2xl font-bold text-gray-900">
+                        <span className="text-2xl font-bold text-foreground">
                           ${goal.current_amount.toLocaleString()}
                         </span>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-foreground/60">
                           of ${goal.target_amount.toLocaleString()}
                         </span>
                       </div>
@@ -118,14 +118,14 @@ export default function CommunityGoals({ onDonate }) {
                         <span className={`font-semibold ${colors.text}`}>
                           {Math.round(progress)}% funded
                         </span>
-                        <span className="text-gray-500">
+                        <span className="text-foreground/60">
                           Deadline: {format(new Date(goal.deadline), 'MMM d, yyyy')}
                         </span>
                       </div>
                     </div>
 
                     <div className="pt-4 border-t flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <div className="flex items-center gap-2 text-sm text-foreground/70">
                         <Users className="w-4 h-4" />
                         <span>{Math.floor(goal.current_amount / 50)} supporters</span>
                       </div>

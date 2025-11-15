@@ -155,7 +155,7 @@ export default function PathGoals() {
               >
                 <Card className="overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all">
                   <CardContent className="p-6">
-                    <div className="flex items-center gap-3 mb-4">
+                    <div className="flex items-center gap-3 mb-4 mt-4">
                       <div className={`${goal.bgColor} p-3 rounded-lg`}>
                         <Icon className={`w-6 h-6 ${goal.iconColor}`} />
                       </div>
