@@ -401,7 +401,7 @@ export default function Landing() {
                 </div>
                 <div className="bg-gradient-to-br from-highlight/20 to-highlight/10 rounded-lg p-4 border border-highlight/40">
                   <div className="text-3xl font-bold text-highlight mb-1">
-                    40+
+                    30+
                   </div>
                   <div className="text-sm text-foreground/70">
                     {language === "fr"
