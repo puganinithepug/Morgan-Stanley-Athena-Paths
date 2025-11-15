@@ -1,11 +1,52 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "./ui/Button";
-import { ArrowRight, Phone, Heart, Shield } from "lucide-react";
+import { ArrowRight, Phone, Heart, Shield, HandHeart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";
 import courageImg from "../assets/hero_courage.jpeg";
+
+const PATHS = [
+  {
+    id: "WISDOM",
+    label: "Wisdom",
+    color: "bg-amber-600",
+    textColor: "text-amber-600",
+    icon: Phone,
+    description:
+      "Support first contact, crisis information, outreach, and guidance.",
+  },
+  {
+    id: "COURAGE",
+    label: "Courage",
+    color: "bg-rose-600",
+    textColor: "text-rose-600",
+    icon: Heart,
+    description:
+      "Help survivors rebuild through counseling and long-term support.",
+  },
+  {
+    id: "PROTECTION",
+    label: "Protection",
+    color: "bg-blue-600",
+    textColor: "text-blue-600",
+    icon: Shield,
+    description:
+      "Fund emergency shelter nights and safe housing for families.",
+  },
+  {
+    id: "SERVICE",
+    label: "Service",
+    color: "bg-emerald-600",
+    textColor: "text-emerald-600",
+    icon: HandHeart,
+    description:
+      "Volunteer your time to support shelters, events, and families.",
+  },
+];
+
+
 
 
 export default function PathTransitionSection() {
@@ -33,6 +74,7 @@ export default function PathTransitionSection() {
   const stripe2Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 80]);
   const stripe3Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 80]);
   const stripe4Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 80]);
+  const stripeHeights = [stripe1Height, stripe2Height, stripe3Height, stripe4Height];
 
 
   const scrollToWaysToHelp = () => {
@@ -125,7 +167,7 @@ export default function PathTransitionSection() {
             <div className="absolute inset-x-0 top-8 flex flex-col items-center gap-3">
             {/* Icon circle */}
             <div className="flex items-center justify-center w-14 h-14 rounded-full bg-white/90 shadow-sm">
-                <Heart className="w-7 h-7 text-rose-500" />
+                <Heart className="w-7 h-7 text-rose-600" />
             </div>
 
             {/* Text box */}
@@ -171,30 +213,59 @@ export default function PathTransitionSection() {
         </div>
       </motion.div>
 
-      {/* STRIPES – fixed so they persist across the page */}
-      <motion.div
+        {/* STRIPES + HOVER CARDS */}
+        <motion.div
         style={{ opacity: stripesOpacity, x: stripesX }}
-        className="fixed left-6 top-1/3 z-10 pointer-events-none"
-      >
+        className="fixed left-6 top-1/3 z-10"
+        >
         <div className="flex flex-col gap-3">
-          <motion.div
-            className="w-2 bg-amber-600 rounded-full"
-            style={{ height: stripe1Height }}
-          />
-          <motion.div
-            className="w-2 bg-rose-500 rounded-full"
-            style={{ height: stripe2Height }}
-          />
-          <motion.div
-            className="w-2 bg-blue-500 rounded-full"
-            style={{ height: stripe3Height }}
-          />
-          <motion.div
-            className="w-2 bg-green-500 rounded-full"
-            style={{ height: stripe4Height }}
-          />
+            {PATHS.map((path, index) => (
+            <div
+                key={path.id}
+                className="group relative cursor-pointer"
+                onClick={() => handlePathClick(path.id)}     // ⬅️ moved here
+            >
+                {/* The stripe itself */}
+                <motion.div
+                className={`
+                    w-2 rounded-full
+                    transition-all duration-200
+                    group-hover:w-3
+                    ${path.color}
+                `}
+                style={{ height: stripeHeights[index] }}
+                />
+
+                {/* The extended card that appears on hover */}
+                <div
+                className="
+                    absolute left-4 top-1/2 -translate-y-1/2
+                    opacity-0 translate-x-[-8px]
+                    group-hover:opacity-100 group-hover:translate-x-0
+                    transition-all duration-200
+                    bg-white/95 rounded-xl shadow-lg border border-gray-100
+                    px-3 py-2 w-52
+                "
+                >
+                <div className="flex items-center gap-2">
+                <path.icon className={`w-4 h-4 ${path.textColor}`} />
+                <p className={`text-xs font-semibold ${path.textColor}`}>
+                    {path.label}
+                </p>
+                </div>
+
+                <p className="mt-1 text-[13px] text-gray-600 leading-snug">
+                    {path.description}
+                </p>
+                <p className="mt-2 text-[13px] font-medium text-indigo-600">
+                    Click to view this path →
+                </p>
+                </div>
+            </div>
+            ))}
         </div>
-      </motion.div>
+        </motion.div>
+
     </section>
   );
 }
