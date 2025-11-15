@@ -31,9 +31,9 @@ const PATH_COLORS = {
     border: 'border-secondary/40',
   },
    SERVICE: {
-    bg: 'from-amber-400 to-primary',      // to do: change gradient
-    light: 'bg-amber-100/40',
-    border: 'border-amber-400/60',
+    bg: 'from-accent to-primary',      // to do: change gradient
+    light: 'bg-accent/40',
+    border: 'border-accent/40',
   },
 };
 

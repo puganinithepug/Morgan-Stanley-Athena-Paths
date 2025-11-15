@@ -92,9 +92,9 @@ export default function FindYourPath() {
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-amber-200/20 to-amber-100/10 border-2 border-amber-400/40 rounded-xl p-6 text-center">
-            <div className="inline-flex p-3 rounded-full bg-amber-300/30 mb-3">
-              <HandHeart className="w-8 h-8 text-amber-500" />
+          <div className="bg-gradient-to-br from-accent/20 to-amber-100/10 border-2 border-accent/40 rounded-xl p-6 text-center">
+            <div className="inline-flex p-3 rounded-full bg-accent/30 mb-3">
+              <HandHeart className="w-8 h-8 text-accent" />
             </div>
             <h3 className="font-bold text-foreground mb-2">
               {language === 'fr' ? 'Service' : 'Service'}
