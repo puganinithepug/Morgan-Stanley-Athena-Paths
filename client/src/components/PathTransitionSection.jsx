@@ -36,12 +36,11 @@ export default function PathTransitionSection() {
     >
       {/* TEXT + CTA */}
       <div className="relative z-20 flex flex-col items-center text-center px-4">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
-          Choose How You Want to Help
+        <h1 className="text-4xl max-w-2xl md:text-5xl font-bold text-gray-900 mb-3">
+          Help women and children find safety, healing, and hope.
         </h1>
         <p className="text-gray-600 max-w-2xl mx-auto mb-6">
-          Scroll to see how the three Athena paths transform into a guiding
-          journey that follows you down the page.
+          Athena Paths transforms donating into a guided journey—Wisdom, Courage, and Protection—that mirrors the real stages of a survivor's healing.
         </p>
         <Button
           size="lg"
@@ -57,7 +56,7 @@ export default function PathTransitionSection() {
       <motion.div
         style={{ opacity: trianglesOpacity, y: trianglesY }}
         className="
-          relative w-full -mt-10
+          relative w-full -mt-48
           flex items-end justify-center gap-[1vw]
           pointer-events-none
         "
@@ -65,7 +64,7 @@ export default function PathTransitionSection() {
         {/*TODO: Support mobile view (currently not implemented) */}
         {/* LEFT – Wisdom (bigger, pushed left) */}
         <div
-          className="relative w-[24rem] md:w-[50rem] h-[30rem] md:h-[36rem] shadow-2xl origin-bottom translate-x-[40%]"
+          className="relative w-[24rem] md:w-[90rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[25%]"
           style={{
             clipPath: "polygon(0% 30%, 21% 0, 100% 100%, 4% 75%)",
             background:
@@ -82,7 +81,7 @@ export default function PathTransitionSection() {
 
         {/* MIDDLE – Courage (slightly smaller + lower) */}
         <div
-          className="relative w-[18rem] md:w-[50rem] h-[24rem] md:h-[28rem] shadow-2xl origin-bottoms z-10"
+          className="relative w-[18rem] md:w-[70rem] h-[24rem] md:h-[28rem] shadow-2xl origin-bottoms z-10"
           style={{
             clipPath: "polygon(16% 0%, 84% 0%, 100% 24%, 50% 100%, 2% 24%)",
             background:
@@ -99,7 +98,7 @@ export default function PathTransitionSection() {
 
         {/* RIGHT – Protection (bigger, pushed right) */}
         <div
-          className="relative w-[24rem] md:w-[50rem] h-[30rem] md:h-[36rem] shadow-2xl origin-bottom translate-x-[-40%]"
+          className="relative w-[24rem] md:w-[90rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[-25%]"
           style={{
             clipPath: "polygon(100% 30%, 79% 0, 0% 100%, 96% 75%)",
             background:
