@@ -176,7 +176,7 @@ export default function Landing() {
     SERVICE: {
       icon: Clock,
       color: "bg-gradient-to-br from-accent/20 to-accent/10", // mint color
-      border: 'border-accent/50',
+      border: 'border-accent/40',
       iconColor: 'text-accent',
       iconBg: 'bg-accent/30',
       shadowColor: 'shadow-accent-glow',
