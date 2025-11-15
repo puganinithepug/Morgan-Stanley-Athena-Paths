@@ -8,6 +8,7 @@ import PathResults from './pages/PathResults';
 import Leaderboard from './pages/Leaderboard';
 import Profile from './pages/Profile';
 import SupportWall from './pages/SupportWall';
+import VolunteerSchedulePage from './pages/VolunteerSchedule';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/landing" element={<Landing />} />
           <Route path="/services" element={<OurServices />} />
           <Route path="/find-your-path" element={<FindYourPath />} />
+          <Route path="/volunteer-schedule" element={<VolunteerSchedulePage />} />
           <Route path="/path-results" element={<PathResults />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/profile" element={<Profile />} />
