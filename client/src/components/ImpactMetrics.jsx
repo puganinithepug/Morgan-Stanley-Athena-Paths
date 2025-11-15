@@ -101,7 +101,7 @@ export default function ImpactMetrics() {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-highlight/80 via-primary/80 to-primary-dark">
+    <section className="py-20 bg-gradient-to-br from-highlight/80 via-primary/70 to-primary-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-foreground mb-4">
@@ -112,7 +112,7 @@ export default function ImpactMetrics() {
               ? 'Ensemble, nous créons un changement durable pour les femmes et les enfants'
               : 'Together, we\'re creating lasting change for women and children'}
           </p>
-          <p className="text-sm text-foreground/60 max-w-2xl mx-auto">
+          <p className="text-sm text-foreground/70 max-w-2xl mx-auto">
             {language === 'fr' 
               ? 'Impact en temps réel basé sur les dons de la communauté'
               : 'Real-time impact based on community donations'}

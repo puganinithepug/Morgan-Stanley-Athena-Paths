@@ -27,25 +27,25 @@ export default function OurServices() {
       icon: Users,
       value: '5,000+',
       description: language === 'fr' ? 'Femmes et enfants aidés chaque année' : 'Women and children helped each year',
-      color: 'text-purple-400'
+      color: 'text-primary'
     },
     {
       icon: Clock,
       value: '24/7',
       description: language === 'fr' ? 'Disponibilité de la ligne de crise' : 'Crisis line availability',
-      color: 'text-purple-400'
+      color: 'text-primary'
     },
     {
       icon: Home,
       value: '40+',
       description: language === 'fr' ? 'Années de service' : 'Years of service',
-      color: 'text-purple-400'
+      color: 'text-primary'
     },
     {
       icon: Heart,
       value: '100%',
       description: language === 'fr' ? 'Services gratuits et confidentiels' : 'Free and confidential services',
-      color: 'text-purple-400'
+      color: 'text-primary'
     }
   ];
 
@@ -57,20 +57,20 @@ export default function OurServices() {
         ? 'Soutien téléphonique immédiat pour les femmes en crise. Disponible jour et nuit, notre ligne de crise offre écoute, information et planification de sécurité.'
         : 'Immediate phone support for women in crisis. Available day and night, our crisis line provides listening, information, and safety planning.',
       stat: language === 'fr' ? '3,500+ appels annuellement' : '3,500+ calls annually',
-      statColor: 'text-orange-600',
-      iconBg: 'bg-yellow-100',
-      iconColor: 'text-yellow-600'
+      statColor: 'text-highlight',
+      iconBg: 'bg-highlight/20',
+      iconColor: 'text-highlight'
     },
     {
       icon: Building2,
-      title: language === 'fr' ? 'Hébergement d\'Urgence' : 'Emergency Shelter',
+      title: language === 'fr' ? "Hébergement d'Urgence" : 'Emergency Shelter',
       description: language === 'fr'
         ? 'Logement sûr et confidentiel pour les femmes et leurs enfants fuyant la violence. Comprend les repas, la sécurité et un espace pour respirer.'
         : 'Safe, confidential housing for women and their children fleeing violence. Includes meals, security, and a space to breathe.',
       stat: language === 'fr' ? '200+ familles hébergées annuellement' : '200+ families sheltered annually',
-      statColor: 'text-blue-600',
-      iconBg: 'bg-blue-100',
-      iconColor: 'text-blue-600'
+      statColor: 'text-secondary',
+      iconBg: 'bg-secondary/20',
+      iconColor: 'text-secondary'
     },
     {
       icon: MessageSquare,
@@ -79,9 +79,9 @@ export default function OurServices() {
         ? 'Soutien thérapeutique professionnel pour les femmes et les enfants. Nos conseillers aident à traiter le traumatisme, développer des stratégies d\'adaptation et reconstruire la confiance.'
         : 'Professional therapeutic support for women and children. Our counselors help process trauma, develop coping strategies, and rebuild confidence.',
       stat: language === 'fr' ? '1,000+ heures de counseling annuellement' : '1,000+ counseling hours annually',
-      statColor: 'text-pink-600',
-      iconBg: 'bg-pink-100',
-      iconColor: 'text-pink-600'
+      statColor: 'text-muted',
+      iconBg: 'bg-muted/20',
+      iconColor: 'text-muted'
     },
     {
       icon: Users2,
@@ -90,9 +90,9 @@ export default function OurServices() {
         ? 'Réunions de groupe hebdomadaires où les survivantes partagent leurs expériences, apprennent les unes des autres et construisent une communauté.'
         : 'Weekly group meetings where survivors share experiences, learn from each other, and build community.',
       stat: language === 'fr' ? '15 groupes actifs' : '15 active groups',
-      statColor: 'text-purple-600',
-      iconBg: 'bg-purple-100',
-      iconColor: 'text-purple-600'
+      statColor: 'text-primary',
+      iconBg: 'bg-primary/15',
+      iconColor: 'text-primary'
     }
   ];
 
@@ -104,9 +104,9 @@ export default function OurServices() {
         ? 'Information sur les droits juridiques, références aux services juridiques et soutien dans les processus judiciaires. Nous aidons les femmes à naviguer dans le système.'
         : 'Information about legal rights, referrals to legal services, and support through court processes. We help women navigate the system.',
       stat: language === 'fr' ? '500+ femmes informées annuellement' : '500+ women informed annually',
-      statColor: 'text-green-600',
-      iconBg: 'bg-green-100',
-      iconColor: 'text-green-600'
+      statColor: 'text-accent',
+      iconBg: 'bg-accent/30',
+      iconColor: 'text-accent'
     },
     {
       icon: Baby,
@@ -115,9 +115,9 @@ export default function OurServices() {
         ? 'Programmes spécialisés pour les enfants exposés à la violence familiale, notamment counseling, activités récréatives et soutien éducatif.'
         : 'Specialized programs for children exposed to family violence, including counseling, recreational activities, and educational support.',
       stat: language === 'fr' ? '300+ enfants soutenus annuellement' : '300+ children supported annually',
-      statColor: 'text-red-600',
-      iconBg: 'bg-pink-100',
-      iconColor: 'text-pink-600'
+      statColor: 'text-highlight',
+      iconBg: 'bg-highlight/20',
+      iconColor: 'text-highlight'
     },
     {
       icon: GraduationCap,
@@ -126,9 +126,9 @@ export default function OurServices() {
         ? 'Ateliers sur la violence familiale, les relations saines, la parentalité et le développement personnel pour les survivantes.'
         : 'Workshops on family violence, healthy relationships, parenting, and personal development for survivors.',
       stat: language === 'fr' ? '50+ ateliers annuellement' : '50+ workshops annually',
-      statColor: 'text-purple-600',
-      iconBg: 'bg-purple-100',
-      iconColor: 'text-purple-600'
+      statColor: 'text-primary',
+      iconBg: 'bg-primary/15',
+      iconColor: 'text-primary'
     },
     {
       icon: Home,
@@ -137,19 +137,19 @@ export default function OurServices() {
         ? 'Soutien au logement à long terme pour aider les femmes à trouver et maintenir un logement stable après avoir quitté le refuge.'
         : 'Long-term housing support to help women find and maintain stable housing after leaving shelter.',
       stat: language === 'fr' ? '100+ familles aidées annuellement' : '100+ families assisted annually',
-      statColor: 'text-blue-600',
-      iconBg: 'bg-blue-100',
-      iconColor: 'text-blue-600'
+      statColor: 'text-secondary',
+      iconBg: 'bg-secondary/20',
+      iconColor: 'text-secondary'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="relative bg-gradient-to-br from-purple-700 via-purple-600 to-purple-500 py-20 md:py-24">
+    <div className="min-h-screen bg-background">
+      <div className="relative bg-gradient-to-br from-primary-dark via-primary to-secondary py-20 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-white mb-6">
-              <Shield className="w-12 h-12 text-purple-600" />
+            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-white/90 mb-6 shadow-lg">
+              <Shield className="w-12 h-12 text-primary" />
             </div>
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
               {language === 'fr' ? 'Nos Services' : 'Our Services'}
@@ -163,7 +163,7 @@ export default function OurServices() {
         </div>
       </div>
 
-      <div className="py-16 bg-white">
+      <div className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => {
@@ -173,10 +173,10 @@ export default function OurServices() {
                   <div className="flex justify-center mb-4">
                     <Icon className={`w-12 h-12 ${stat.color}`} />
                   </div>
-                  <div className="text-4xl font-bold text-gray-900 mb-2">
+                  <div className="text-4xl font-bold text-foreground mb-2">
                     {stat.value}
                   </div>
-                  <div className="text-gray-600 text-sm">
+                  <div className="text-foreground/70 text-sm">
                     {stat.description}
                   </div>
                 </div>
@@ -186,12 +186,12 @@ export default function OurServices() {
         </div>
       </div>
 
-      <div className="py-12 bg-white">
+      <div className="py-12 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             {language === 'fr' ? 'Soutien Complet à Chaque Étape' : 'Comprehensive Support at Every Stage'}
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
             {language === 'fr'
               ? 'De la crise à la guérison, nous marchons aux côtés des survivantes tout au long de leur parcours.'
               : 'From crisis to healing, we walk alongside survivors throughout their journey.'}
@@ -199,23 +199,23 @@ export default function OurServices() {
         </div>
       </div>
 
-      <div className="py-12 bg-white">
+      <div className="py-12 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {services1.map((service, index) => {
               const Icon = service.icon;
               return (
-                <Card key={index} className="shadow-md hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
+                <Card key={index} className="shadow-md hover:shadow-lg hover:-translate-y-1 transition-all">
+                  <CardContent className="pt-7 pb-6 px-6">
                     <div className="flex items-start gap-4">
                       <div className={`${service.iconBg} p-2 rounded flex-shrink-0`}>
                         <Icon className={`w-5 h-5 ${service.iconColor}`} />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 mb-3">
+                        <h3 className="text-xl font-bold text-foreground mb-3">
                           {service.title}
                         </h3>
-                        <p className="text-gray-600 mb-4 leading-relaxed">
+                        <p className="text-foreground/70 mb-4 leading-relaxed">
                           {service.description}
                         </p>
                         <p className={`font-semibold ${service.statColor}`}>
@@ -231,23 +231,23 @@ export default function OurServices() {
         </div>
       </div>
 
-      <div className="py-12 bg-white">
+      <div className="py-12 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {services2.map((service, index) => {
               const Icon = service.icon;
               return (
-                <Card key={index} className="shadow-md hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
+                <Card key={index} className="shadow-md hover:shadow-lg hover:-translate-y-1 transition-all">
+                  <CardContent className="pt-7 pb-6 px-6">
                     <div className="flex items-start gap-4">
                       <div className={`${service.iconBg} p-2 rounded flex-shrink-0`}>
                         <Icon className={`w-5 h-5 ${service.iconColor}`} />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 mb-3">
+                        <h3 className="text-xl font-bold text-foreground mb-3">
                           {service.title}
                         </h3>
-                        <p className="text-gray-600 mb-4 leading-relaxed">
+                        <p className="text-foreground/70 mb-4 leading-relaxed">
                           {service.description}
                         </p>
                         <p className={`font-semibold ${service.statColor}`}>
@@ -263,7 +263,7 @@ export default function OurServices() {
         </div>
       </div>
 
-      <div className="py-20 bg-gradient-to-r from-purple-700 via-purple-600 to-purple-500">
+      <div className="py-20 bg-gradient-to-r from-primary-dark via-primary to-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             {language === 'fr' ? 'Votre don maintient ces services en fonctionnement' : 'Your donation keeps these services running'}
@@ -275,7 +275,10 @@ export default function OurServices() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link to="/find-your-path">
-              <Button size="lg" className="bg-white !text-purple-600 hover:bg-gray-100 flex items-center gap-2">
+              <Button
+                size="lg"
+                className="bg-highlight text-foreground hover:bg-highlight/95 flex items-center gap-2 shadow-[0_0_18px_rgba(210,194,150,0.6)] hover:shadow-[0_0_24px_rgba(210,194,150,0.9)] hover:scale-[1.02] transition-all"
+              >
                 {language === 'fr' ? 'Trouvez Votre Parcours' : 'Find Your Path'}
                 <ArrowRight className="w-5 h-5" />
               </Button>

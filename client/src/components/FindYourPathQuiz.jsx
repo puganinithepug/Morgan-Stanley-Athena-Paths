@@ -14,9 +14,21 @@ const PATH_ICONS = {
 };
 
 const PATH_COLORS = {
-  WISDOM: { bg: 'from-amber-500 to-orange-500', light: 'bg-amber-50', border: 'border-amber-300' },
-  COURAGE: { bg: 'from-rose-500 to-pink-500', light: 'bg-rose-50', border: 'border-rose-300' },
-  PROTECTION: { bg: 'from-blue-500 to-cyan-500', light: 'bg-blue-50', border: 'border-blue-300' }
+  WISDOM: {
+    bg: 'from-highlight to-secondary',
+    light: 'bg-highlight/15',
+    border: 'border-highlight/40',
+  },
+  COURAGE: {
+    bg: 'from-muted to-primary',
+    light: 'bg-muted/15',
+    border: 'border-muted/40',
+  },
+  PROTECTION: {
+    bg: 'from-secondary to-primary-dark',
+    light: 'bg-secondary/15',
+    border: 'border-secondary/40',
+  },
 };
 
 export default function FindYourPathQuiz() {
@@ -204,7 +216,7 @@ export default function FindYourPathQuiz() {
         transition={{ duration: 0.5 }}
       >
         <Card className={`overflow-hidden border-2 ${colors.border}`}>
-          <div className={`bg-gradient-to-r ${colors.bg} p-8 text-white text-center`}>
+          <div className={`bg-gradient-to-r ${colors.bg} p-8 pb-10 text-white text-center`}>
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -221,14 +233,14 @@ export default function FindYourPathQuiz() {
             </p>
           </div>
 
-          <CardContent className="p-8 space-y-6">
+          <CardContent className="px-8 pb-8 pt-7 space-y-6">
             <div className={`rounded-lg border-2 ${colors.border} ${colors.light} p-6`}>
-              <p className="text-sm text-gray-600 leading-relaxed">
+              <p className="text-sm text-foreground/70 leading-relaxed">
                 {t(`paths.${resultPath.toLowerCase()}.desc`)}
               </p>
             </div>
 
-            <p className="text-sm text-gray-600 text-center">
+            <p className="text-sm text-foreground/70 text-center">
               {language === 'en' 
                 ? 'Based on your answers, this Path reflects where your values and instincts are especially strong. You can still support any area!'
                 : 'Basé sur vos réponses, ce Parcours reflète où vos valeurs et instincts sont particulièrement forts. Vous pouvez toujours soutenir n\'importe quel domaine!'}
@@ -258,19 +270,19 @@ export default function FindYourPathQuiz() {
 
   return (
     <Card className="overflow-hidden">
-      <CardContent className="p-8 space-y-6">
+      <CardContent className="pt-7 pb-8 px-8 space-y-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl font-bold text-foreground mb-2">
               {language === 'en' ? 'Find Your Path' : 'Trouvez Votre Parcours'}
             </h2>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-foreground/70">
               {language === 'en' 
                 ? 'Answer a few quick questions to explore which area of support resonates most with you.'
                 : 'Répondez à quelques questions rapides pour explorer quel domaine de soutien résonne le plus avec vous.'}
             </p>
           </div>
-          <div className="text-sm font-semibold text-gray-500">
+          <div className="text-sm font-semibold text-foreground/60">
             {currentIndex + 1} / {totalQuestions}
           </div>
         </div>
@@ -286,7 +298,7 @@ export default function FindYourPathQuiz() {
             transition={{ duration: 0.3 }}
             className="space-y-4"
           >
-            <p className="text-lg font-semibold text-gray-900">
+            <p className="text-lg font-semibold text-foreground">
               {currentQuestion.text[language]}
             </p>
 
@@ -302,15 +314,15 @@ export default function FindYourPathQuiz() {
                     whileTap={{ scale: 0.98 }}
                     className={`w-full text-left rounded-lg border-2 p-4 transition-all ${
                       isSelected
-                        ? 'border-indigo-500 bg-indigo-50 shadow-md'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        ? 'border-primary bg-primary/5 shadow-md'
+                        : 'border-foreground/10 hover:border-primary/40 hover:bg-background-dark'
                     }`}
                   >
-                    <span className="font-medium text-gray-900 block mb-1">
+                    <span className="font-medium text-foreground block mb-1">
                       {option.label[language]}
                     </span>
                     {option.description && (
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-foreground/70">
                         {option.description[language]}
                       </p>
                     )}
@@ -321,7 +333,7 @@ export default function FindYourPathQuiz() {
           </motion.div>
         </AnimatePresence>
 
-        <div className="flex justify-between items-center pt-4 border-t">
+        <div className="flex justify-between items-center pt-4 border-t border-foreground/10">
           <Button
             type="button"
             variant="ghost"
@@ -334,7 +346,7 @@ export default function FindYourPathQuiz() {
             type="button"
             onClick={handleNext}
             disabled={!selectedAnswer}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white"
+            className="shadow-sm hover:shadow-md"
           >
             {currentIndex === totalQuestions - 1 
               ? (language === 'en' ? 'See my Path' : 'Voir mon Parcours')

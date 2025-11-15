@@ -14,34 +14,41 @@ export default function DonationSuccessModal({ isOpen, onClose, donation }) {
       const calls = Math.floor(amount / 5) || 1;
       return {
         icon: Phone,
-        color: 'from-amber-500 to-orange-500',
-        bgColor: 'bg-amber-50',
+        color: 'from-highlight to-secondary',
+        iconColor: 'text-highlight/80',
+        bgColor: 'bg-highlight/15',
         primary: `${calls} Crisis Call${calls > 1 ? 's' : ''}`,
         secondary: 'Your donation helps women reach out for help in their darkest moments',
-        detail: `Approximately ${calls} women will receive immediate support and guidance through the crisis line.`
+        detail: `Approximately ${calls} women will receive immediate support and guidance through the crisis line.`,
       };
     } else if (path === 'COURAGE') {
       const hours = Math.floor(amount / 50);
       const sessions = Math.floor(amount / 100) || 1;
       return {
         icon: Heart,
-        color: 'from-rose-500 to-pink-500',
-        bgColor: 'bg-rose-50',
-        primary: hours > 0 ? `${hours} Counseling Hour${hours > 1 ? 's' : ''}` : `${sessions} Counseling Session${sessions > 1 ? 's' : ''}`,
-        secondary: 'You\'re helping survivors heal from trauma and rebuild their lives',
-        detail: hours > 0 
-          ? `${hours} hours of professional therapy helping women and children process trauma and develop coping strategies.`
-          : `Professional therapeutic support for ${sessions} survivor${sessions > 1 ? 's' : ''}.`
+        color: 'from-muted to-primary',
+        iconColor: 'text-muted/80',
+        bgColor: 'bg-muted/15',
+        primary:
+          hours > 0
+            ? `${hours} Counseling Hour${hours > 1 ? 's' : ''}`
+            : `${sessions} Counseling Session${sessions > 1 ? 's' : ''}`,
+        secondary: "You're helping survivors heal from trauma and rebuild their lives",
+        detail:
+          hours > 0
+            ? `${hours} hours of professional therapy helping women and children process trauma and develop coping strategies.`
+            : `Professional therapeutic support for ${sessions} survivor${sessions > 1 ? 's' : ''}.`,
       };
     } else {
       const nights = Math.floor(amount / 20) || 1;
       return {
         icon: Home,
-        color: 'from-blue-500 to-cyan-500',
-        bgColor: 'bg-blue-50',
+        color: 'from-secondary to-primary-dark',
+        iconColor: 'text-secondary/80',
+        bgColor: 'bg-secondary/15',
         primary: `${nights} Safe Shelter Night${nights > 1 ? 's' : ''}`,
-        secondary: 'You\'re providing safety when women and children need it most',
-        detail: `${nights} night${nights > 1 ? 's' : ''} of emergency shelter, including meals, security, and a safe place to sleep.`
+        secondary: "You're providing safety when women and children need it most",
+        detail: `${nights} night${nights > 1 ? 's' : ''} of emergency shelter, including meals, security, and a safe place to sleep.`,
       };
     }
   };
@@ -74,7 +81,7 @@ export default function DonationSuccessModal({ isOpen, onClose, donation }) {
                   {[...Array(20)].map((_, i) => (
                     <motion.div
                       key={i}
-                      className="absolute w-2 h-2 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full"
+                      className="absolute w-2 h-2 bg-gradient-to-br from-primary to-highlight rounded-full"
                       initial={{ 
                         x: '50%', 
                         y: '20%',
@@ -96,10 +103,10 @@ export default function DonationSuccessModal({ isOpen, onClose, donation }) {
                   ))}
                 </div>
 
-                <CardContent className="p-8 relative">
+                <CardContent className="pt-9 pb-8 px-8 relative">
                   <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute top-4 right-4 text-foreground/40 hover:text-foreground/80 transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -115,7 +122,7 @@ export default function DonationSuccessModal({ isOpen, onClose, donation }) {
                       }}
                       className={`inline-flex p-4 rounded-full ${impact.bgColor} mb-6 relative`}
                     >
-                      <Icon className={`w-12 h-12 bg-gradient-to-br ${impact.color} bg-clip-text text-transparent`} style={{ WebkitTextFillColor: 'transparent', WebkitBackgroundClip: 'text' }} />
+                      <Icon className={`w-12 h-12 ${impact.iconColor}`}/>
                       <motion.div
                         className="absolute -top-2 -right-2"
                         animate={{ 
@@ -137,10 +144,10 @@ export default function DonationSuccessModal({ isOpen, onClose, donation }) {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4 }}
                     >
-                      <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                      <h2 className="text-3xl font-bold text-foreground mb-2">
                         Thank You! 🙏
                       </h2>
-                      <p className="text-gray-600 mb-6">
+                      <p className="text-foreground/70 mb-6">
                         Your ${donation.amount} donation just made a real difference
                       </p>
                     </motion.div>
@@ -154,10 +161,10 @@ export default function DonationSuccessModal({ isOpen, onClose, donation }) {
                       <div className={`inline-block bg-gradient-to-r ${impact.color} text-white px-4 py-2 rounded-full font-bold text-lg mb-3`}>
                         {impact.primary}
                       </div>
-                      <p className="font-semibold text-gray-900 mb-2">
+                      <p className="font-semibold text-foreground mb-2">
                         {impact.secondary}
                       </p>
-                      <p className="text-sm text-gray-700">
+                      <p className="text-sm text-foreground/70">
                         {impact.detail}
                       </p>
                     </motion.div>
@@ -166,7 +173,7 @@ export default function DonationSuccessModal({ isOpen, onClose, donation }) {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.8 }}
-                      className="flex items-center justify-center gap-2 text-purple-600 mb-6"
+                      className="flex items-center justify-center gap-2 text-primary mb-6"
                     >
                       <Sparkles className="w-5 h-5" />
                       <span className="font-semibold">
@@ -181,7 +188,7 @@ export default function DonationSuccessModal({ isOpen, onClose, donation }) {
                     >
                       <Button
                         onClick={onClose}
-                        className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white"
+                        className="w-full shadow-md hover:shadow-[0_0_20px_rgba(111,106,168,0.6)] hover:scale-[1.02] transition-all duration-200"
                       >
                         Continue Your Journey
                       </Button>

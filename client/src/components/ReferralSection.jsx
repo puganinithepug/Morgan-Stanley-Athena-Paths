@@ -36,7 +36,7 @@ export default function ReferralSection() {
         await navigator.share({
           title: language === 'fr' ? 'Soutenez Shield of Athena' : 'Support Shield of Athena',
           text,
-          url: referralLink
+          url: referralLink,
         });
       } catch (err) {
         console.log('Share cancelled');
@@ -47,8 +47,8 @@ export default function ReferralSection() {
   };
 
   return (
-    <Card className="overflow-hidden border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-indigo-50">
-      <CardHeader className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+    <Card className="overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-background via-background to-primary/5">
+      <CardHeader className="bg-gradient-to-r from-primary-dark to-primary text-white">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-white/20">
             <Gift className="w-6 h-6" />
@@ -58,7 +58,7 @@ export default function ReferralSection() {
               {language === 'fr' ? 'Programme de Parrainage' : 'Referral Program'}
             </CardTitle>
             <p className="text-sm text-white/90 mt-1">
-              {language === 'fr' 
+              {language === 'fr'
                 ? 'Invitez vos amis et gagnez des récompenses'
                 : 'Invite friends and earn rewards'}
             </p>
@@ -66,52 +66,52 @@ export default function ReferralSection() {
         </div>
       </CardHeader>
 
-      <CardContent className="p-6 space-y-6">
+      <CardContent className="pt-6 pb-6 px-6 space-y-6">
         <div className="grid md:grid-cols-3 gap-4">
-          <div className="bg-white rounded-lg p-4 text-center border border-purple-100">
-            <Users className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900">{userReferrals.length}</div>
-            <div className="text-sm text-gray-600">
+          <div className="bg-background rounded-lg p-4 text-center border border-primary/10">
+            <Users className="w-8 h-8 text-primary mx-auto mb-2" />
+            <div className="text-2xl font-bold text-foreground">{userReferrals.length}</div>
+            <div className="text-sm text-foreground/70">
               {language === 'fr' ? 'Amis Référés' : 'Friends Referred'}
             </div>
           </div>
 
-          <div className="bg-white rounded-lg p-4 text-center border border-purple-100">
-            <Gift className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900">
+          <div className="bg-background rounded-lg p-4 text-center border border-primary/10">
+            <Gift className="w-8 h-8 text-primary mx-auto mb-2" />
+            <div className="text-2xl font-bold text-foreground">
               {userReferrals.length * 10}
             </div>
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-foreground/70">
               {language === 'fr' ? 'Points Bonus' : 'Bonus Points'}
             </div>
           </div>
 
-          <div className="bg-white rounded-lg p-4 text-center border border-purple-100">
-            <Share2 className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900">
+          <div className="bg-background rounded-lg p-4 text-center border border-primary/10">
+            <Share2 className="w-8 h-8 text-primary mx-auto mb-2" />
+            <div className="text-2xl font-bold text-foreground">
               {userReferrals.filter(r => r.has_donated).length}
             </div>
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-foreground/70">
               {language === 'fr' ? 'Ont Donné' : 'Have Donated'}
             </div>
           </div>
         </div>
 
         <div className="space-y-3">
-          <label className="text-sm font-semibold text-gray-700 block">
+          <label className="text-sm font-semibold text-foreground/80 block">
             {language === 'fr' ? 'Votre Lien de Parrainage' : 'Your Referral Link'}
           </label>
           <div className="flex gap-2">
             <Input
               value={referralLink}
               readOnly
-              className="flex-1 bg-white"
+              className="flex-1 bg-background"
             />
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 onClick={handleCopy}
                 variant="outline"
-                className="border-purple-300 hover:bg-purple-50"
+                className="border-primary/40 hover:bg-primary/10"
               >
                 {copied ? (
                   <>
@@ -129,7 +129,7 @@ export default function ReferralSection() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 onClick={handleShare}
-                className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white"
+                className="bg-gradient-to-r from-primary-dark to-primary hover:brightness-110 text-white shadow-md"
               >
                 <Share2 className="w-4 h-4 mr-2" />
                 {language === 'fr' ? 'Partager' : 'Share'}
@@ -138,13 +138,13 @@ export default function ReferralSection() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg p-4 border border-purple-100">
-          <h4 className="font-semibold text-gray-900 mb-2">
+        <div className="bg-background rounded-lg p-4 border border-primary/10">
+          <h4 className="font-semibold text-foreground mb-2">
             {language === 'fr' ? 'Comment ça fonctionne' : 'How it works'}
           </h4>
-          <ul className="space-y-2 text-sm text-gray-600">
+          <ul className="space-y-2 text-sm text-foreground/70">
             <li className="flex items-start gap-2">
-              <span className="text-purple-600 font-bold">1.</span>
+              <span className="text-primary font-bold">1.</span>
               <span>
                 {language === 'fr'
                   ? 'Partagez votre lien unique avec vos amis'
@@ -152,15 +152,15 @@ export default function ReferralSection() {
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-purple-600 font-bold">2.</span>
+              <span className="text-primary font-bold">2.</span>
               <span>
                 {language === 'fr'
-                  ? 'Ils s\'inscrivent et font leur premier don'
+                  ? "Ils s'inscrivent et font leur premier don"
                   : 'They sign up and make their first donation'}
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-purple-600 font-bold">3.</span>
+              <span className="text-primary font-bold">3.</span>
               <span>
                 {language === 'fr'
                   ? 'Vous gagnez 10 points bonus pour chaque ami qui donne'
@@ -173,4 +173,3 @@ export default function ReferralSection() {
     </Card>
   );
 }
-

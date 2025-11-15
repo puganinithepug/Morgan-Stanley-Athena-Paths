@@ -12,9 +12,9 @@ const PATH_ICONS = {
 };
 
 const PATH_COLORS = {
-  WISDOM: { text: 'text-amber-600', bg: 'bg-amber-50' },
-  COURAGE: { text: 'text-rose-600', bg: 'bg-rose-50' },
-  PROTECTION: { text: 'text-blue-600', bg: 'bg-blue-50' }
+  WISDOM: { text: 'text-highlight', bg: 'bg-highlight/15' },
+  COURAGE: { text: 'text-muted', bg: 'bg-muted/15' },
+  PROTECTION: { text: 'text-secondary', bg: 'bg-secondary/15' },
 };
 
 export default function Leaderboard() {
@@ -70,9 +70,9 @@ export default function Leaderboard() {
     .sort((a, b) => b.totalPoints - a.totalPoints);
 
   const getRankIcon = (rank) => {
-    if (rank === 0) return <Crown className="w-6 h-6 text-yellow-500" />;
-    if (rank === 1) return <Shield className="w-6 h-6 text-gray-400" />;
-    if (rank === 2) return <Trophy className="w-6 h-6 text-amber-500" />;
+    if (rank === 0) return <Crown className="w-6 h-6 text-highlight" />;
+    if (rank === 1) return <Shield className="w-6 h-6 text-secondary" />;
+    if (rank === 2) return <Trophy className="w-6 h-6 text-primary" />;
     return null;
   };
 
@@ -84,7 +84,7 @@ export default function Leaderboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -95,14 +95,14 @@ export default function Leaderboard() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-            className="inline-flex p-4 rounded-full bg-gradient-to-br from-purple-100 to-indigo-100 mb-6"
+            className="inline-flex p-4 rounded-full bg-gradient-to-br from-primary/10 via-background to-primary/20 mb-6"
           >
-            <Trophy className="w-16 h-16 text-purple-600" />
+            <Trophy className="w-16 h-16 text-primary" />
           </motion.div>
-          <h1 className="text-4xl md:text-5xl font-bold text-purple-600 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             {language === 'fr' ? 'Impact Communautaire' : 'Community Impact'}
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-foreground/70 max-w-2xl mx-auto leading-relaxed">
             {language === 'fr'
               ? 'Le Score d\'Espoir met en lumière les donateurs et équipes qui soutiennent constamment les femmes et les enfants. Il ne s\'agit pas de la quantité que vous donnez, mais de rester aux côtés des survivantes dans le temps.'
               : 'The Hope Score highlights donors and teams who consistently support women and children. It\'s not about how much you give, but about standing with survivors over time.'}
@@ -116,8 +116,8 @@ export default function Leaderboard() {
               onClick={() => setSelectedPath(filter.id)}
               className={`px-6 py-2 rounded-lg font-semibold transition-all ${
                 selectedPath === filter.id
-                  ? 'bg-purple-600 text-white shadow-md'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+                  ? 'bg-primary text-white shadow-md'
+                  : 'bg-background text-foreground/80 hover:bg-background-dark border border-foreground/10'
               }`}
             >
               {filter.label}
@@ -130,11 +130,11 @@ export default function Leaderboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="bg-gray-50 border-2 border-gray-200">
+          <Card className="bg-background border-2 border-foreground/10">
             <CardContent className="p-6">
               <div className="flex items-center gap-2 mb-6">
-                <Trophy className="w-5 h-5 text-purple-600" />
-                <h2 className="text-xl font-bold text-gray-900">
+                <Trophy className="w-5 h-5 text-primary" />
+                <h2 className="text-xl font-bold text-foreground">
                   {language === 'fr' ? 'Meilleurs Soutiens' : 'Top Supporters'}
                 </h2>
               </div>
@@ -152,17 +152,17 @@ export default function Leaderboard() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: idx * 0.05 }}
-                        className="flex items-center justify-between p-4 bg-white rounded-lg mb-2 border border-gray-100 hover:shadow-sm transition-shadow"
+                        className="flex items-center justify-between p-4 bg-background rounded-lg mb-2 border border-foreground/10 hover:shadow-sm transition-shadow"
                       >
                         <div className="flex items-center gap-4 flex-1">
                           <div className="flex items-center gap-3">
                             {rankIcon && <div className="flex-shrink-0">{rankIcon}</div>}
-                            <span className="font-bold text-gray-700 text-lg min-w-[3rem]">
+                            <span className="font-bold text-foreground/80 text-lg min-w-[3rem]">
                               #{idx + 1}
                             </span>
                           </div>
                           <div className="flex-1">
-                            <div className="font-bold text-gray-900 mb-1">
+                            <div className="font-bold text-foreground mb-1">
                               {entry.displayName}
                             </div>
                             <div className="flex items-center gap-2">
@@ -182,10 +182,10 @@ export default function Leaderboard() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="font-bold text-purple-600 text-2xl mb-1">
+                          <div className="font-bold text-primary text-2xl mb-1">
                             {entry.totalPoints}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-foreground/60">
                             {entry.totalDonations} {language === 'fr' ? 'don(s)' : entry.totalDonations === 1 ? 'donation' : 'donations'}
                           </div>
                         </div>
@@ -193,7 +193,7 @@ export default function Leaderboard() {
                     );
                   })
                 ) : (
-                  <div className="text-center py-12 text-gray-500">
+                  <div className="text-center py-12 text-foreground/60">
                     {language === 'fr'
                       ? 'Aucun don pour le moment. Soyez le premier à soutenir!'
                       : 'No donations yet. Be the first to support!'}
