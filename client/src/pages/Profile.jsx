@@ -13,16 +13,42 @@ export default function Profile() {
   const { language } = useLanguage();
   const [newBadges, setNewBadges] = useState([]);
   const [showBadgeNotification, setShowBadgeNotification] = useState(false);
+  const [backendBadges, setBackendBadges] = useState([]); // badges from backend
 
   useEffect(() => {
-    if (user) {
-      const earned = checkAndAwardBadges(user);
-      if (earned.length > 0) {
-        setNewBadges(earned);
-        setShowBadgeNotification(true);
-        setTimeout(() => setShowBadgeNotification(false), 5000);
+    if (!user) return;
+
+    let cancelled = false;
+
+    async function syncBadges() {
+      try {
+        // First, check and award any new badges based on backend data
+        const earned = await checkAndAwardBadges(user);
+        if (!cancelled && earned.length > 0) {
+          setNewBadges(earned);
+          setShowBadgeNotification(true);
+          setTimeout(() => setShowBadgeNotification(false), 5000);
+        }
+
+        // Then load the full badge list from backend
+        const res = await fetch(`http://localhost:8000/users/${user.id}/badges`, {
+          credentials: 'include',
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) {
+          setBackendBadges(data.badges || []);
+        }
+      } catch (err) {
+        console.error('Failed to sync badges', err);
       }
     }
+
+    syncBadges();
+
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
 
   if (!user) {
@@ -35,8 +61,12 @@ export default function Profile() {
 
   const donations = dataService.getDonations().filter(d => d.user_id === user.id);
   const totalAmount = donations.reduce((sum, d) => sum + d.amount, 0);
-  const userBadges = user.badges || [];
-  const earnedBadges = Object.values(BADGE_DEFINITIONS).filter(b => userBadges.includes(b.id));
+  const backendBadgeIds = new Set(
+    (backendBadges || []).map((b) => b.badge_id || b.id)
+  );
+  const earnedBadges = Object.values(BADGE_DEFINITIONS).filter((b) =>
+    backendBadgeIds.has(b.id)
+  );
 
   const pathStats = {
     WISDOM: donations.filter(d => d.path === 'WISDOM').length,

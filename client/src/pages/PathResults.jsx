@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -46,9 +46,10 @@ export default function PathResults() {
   const searchParams = new URLSearchParams(location.search);
   const path = (searchParams.get('path') || 'WISDOM').toUpperCase();
   const { t, language } = useLanguage();
-  const { user, login } = useAuth();
+  const { user } = useAuth();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [lastDonation, setLastDonation] = useState(null);
+  const [pendingDonation, setPendingDonation] = useState(null); // { item, customAmount }
 
   const config = PATH_CONFIG[path] || PATH_CONFIG.WISDOM;
   const Icon = config.icon;
@@ -56,9 +57,10 @@ export default function PathResults() {
   const donations = dataService.getDonations().filter((d) => d.path === path);
   const pathGoals = dataService.getGoals(true).filter((g) => g.path === path);
 
-  const handleDonate = async (item, customAmount = null) => {
-    if (!user) {
-      login({});
+  const handleDonate = async (item, customAmount = null, triggeredAfterLogin = false) => {
+    if (!user && !triggeredAfterLogin) {
+      setPendingDonation({ item, customAmount });
+      window.dispatchEvent(new CustomEvent("open-login-modal"));
       return;
     }
 
@@ -68,6 +70,26 @@ export default function PathResults() {
     else if (path === 'COURAGE') points = Math.floor(amount * 1.2);
 
     try {
+      // Record donation in backend
+      try {
+        await fetch("http://localhost:8000/donate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            amount,
+            path,
+            uuid: user.id,
+            impact: language === 'fr' ? item.title_fr : item.title_en,
+          }),
+        });
+      } catch (err) {
+        console.error("Backend donation error:", err);
+      }
+
+      // Maintain existing local data for UI stats
       dataService.createDonation({
         user_id: user.id,
         user_name: user.full_name || 'Anonymous',
@@ -95,6 +117,20 @@ export default function PathResults() {
       alert('Unable to process donation. Please try again.');
     }
   };
+
+  // When login succeeds and there is a pending donation, resume it
+  useEffect(() => {
+    const handler = () => {
+      if (pendingDonation) {
+        const { item, customAmount } = pendingDonation;
+        setPendingDonation(null);
+        handleDonate(item, customAmount, true);
+      }
+    };
+
+    window.addEventListener("login-success", handler);
+    return () => window.removeEventListener("login-success", handler);
+  }, [pendingDonation]);
 
   const totalAmount = donations.reduce((sum, d) => sum + d.amount, 0);
   const totalDonations = donations.length;

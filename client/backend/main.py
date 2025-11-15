@@ -27,6 +27,49 @@ def load_users():
     return df
 
 
+def load_donations():
+    try:
+        return pd.read_csv("donations.csv")
+    except FileNotFoundError:
+        return pd.DataFrame(columns=["uuid", "amount", "path", "impact_points"])
+
+
+def load_referrals():
+    """Load referrals from CSV.
+
+    Columns: referrer_id, referred_id, code, hasDonated
+    """
+    try:
+        return pd.read_csv("referrals.csv")
+    except FileNotFoundError:
+        return pd.DataFrame(
+            columns=["referrer_id", "referred_id", "code", "hasDonated"]
+        )
+
+
+def load_badges():
+    """Load badge definitions from CSV.
+
+    Columns: id, name, description, icon, condition
+    (condition is informational and not evaluated here)
+    """
+    try:
+        return pd.read_csv("badges.csv")
+    except FileNotFoundError:
+        return pd.DataFrame(columns=["id", "name", "description", "icon", "condition"])
+
+
+def load_has_badges():
+    """Load user-badge assignments from CSV.
+
+    Columns: uuid, badge_id
+    """
+    try:
+        return pd.read_csv("hasBadges.csv")
+    except FileNotFoundError:
+        return pd.DataFrame(columns=["uuid", "badge_id"])
+
+
 def check_user_exists(email: str, password: str) -> str:
     df = load_users()
     user = df[(df["email"] == email) & (df["password"] == password)]
@@ -147,13 +190,158 @@ def signup(data: dict, response: Response):
 
     user_sanitized = {k: v for k, v in new_user.items() if k != "password"}
 
-    return {"status": "ok", "message": "User registered successfully", "user": user_sanitized}
+    return {
+        "status": "ok",
+        "message": "User registered successfully",
+        "user": user_sanitized,
+    }
 
 
 @app.post("/logout")
 def logout(response: Response):
     response.delete_cookie(key="session")
     return {"status": "ok", "message": "Logged out!"}
+
+
+@app.post("/donate")
+def donate(data: dict, response: Response):
+    amount = data.get("amount")
+    path = data.get("path")
+    uuid = data.get("uuid")
+    impact = data.get("impact")
+    referral_code = data.get("referral_code")
+
+    if amount is None or path is None or uuid is None:
+        raise HTTPException(
+            status_code=400, detail="amount, path and uuid are required"
+        )
+
+    donations_df = load_donations()
+
+    new_donation = {
+        "uuid": uuid,
+        "amount": amount,
+        "path": path,
+        "impact_points": impact,
+    }
+    donations_df = pd.concat(
+        [donations_df, pd.DataFrame([new_donation])], ignore_index=True
+    )
+    donations_df.to_csv("donations.csv", index=False)
+
+    # Handle referral on first donation, if a referral code is provided
+    if referral_code:
+        referrals_df = load_referrals()
+
+        # Count donations for this user (after inserting the new donation)
+        user_donations = donations_df[donations_df["uuid"] == uuid]
+        is_first_donation = len(user_donations) == 1
+
+        # Try to resolve referrer_id from code like "REF-<UUID>"
+        referrer_uuid = None
+        if isinstance(referral_code, str) and referral_code.startswith("REF-"):
+            candidate_uuid = referral_code[len("REF-") :]
+            users_df = load_users()
+            if not users_df[users_df["uuid"] == candidate_uuid].empty:
+                referrer_uuid = candidate_uuid
+
+        if is_first_donation:
+            # See if a referral row already exists for this referred user + code
+            existing = referrals_df[
+                (referrals_df["referred_id"] == uuid)
+                & (referrals_df["code"] == referral_code)
+            ]
+
+            if not existing.empty:
+                # Mark as donated and fill referrer_id if we resolved it
+                referrals_df.loc[existing.index, "hasDonated"] = True
+                if referrer_uuid is not None:
+                    referrals_df.loc[existing.index, "referrer_id"] = referrer_uuid
+            else:
+                # Record new referral row
+                new_ref = {
+                    "referrer_id": referrer_uuid,
+                    "referred_id": uuid,
+                    "code": referral_code,
+                    "hasDonated": True,
+                }
+                referrals_df = pd.concat(
+                    [referrals_df, pd.DataFrame([new_ref])], ignore_index=True
+                )
+
+            referrals_df.to_csv("referrals.csv", index=False)
+
+            # Award +10 points to referrer as a separate "bonus" donation entry
+            # with amount 0 and path None, so all impact is derived from donations.csv
+            if referrer_uuid is not None:
+                bonus = {
+                    "uuid": referrer_uuid,
+                    "amount": 0,
+                    "path": "Referral Bonus",
+                    "impact_points": 10,
+                }
+                donations_df = pd.concat(
+                    [donations_df, pd.DataFrame([bonus])], ignore_index=True
+                )
+                donations_df.to_csv("donations.csv", index=False)
+
+    return {"status": "ok", "message": "Donation recorded!"}
+
+
+@app.get("/badges")
+def get_badges():
+    """Return all badge definitions from badges.csv."""
+    df = load_badges()
+    return {"badges": df.to_dict(orient="records")}
+
+
+@app.get("/users/{uuid}/badges")
+def get_user_badges(uuid: str):
+    """Return all badges a user has earned, joined with badge metadata."""
+    badges_df = load_badges()
+    has_df = load_has_badges()
+
+    user_badges = has_df[has_df["uuid"] == uuid]
+    if user_badges.empty:
+        return {"badges": []}
+
+    merged = user_badges.merge(badges_df, left_on="badge_id", right_on="id", how="left")
+    return {"badges": merged.to_dict(orient="records")}
+
+
+@app.get("/users/{uuid}/donations")
+def get_user_donations(uuid: str):
+    """Return all donations for a user from donations.csv."""
+    df = load_donations()
+    user_df = df[df["uuid"] == uuid]
+    return {"donations": user_df.to_dict(orient="records")}
+
+
+@app.get("/users/{uuid}/referrals")
+def get_user_referrals(uuid: str):
+    """Return all referrals where this user is the referrer."""
+    df = load_referrals()
+    user_df = df[df["referrer_id"] == uuid]
+    return {"referrals": user_df.to_dict(orient="records")}
+
+
+@app.post("/users/{uuid}/badges")
+def assign_badge(uuid: str, data: dict):
+    """Assign a badge to a user if they don't already have it."""
+    badge_id = data.get("badge_id")
+    if not badge_id:
+        raise HTTPException(status_code=400, detail="badge_id is required")
+
+    has_df = load_has_badges()
+    existing = has_df[(has_df["uuid"] == uuid) & (has_df["badge_id"] == badge_id)]
+    if not existing.empty:
+        return {"status": "ok", "message": "Badge already assigned"}
+
+    new_row = {"uuid": uuid, "badge_id": badge_id}
+    has_df = pd.concat([has_df, pd.DataFrame([new_row])], ignore_index=True)
+    has_df.to_csv("hasBadges.csv", index=False)
+
+    return {"status": "ok", "message": "Badge assigned"}
 
 
 @app.get("/me")

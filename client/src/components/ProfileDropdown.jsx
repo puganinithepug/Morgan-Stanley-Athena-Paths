@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, User, LogOut, LogIn } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -13,10 +13,23 @@ const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
 
+  // Allow other parts of the app to request opening the login popup
+  useEffect(() => {
+    const handler = () => {
+      setIsOpen(false); // close dropdown if open
+      setIsLoginOpen(true);
+    };
+
+    window.addEventListener('open-login-modal', handler);
+    return () => window.removeEventListener('open-login-modal', handler);
+  }, []);
+
   // Called when the popup login succeeds
   const handleLoginSuccess = async () => {
     await login(); // hydrate user from backend /me
     setIsLoginOpen(false);
+    // Notify the app that login just succeeded so pending actions (like donations) can resume
+    window.dispatchEvent(new CustomEvent('login-success'));
   };
 
   const handleLogout = () => {
