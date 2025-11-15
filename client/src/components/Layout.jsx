@@ -3,10 +3,13 @@ import { AuthProvider } from '../contexts/AuthContext';
 import { LanguageProvider } from '../contexts/LanguageContext';
 import Header from './Header';
 import Footer from './Footer';
+import { useLocation } from 'react-router-dom';
 
 export default function Layout({ children }) {
   const [hideHeader, setHideHeader] = useState(false);
+  const location = useLocation();
 
+  // Hide / show header based on scroll direction
   useEffect(() => {
     let lastScrollY = window.scrollY;
 
@@ -27,6 +30,11 @@ export default function Layout({ children }) {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Always start new page at the top 
+  useEffect(() => {
+    window.scrollTo(0, 0); // jump to top
+  }, [location.pathname]);
 
   return (
     <LanguageProvider>

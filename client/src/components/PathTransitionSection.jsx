@@ -66,8 +66,8 @@ export default function PathTransitionSection() {
   const trianglesY = useTransform(scrollYProgress, [0, 0.8], [0, 80]);
 
   // Stripes fade + slide in, then stay visible
-  const stripesOpacity = useTransform(scrollYProgress, [0.15, 0.45], [0, 1]);
-  const stripesX = useTransform(scrollYProgress, [0.15, 0.45], [-80, 0]);
+  const stripesOpacity = useTransform(scrollYProgress, [0.2, 0.8], [0, 1]);
+  const stripesX       = useTransform(scrollYProgress, [0.2, 0.8], [-20, 0]);
 
   // Stripes grow and then keep full height
   const stripe1Height = useTransform(scrollYProgress, [0.2, 0.8], [16, 80]);
