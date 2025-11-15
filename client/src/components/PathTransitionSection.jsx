@@ -11,8 +11,8 @@ const PATHS = [
   {
     id: "WISDOM",
     label: "Wisdom",
-    color: "bg-amber-600",
-    textColor: "text-amber-600",
+    color: "bg-highlight",
+    textColor: "text-highlight/80",
     icon: Phone,
     description:
       "Support first contact, crisis information, outreach, and guidance.",
@@ -20,8 +20,8 @@ const PATHS = [
   {
     id: "COURAGE",
     label: "Courage",
-    color: "bg-rose-600",
-    textColor: "text-rose-600",
+    color: "bg-muted",
+    textColor: "text-muted/80",
     icon: Heart,
     description:
       "Help survivors rebuild through counseling and long-term support.",
@@ -29,8 +29,8 @@ const PATHS = [
   {
     id: "PROTECTION",
     label: "Protection",
-    color: "bg-blue-600",
-    textColor: "text-blue-600",
+    color: "bg-secondary",
+    textColor: "text-secondary/80",
     icon: Shield,
     description:
       "Fund emergency shelter nights and safe housing for families.",
@@ -38,8 +38,8 @@ const PATHS = [
   {
     id: "SERVICE",
     label: "Service",
-    color: "bg-emerald-600",
-    textColor: "text-emerald-600",
+    color: "bg-accent",
+    textColor: "text-accent/80",
     icon: HandHeart,
     description:
       "Volunteer your time to support shelters, events, and families.",
@@ -94,8 +94,9 @@ export default function PathTransitionSection() {
         </p>
         <Button
           size="lg"
+          variant="unstyled"
           onClick={scrollToWaysToHelp}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-5 rounded-full shadow-lg flex items-center gap-2"
+          className="bg-highlight/70 hover:bg-highlight/90 text-white px-8 py-5 rounded-full shadow-lg flex items-center gap-2 shadow-highlight-glow hover:shadow-highlight-glow-strong"
         >
           Donate
           {/* <ArrowRight className="w-5 h-5" /> */}
@@ -132,12 +133,12 @@ export default function PathTransitionSection() {
             <div className="absolute inset-x-0 top-8 flex flex-col items-center gap-3 -translate-x-[20px] translate-y-[430px]">
             {/* Icon circle */}
             <div className="flex items-center justify-center w-14 h-14 rounded-full bg-white/90 shadow-sm">
-                <Phone className="w-7 h-7 text-amber-600" />
+                <Phone className="w-7 h-7 text-highlight" />
             </div>
 
             {/* Text box */}
             <div className="px-4 py-1 rounded-full bg-white/90 shadow-sm">
-                <span className="text-sm font-semibold text-amber-600">
+                <span className="text-sm font-semibold text-highlight">
                 Wisdom
                 </span>
             </div>
@@ -164,12 +165,12 @@ export default function PathTransitionSection() {
             <div className="absolute inset-x-0 top-8 flex flex-col items-center gap-3">
             {/* Icon circle */}
             <div className="flex items-center justify-center w-14 h-14 rounded-full bg-white/90 shadow-sm">
-                <Heart className="w-7 h-7 text-rose-600" />
+                <Heart className="w-7 h-7 text-muted" />
             </div>
 
             {/* Text box */}
             <div className="px-4 py-1 rounded-full bg-white/90 shadow-sm">
-                <span className="text-sm font-semibold text-rose-600">
+                <span className="text-sm font-semibold text-muted">
                 Courage
                 </span>
             </div>
@@ -197,12 +198,12 @@ export default function PathTransitionSection() {
             <div className="absolute inset-x-0 top-8 flex flex-col items-center gap-3 translate-x-[20px] translate-y-[430px]">
             {/* Icon circle */}
             <div className="flex items-center justify-center w-14 h-14 rounded-full bg-white/90 shadow-sm">
-                <Shield className="w-7 h-7 text-blue-600" />
+                <Shield className="w-7 h-7 text-secondary" />
             </div>
 
             {/* Text box */}
             <div className="px-4 py-1 rounded-full bg-white/90 shadow-sm">
-                <span className="text-sm font-semibold text-blue-600">
+                <span className="text-sm font-semibold text-secondary">
                 Protection
                 </span>
             </div>
@@ -254,7 +255,7 @@ export default function PathTransitionSection() {
                 <p className="mt-1 text-[13px] text-gray-600 leading-snug">
                     {path.description}
                 </p>
-                <p className="mt-2 text-[13px] font-medium text-indigo-600">
+                <p className="mt-2 text-[13px] font-medium text-foreground">
                     Click to view this path →
                 </p>
                 </div>
