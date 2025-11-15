@@ -3,7 +3,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import dataService from '../services/dataService';
 import { Card, CardContent } from '../components/ui/Card';
 import { Trophy, Crown, Shield, Phone, Heart, Home } from 'lucide-react';
-import { color, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const PATH_ICONS = {
   WISDOM: Phone,

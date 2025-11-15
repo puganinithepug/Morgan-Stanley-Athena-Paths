@@ -5,7 +5,7 @@ import dataService from "../services/dataService";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Card, CardContent } from "../components/ui/Card";
-import { ArrowRight, Heart, Shield, Phone, Home } from "lucide-react";
+import { ArrowRight, Heart, Shield, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import ImpactMetrics from "../components/ImpactMetrics";
