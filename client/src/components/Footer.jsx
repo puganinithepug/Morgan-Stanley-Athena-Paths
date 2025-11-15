@@ -8,7 +8,7 @@ export default function Footer() {
 
   return (
     <footer>
-      <div className="bg-gradient-to-br from-gray-900 via-purple-900 to-gray-800 text-white">
+      <div className="bg-primary-dark text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
@@ -62,7 +62,7 @@ export default function Footer() {
                   <div className="font-bold text-lg">Shield of Athena</div>
                 </div>
               </div>
-              <p className="text-gray-300 text-sm leading-relaxed">
+              <p className="text-white/80 text-sm leading-relaxed">
                 {language === 'fr'
                   ? 'Offrant sécurité, guérison et espoir aux femmes et enfants fuyant la violence familiale depuis plus de 40 ans.'
                   : 'Providing safety, healing, and hope to women and children fleeing family violence for over 40 years.'}
@@ -75,27 +75,27 @@ export default function Footer() {
               </h3>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link to="/landing" className="text-gray-300 hover:text-white transition-colors">
+                  <Link to="/landing" className="text-white/80 hover:text-white transition-colors">
                     {language === 'fr' ? 'Accueil' : 'Home'}
                   </Link>
                 </li>
                 <li>
-                  <Link to="/services" className="text-gray-300 hover:text-white transition-colors">
+                  <Link to="/services" className="text-white/80 hover:text-white transition-colors">
                     {language === 'fr' ? 'Nos Services' : 'Our Services'}
                   </Link>
                 </li>
                 <li>
-                  <Link to="/find-your-path" className="text-gray-300 hover:text-white transition-colors">
+                  <Link to="/find-your-path" className="text-white/80 hover:text-white transition-colors">
                     {language === 'fr' ? 'Trouvez Votre Parcours' : 'Find Your Path'}
                   </Link>
                 </li>
                 <li>
-                  <Link to="/leaderboard" className="text-gray-300 hover:text-white transition-colors">
+                  <Link to="/leaderboard" className="text-white/80 hover:text-white transition-colors">
                     {language === 'fr' ? 'Impact Communautaire' : 'Community Impact'}
                   </Link>
                 </li>
                 <li>
-                  <Link to="/support-wall" className="text-gray-300 hover:text-white transition-colors">
+                  <Link to="/support-wall" className="text-white/80 hover:text-white transition-colors">
                     {language === 'fr' ? 'Mur d\'Espoir' : 'Hope Wall'}
                   </Link>
                 </li>
@@ -111,14 +111,14 @@ export default function Footer() {
                     <div className="font-semibold text-white mb-1">
                       {language === 'fr' ? 'Ligne de Crise 24/7' : '24/7 Crisis Line'}
                     </div>
-                    <a href="tel:514-274-8117" className="text-gray-300 hover:text-white">
+                    <a href="tel:514-274-8117" className="text-white/80 hover:text-white">
                       514-274-8117
                     </a>
                   </div>
                 </li>
                 <li className="flex items-start gap-2">
                   <MapPin className="w-4 h-4 text-white mt-1 flex-shrink-0" />
-                  <div className="text-gray-300">
+                  <div className="text-white/80">
                     Montreal, Quebec<br />
                     {language === 'fr' ? 'Services multilingues' : 'Multilingual services'}
                   </div>
@@ -130,7 +130,7 @@ export default function Footer() {
               <h3 className="font-semibold mb-4 text-red-400">
                 {language === 'fr' ? 'Besoin d\'aide?' : 'Need Help?'}
               </h3>
-              <p className="text-gray-300 text-sm mb-4">
+              <p className="text-white/80 text-sm mb-4">
                 {language === 'fr'
                   ? 'Si vous êtes en danger, appelez notre ligne de crise immédiatement.'
                   : 'If you are in danger, call our crisis line immediately.'}
@@ -145,7 +145,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-400">
+          <div className="border-t border-white/15 mt-8 pt-8 text-center text-sm text-gray-400">
             <p className="flex items-center justify-center gap-2 mb-2">
               {language === 'fr' ? 'Fait avec' : 'Made with'} <Heart className="w-4 h-4 text-red-400" /> {language === 'fr' ? 'pour Shield of Athena' : 'for Shield of Athena'}
             </p>

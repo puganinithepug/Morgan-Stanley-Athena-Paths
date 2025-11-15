@@ -14,7 +14,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <header className="fixed top-0 inset-x-0 z-50 bg-background border-b border-secondary/2">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/landing" className="flex items-center gap-3 group">
@@ -66,7 +66,7 @@ export default function Header() {
               </svg>
             </div>
             <div>
-              <div className="font-bold text-xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <div className="font-bold text-xl bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent">
                 Shield of Athena
               </div>
               <div className="text-xs text-gray-600 font-medium">Athena Paths</div>
@@ -74,40 +74,54 @@ export default function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
-            <Link to="/landing" className="text-gray-700 hover:text-blue-600 transition-colors font-medium text-sm">
+            <Link to="/landing" className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm">
               {t('nav.home')}
             </Link>
-            <Link to="/services" className="text-gray-700 hover:text-blue-600 transition-colors font-medium text-sm">
+            <Link to="/services" className="text-foreground/80 hover:text-primarytransition-colors font-medium text-sm">
               {t('nav.services')}
             </Link>
-            <Link to="/find-your-path" className="text-gray-700 hover:text-blue-600 transition-colors font-medium text-sm">
+            <Link to="/find-your-path" className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm">
               {t('nav.findPath')}
             </Link>
-            <Link to="/leaderboard" className="text-gray-700 hover:text-blue-600 transition-colors font-medium text-sm">
+            <Link to="/leaderboard" className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm">
               {t('nav.leaderboard')}
             </Link>
             {user && (
-              <Link to="/profile" className="text-gray-700 hover:text-blue-600 transition-colors font-medium text-sm">
+              <Link to="/profile" className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm">
                 {t('nav.profile')}
               </Link>
             )}
-            <Link to="/support-wall" className="text-gray-700 hover:text-blue-600 transition-colors font-medium text-sm">
+            <Link to="/support-wall" className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm">
               {t('nav.supportWall')}
             </Link>
           </nav>
 
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" onClick={toggleLanguage} className="flex items-center gap-1">
+                    <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleLanguage}
+              className="flex items-center gap-1 text-foreground/80 hover:text-primary"
+            >
               <Globe className="w-4 h-4" />
               <span className="uppercase font-semibold">{language}</span>
             </Button>
-            
+
             {user ? (
-              <Button variant="outline" size="sm" onClick={logout}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={logout}
+                className="border-secondary/60 text-foreground/80 hover:border-primary hover:text-primary"
+              >
                 {t('common.logout')}
               </Button>
             ) : (
-              <Button size="sm" onClick={handleLogin} className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Button
+                size="sm"
+                onClick={handleLogin}
+                className="bg-primary text-white hover:bg-primary/90 font-semibold"
+              >
                 {t('common.login')}
               </Button>
             )}

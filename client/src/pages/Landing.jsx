@@ -120,13 +120,25 @@ export default function Landing() {
   };
 
   const pathConfig = {
-    WISDOM: { icon: Phone, color: 'bg-amber-600', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=600&fit=crop' },
-    COURAGE: { icon: Heart, color: 'bg-rose-600', image: 'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop' },
-    PROTECTION: { icon: Home, color: 'bg-blue-600', image: 'https://images.unsplash.com/photo-1560264280-88b68371db39?w=800&h=600&fit=crop' }
+    WISDOM: {
+      icon: Phone,
+      color: 'bg-secondary', // calm blue
+      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=600&fit=crop',
+    },
+    COURAGE: {
+      icon: Heart,
+      color: 'bg-muted', // warm brown
+      image: 'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop',
+    },
+    PROTECTION: {
+      icon: Home,
+      color: 'bg-primary', // brand purple
+      image: 'https://images.unsplash.com/photo-1560264280-88b68371db39?w=800&h=600&fit=crop',
+    },
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background text-foreground">
       <FirstTimeVisitorModal
         isOpen={showWelcomeModal}
         onClose={() => {
@@ -176,9 +188,11 @@ export default function Landing() {
             transition={{ duration: 0.8, delay: 0.6 }}
           >
             <Button
+              variant='unstyled'
               size="lg"
               onClick={() => document.getElementById('ways-to-help')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-white !text-gray-900 hover:bg-gray-100 text-lg px-8 py-6"
+              // className="bg-highlight !text-gray-900 hover:bg-white hover:shadow-highlight text-lg px-8 py-6"
+              className="relative overflow-hidden bg-highlight text-foreground text-lg px-8 py-6 font-semibold rounded-full shadow-[0_0_25px_rgba(210,194,150,0.65)] hover:shadow-[0_0_35px_rgba(210,194,150,0.9)] hover:bg-highlight/95 hover:scale-[1.03] transition-all duration-500 ease-out"
             >
               {t('hero.cta')}
               <ArrowRight className="ml-2 w-5 h-5" />
@@ -186,14 +200,13 @@ export default function Landing() {
           </motion.div>
         </div>
       </section>
-
-      <section id="ways-to-help" className="py-20 bg-gray-50">
+      <section id="ways-to-help" className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-foreground mb-4">
               Choose How You Want to Help
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
               Every contribution directly supports women and children on their journey to safety and healing
             </p>
           </div>
@@ -228,7 +241,7 @@ export default function Landing() {
                     </div>
                   
                     <CardContent className="p-6">
-                      <p className="text-gray-600 mb-6 leading-relaxed">
+                      <p className="text-foreground/70 mb-6 leading-relaxed">
                         {t(`paths.${path.toLowerCase()}.desc`)}
                       </p>
 
@@ -237,7 +250,7 @@ export default function Landing() {
                           {pathItems.slice(0, 2).map(item => (
                             <div key={item.id} className="mb-4">
                               <div className="flex justify-between items-start mb-2">
-                                <span className="text-sm font-medium text-gray-700">
+                                <span className="text-sm font-medium text-foreground/80">
                                   {language === 'fr' ? item.title_fr : item.title_en}
                                 </span>
                                 <span className="text-lg font-bold text-gray-900">
@@ -245,22 +258,23 @@ export default function Landing() {
                                 </span>
                               </div>
                               <Button
+                                variant="unstyled"
                                 onClick={() => handleDonate(item)}
                                 disabled={processing}
-                                className={`w-full ${config.color} hover:opacity-90 text-white`}
+                                className={`w-full ${config.color} text-white shadow-md hover:brightness-80 hover:shadow-[0_0_20px_rgba(111,106,168,0.6)] hover:scale-[1.02]  transition-all duration-200`}
                               >
                                 Donate ${item.suggested_amount}
                               </Button>
                             </div>
                           ))}
 
-                          <div className="pt-4 border-t">
-                            <label className="text-sm font-medium text-gray-700 block mb-2">
+                          <div className="pt-4 border-t border-foreground/10">
+                            <label className="text-sm font-medium text-foreground/80 block mb-2">
                               Or choose your amount:
                             </label>
                             <div className="flex gap-2">
                               <div className="relative flex-1">
-                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/50">$</span>
                                 <Input
                                   type="number"
                                   placeholder="0"
@@ -269,7 +283,7 @@ export default function Landing() {
                                     setDonationAmount(e.target.value);
                                     setSelectedPath(path);
                                   }}
-                                  className="pl-7"
+                                  className="pl-7 border-foreground/20 focus:border-primary focus:ring-primary/30"
                                   min="1"
                                 />
                               </div>
@@ -293,7 +307,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -302,40 +316,40 @@ export default function Landing() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <div className="inline-flex p-3 rounded-full bg-indigo-100 mb-4">
-                <Shield className="w-8 h-8 text-indigo-600" />
+              <div className="inline-flex p-3 rounded-full bg-primary/10 mb-4">
+                <Shield className="w-8 h-8 text-primary" />
               </div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">
+              <h2 className="text-4xl font-bold text-foreground mb-6">
                 {language === 'fr' ? 'À propos de Shield of Athena' : 'About Shield of Athena'}
               </h2>
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+              <p className="text-lg text-foreground/70 mb-6 leading-relaxed">
                 {language === 'fr'
                   ? 'Depuis plus de 40 ans, Shield of Athena offre un refuge sûr et des services complets aux femmes et aux enfants fuyant la violence familiale à Montréal.'
                   : 'For over 40 years, Shield of Athena has provided safe shelter and comprehensive services to women and children fleeing family violence in Montreal.'}
               </p>
               
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg p-4 border-2 border-indigo-200">
-                  <div className="text-3xl font-bold text-indigo-600 mb-1">5,000+</div>
-                  <div className="text-sm text-gray-600">
+                <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-4 border border-primary/30">
+                  <div className="text-3xl font-bold text-primary mb-1">5,000+</div>
+                  <div className="text-sm text-foreground/70">
                     {language === 'fr' ? 'Femmes et enfants aidés/an' : 'Women & children helped/year'}
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-rose-50 to-pink-50 rounded-lg p-4 border-2 border-rose-200">
-                  <div className="text-3xl font-bold text-rose-600 mb-1">24/7</div>
-                  <div className="text-sm text-gray-600">
+                <div className="bg-gradient-to-br from-muted/10 to-muted/5 rounded-lg p-4 border border-muted/40">
+                  <div className="text-3xl font-bold text-muted mb-1">24/7</div>
+                  <div className="text-sm text-foreground/70">
                     {language === 'fr' ? 'Ligne de crise' : 'Crisis line'}
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg p-4 border-2 border-amber-200">
-                  <div className="text-3xl font-bold text-amber-600 mb-1">40+</div>
-                  <div className="text-sm text-gray-600">
+                <div className="bg-gradient-to-br from-highlight/20 to-highlight/10 rounded-lg p-4 border border-highlight/40">
+                  <div className="text-3xl font-bold text-highlight mb-1">40+</div>
+                  <div className="text-sm text-foreground/70">
                     {language === 'fr' ? 'Années de service' : 'Years of service'}
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-4 border-2 border-blue-200">
-                  <div className="text-3xl font-bold text-blue-600 mb-1">100%</div>
-                  <div className="text-sm text-gray-600">
+                <div className="bg-gradient-to-br from-accent/20 to-accent/10 rounded-lg p-4 border border-accent/50">
+                  <div className="text-3xl font-bold text-secondary mb-1">100%</div>
+                  <div className="text-sm text-foreground/70">
                     {language === 'fr' ? 'Services gratuits' : 'Free services'}
                   </div>
                 </div>
@@ -343,13 +357,20 @@ export default function Landing() {
 
               <div className="flex flex-wrap gap-4">
                 <Link to="/services">
-                  <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                  <Button
+                    size="lg"
+                    className="shadow-md hover:shadow-[0_0_20px_rgba(111,106,168,0.6)] hover:scale-[1.02] transition-all duration-200"
+                  >
                     {language === 'fr' ? 'Découvrir Nos Services' : 'Discover Our Services'}
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </Link>
                 <Link to="/find-your-path">
-                  <Button size="lg" variant="outline" className="border-indigo-300 text-indigo-700 hover:bg-indigo-50">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-primary/40 text-primary hover:border-primary hover:text-primary-dark"
+                  >
                     {language === 'fr' ? 'Commencer à Aider' : 'Start Helping'}
                     <Heart className="ml-2 w-5 h-5" />
                   </Button>
@@ -399,16 +420,16 @@ export default function Landing() {
         document.getElementById('ways-to-help')?.scrollIntoView({ behavior: 'smooth' });
       }} />
 
-      <section className="py-20 bg-gradient-to-br from-gray-900 via-purple-900 to-gray-800 text-white">
+      <section className="py-20 bg-gradient-to-br from-foreground via-primary-dark to-primary text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, type: "spring" }}
-            className="inline-flex p-4 rounded-full bg-white/10 mb-8"
+            className="inline-flex p-4 rounded-full bg-white/10 border border-highlight/40 mb-8"
           >
-            <Heart className="w-10 h-10" />
+            <Heart className="w-10 h-10 text-highlight" />
           </motion.div>
           <motion.blockquote
             initial={{ opacity: 0, y: 20 }}
@@ -425,7 +446,7 @@ export default function Landing() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-white/80"
+            className="text-highlight"
           >
             — Shield of Athena Team
           </motion.p>

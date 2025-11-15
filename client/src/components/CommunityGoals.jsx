@@ -20,16 +20,32 @@ export default function CommunityGoals({ onDonate }) {
   };
 
   const pathColors = {
-    WISDOM: { bg: 'from-amber-500 to-orange-500', light: 'bg-amber-50', text: 'text-amber-700' },
-    COURAGE: { bg: 'from-rose-500 to-pink-500', light: 'bg-rose-50', text: 'text-rose-700' },
-    PROTECTION: { bg: 'from-blue-500 to-cyan-500', light: 'bg-blue-50', text: 'text-blue-700' },
-    GENERAL: { bg: 'from-purple-500 to-indigo-500', light: 'bg-purple-50', text: 'text-purple-700' }
+    WISDOM: {
+      // warm, hopeful
+      bg: 'from-highlight to-primary',
+      text: 'text-highlight',
+    },
+    COURAGE: {
+      // stronger, heart-forward
+      bg: 'from-rose-500 to-primary',
+      text: 'text-rose-500',
+    },
+    PROTECTION: {
+      // calm but vivid
+      bg: 'from-secondary to-primary-light',
+      text: 'text-secondary',
+    },
+    GENERAL: {
+      // classic brand gradient
+      bg: 'from-primary-dark to-primary-light',
+      text: 'text-primary',
+    },
   };
 
   if (goals.length === 0) return null;
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+    <section className="py-20 bg-gradient-to-br from-background via-background to-primary/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -37,14 +53,14 @@ export default function CommunityGoals({ onDonate }) {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-100 to-indigo-100 px-4 py-2 rounded-full mb-4">
-            <Target className="w-5 h-5 text-purple-600" />
-            <span className="text-purple-900 font-semibold">Community Fund Goals</span>
+          <div className="inline-flex items-center gap-2 bg-primary/15 px-4 py-2 rounded-full mb-4">
+            <Target className="w-5 h-5 text-primary-dark" />
+            <span className="text-primary-dark font-semibold">Community Fund Goals</span>
           </div>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl font-bold text-foreground-900 mb-4">
             Together We Can Achieve More
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-foreground/70 max-w-2xl mx-auto">
             Join our community in reaching specific fundraising goals that directly fund life-changing programs
           </p>
         </motion.div>
@@ -66,7 +82,8 @@ export default function CommunityGoals({ onDonate }) {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
               >
-                <Card className="h-full hover:shadow-xl transition-all duration-300 overflow-hidden">
+                {/* <Card className="h-full hover:shadow-xl transition-all duration-300 overflow-hidden"> */}
+                <Card className="h-full hover:shadow-xl hover:-translate-y-1.5 border border-transparent hover:border-primary/30 transition-all duration-300 overflow-hidden">
                   <div className={`bg-gradient-to-r ${colors.bg} p-6 text-white relative overflow-hidden`}>
                     <div className="relative z-10">
                       <div className="flex items-start justify-between mb-3">
@@ -112,13 +129,13 @@ export default function CommunityGoals({ onDonate }) {
                         <Users className="w-4 h-4" />
                         <span>{Math.floor(goal.current_amount / 50)} supporters</span>
                       </div>
-                      <Button
+                     <Button
                         onClick={() => onDonate && onDonate(goal)}
-                        className={`bg-gradient-to-r ${colors.bg} hover:opacity-90 text-white`}
+                        className={`bg-gradient-to-r ${colors.bg} hover:brightness-110 hover:shadow-md text-white`}
                         size="sm"
                       >
                         Contribute
-                      </Button>
+                    </Button> 
                     </div>
                   </CardContent>
                 </Card>

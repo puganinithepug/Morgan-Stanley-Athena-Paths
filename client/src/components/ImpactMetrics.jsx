@@ -68,51 +68,51 @@ export default function ImpactMetrics() {
   }, [donations]);
 
   const stats = [
-    { 
-      icon: Users, 
-      label: language === 'fr' ? 'Familles Aidées' : 'Families Helped', 
+    {
+      icon: Users,
+      label: language === 'fr' ? 'Familles Aidées' : 'Families Helped',
       value: metrics.families,
-      color: 'from-purple-500 to-indigo-500'
+      color: 'from-primary-dark to-primary', // strong brand gradient
     },
-    { 
-      icon: Home, 
-      label: language === 'fr' ? 'Nuits d\'Hébergement' : 'Shelter Nights', 
+    {
+      icon: Home,
+      label: language === 'fr' ? "Nuits d'Hébergement" : 'Shelter Nights',
       value: metrics.shelter,
-      color: 'from-blue-500 to-cyan-500'
+      color: 'from-secondary to-primary-light', // blue → light lavender
     },
-    { 
-      icon: Heart, 
-      label: language === 'fr' ? 'Heures de Counseling' : 'Counseling Hours', 
+    {
+      icon: Heart,
+      label: language === 'fr' ? 'Heures de Counseling' : 'Counseling Hours',
       value: metrics.counseling,
-      color: 'from-pink-500 to-rose-500'
+      color: 'from-rose-500 to-primary', // allow one warmer gradient
     },
-    { 
-      icon: Baby, 
-      label: language === 'fr' ? 'Enfants Soutenus' : 'Children Supported', 
+    {
+      icon: Baby,
+      label: language === 'fr' ? 'Enfants Soutenus' : 'Children Supported',
       value: metrics.children,
-      color: 'from-amber-500 to-orange-500'
+      color: 'from-highlight to-primary', // yellow → purple
     },
-    { 
-      icon: Phone, 
-      label: language === 'fr' ? 'Appels de Crise' : 'Crisis Calls', 
+    {
+      icon: Phone,
+      label: language === 'fr' ? 'Appels de Crise' : 'Crisis Calls',
       value: metrics.crisis,
-      color: 'from-green-500 to-emerald-500'
-    }
+      color: 'from-secondary to-primary-dark', // blue → deep purple
+    },
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+    <section className="py-20 bg-gradient-to-br from-highlight/80 via-primary/80 to-primary-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl font-bold text-foreground mb-4">
             {language === 'fr' ? 'L\'Impact de Notre Communauté' : 'Our Community\'s Impact'}
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-2">
+          <p className="text-lg text-foreground/70 max-w-2xl mx-auto mb-2">
             {language === 'fr' 
               ? 'Ensemble, nous créons un changement durable pour les femmes et les enfants'
               : 'Together, we\'re creating lasting change for women and children'}
           </p>
-          <p className="text-sm text-gray-500 max-w-2xl mx-auto">
+          <p className="text-sm text-foreground/60 max-w-2xl mx-auto">
             {language === 'fr' 
               ? 'Impact en temps réel basé sur les dons de la communauté'
               : 'Real-time impact based on community donations'}
@@ -130,24 +130,24 @@ export default function ImpactMetrics() {
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
               >
-                <Card className="text-center hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm border-2 border-indigo-100">
+                <Card className="text-center hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 bg-background/90 backdrop-blur-sm border border-primary/10">
                   <CardContent className="p-6">
                     <motion.div
                       initial={{ scale: 0 }}
                       whileInView={{ scale: 1 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: idx * 0.1 + 0.2, type: "spring" }}
-                      className="inline-flex p-3 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 mb-4"
+                      className="inline-flex p-3 rounded-full bg-gradient-to-br from-primary-light/70 to-primary/70 mb-4"
                     >
-                      <Icon className="w-6 h-6 text-indigo-600" />
+                      <Icon className="w-6 h-6 text-white" />
                     </motion.div>
-                    <div className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-1">
+                    <div className="text-4xl font-bold bg-gradient-to-r from-highlight to-primary-dark bg-clip-text text-transparent mb-1">
                       <AnimatedCounter value={stat.value} duration={2000} />+
                     </div>
-                    <div className="text-sm font-semibold text-gray-900 mb-1">
+                    <div className="text-sm font-semibold text-foreground mb-1">
                       {stat.label}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-foreground/60">
                       {language === 'fr' ? 'de vos dons' : 'from your donations'}
                     </div>
                   </CardContent>
@@ -164,9 +164,9 @@ export default function ImpactMetrics() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mt-12 text-center"
         >
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-3 rounded-full border-2 border-green-200">
+          <div className="inline-flex items-center gap-2 bg-accent/80 px-6 py-3 rounded-full border border-accent">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <p className="text-sm font-semibold text-gray-700">
+            <p className="text-sm font-semibold text-foreground/80">
               {language === 'fr'
                 ? '100% des dons vont directement aux services - Aucuns frais administratifs'
                 : '100% of donations go directly to services - No admin fees'}

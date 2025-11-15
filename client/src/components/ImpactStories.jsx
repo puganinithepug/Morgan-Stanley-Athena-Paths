@@ -13,7 +13,8 @@ const stories = [
     impact: "2 shelter nights funded",
     icon: Home,
     image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=400&h=300&fit=crop",
-    color: "from-blue-500 to-cyan-500"
+    // warm, hopeful: highlight -> primary
+    color: "from-highlight to-primary",
   },
   {
     id: 'story-2',
@@ -21,7 +22,8 @@ const stories = [
     impact: "8 counseling hours funded",
     icon: Flower,
     image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=400&h=300&fit=crop",
-    color: "from-pink-500 to-rose-500"
+    // softer, heart-forward: muted -> primary-light
+    color: "from-muted to-primary-light",
   },
   {
     id: 'story-3',
@@ -29,7 +31,8 @@ const stories = [
     impact: "24 crisis calls answered",
     icon: Phone,
     image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=300&fit=crop",
-    color: "from-amber-500 to-orange-500"
+    // urgent but on-brand: secondary -> primary-dark
+    color: "from-secondary to-primary-dark",
   },
   {
     id: 'story-4',
@@ -37,7 +40,8 @@ const stories = [
     impact: "12 children supported",
     icon: Users,
     image: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=300&fit=crop",
-    color: "from-purple-500 to-indigo-500"
+    // classic brand gradient: primary-dark -> primary-light
+    color: "from-primary-dark to-primary-light",
   },
   {
     id: 'story-5',
@@ -45,8 +49,9 @@ const stories = [
     impact: "45 families guided to resources",
     icon: Shield,
     image: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=400&h=300&fit=crop",
-    color: "from-green-500 to-emerald-500"
-  }
+    // supportive, calm: accent -> primary
+    color: "from-accent to-primary",
+  },
 ];
 
 export default function ImpactStories() {
@@ -160,10 +165,10 @@ export default function ImpactStories() {
                           onClick={() => handleLike(currentStoryData.id)}
                           variant="ghost"
                           className={`text-white hover:bg-white/20 flex items-center gap-2 ${
-                            isLiked ? 'bg-white/20' : ''
+                            isLiked ? 'bg-primary/40' : ''
                           }`}
                         >
-                          <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+                          <Heart className={`w-5 h-5 ${isLiked ? 'fill-current text-highlight' : ''}`} />
                           <span>{likes}</span>
                         </Button>
                       </motion.div>

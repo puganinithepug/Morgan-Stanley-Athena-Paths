@@ -19,7 +19,7 @@ export default function FirstTimeVisitorModal({ isOpen = false, onClose = () => 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-foreground/70 backdrop-blur-sm z-50"
             onClick={handleClose}
           />
 
@@ -29,11 +29,11 @@ export default function FirstTimeVisitorModal({ isOpen = false, onClose = () => 
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ type: "spring", duration: 0.5 }}
-              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl relative"
+              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-background rounded-2xl shadow-2xl relative"
             >
               <button
                 onClick={handleClose}
-                className="absolute top-4 right-4 z-10 text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute top-4 right-4 z-10 text-foreground/60 hover:text-foreground transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -48,7 +48,7 @@ export default function FirstTimeVisitorModal({ isOpen = false, onClose = () => 
                       stiffness: 200,
                       delay: 0.2
                     }}
-                    className="inline-flex p-4 rounded-full bg-gradient-to-br from-purple-100 to-indigo-100 mb-4 relative"
+                    className="inline-flex p-4 rounded-full bg-gradient-to-br from-primary/30 to-primary-dark/30 mb-4 relative"
                   >
                     <svg 
                       width="48" 
@@ -114,7 +114,7 @@ export default function FirstTimeVisitorModal({ isOpen = false, onClose = () => 
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
-                    className="text-3xl font-bold text-gray-900 mb-3"
+                    className="text-3xl font-bold text-foreground mb-3"
                   >
                     {language === 'fr' ? 'Bienvenue sur Athena Paths!' : 'Welcome to Athena Paths!'} 👋
                   </motion.h2>
@@ -123,7 +123,7 @@ export default function FirstTimeVisitorModal({ isOpen = false, onClose = () => 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.4 }}
-                    className="text-gray-600 text-base"
+                    className="text-foreground/70 text-base"
                   >
                     {language === 'fr'
                       ? 'Est-ce votre première visite? Répondez à un quiz rapide pour découvrir quel parcours résonne le plus avec vos valeurs.'
@@ -144,7 +144,7 @@ export default function FirstTimeVisitorModal({ isOpen = false, onClose = () => 
                         window.location.href = '/find-your-path';
                       }, 300);
                     }}
-                    className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3"
+                    className="flex-1 bg-gradient-to-r from-primary-dark to-primary hover:from-primary hover:to-primary-light text-white hover:text-foreground py-3"
                   >
                     {language === 'fr' ? 'Oui, commençons!' : 'Yes, let\'s start!'}
                     <ArrowRight className="ml-2 w-4 h-4" />
@@ -152,7 +152,7 @@ export default function FirstTimeVisitorModal({ isOpen = false, onClose = () => 
                   <Button
                     onClick={handleClose}
                     variant="outline"
-                    className="border-gray-300"
+                    className="border-foreground/20 text-foreground/80 hover:border-primary hover:text-primary"
                   >
                     {language === 'fr' ? 'Non merci, explorer' : 'No thanks, explore'}
                   </Button>
@@ -162,7 +162,7 @@ export default function FirstTimeVisitorModal({ isOpen = false, onClose = () => 
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.6 }}
-                  className="text-center text-sm text-gray-500 flex items-center justify-center gap-1"
+                  className="text-center text-sm text-foreground/60 flex items-center justify-center gap-1"
                 >
                   <Clock className="w-4 h-4" />
                   {language === 'fr' ? 'Prend environ 1 minute' : 'Takes about 1 minute'}
