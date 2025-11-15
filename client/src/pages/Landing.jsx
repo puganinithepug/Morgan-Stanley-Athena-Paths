@@ -175,7 +175,12 @@ export default function Landing() {
     },
     SERVICE: {
       icon: Clock,
-      color: "bg-accent", // mint color
+      color: "bg-gradient-to-br from-accent/20 to-accent/10", // mint color
+      border: 'border-accent/50',
+      iconColor: 'text-accent',
+      iconBg: 'bg-accent/30',
+      shadowColor: 'shadow-accent-glow',
+      hoverColor: 'hover:shadow-accent-glow-strong',
       image: "https://images.unsplash.com/photo-1543269865-cbf427effbad?w=800&h=600&fit=crop",
     },
   };
@@ -297,7 +302,7 @@ export default function Landing() {
                     </div>
 
                     <CardContent className="p-6 flex-1 flex flex-col">
-                      <p className="text-foreground/70 mb-6 leading-relaxed flex-1 min-h-[80px]">
+                      <p className="text-foreground/70 mt-6 mb-3 leading-relaxed flex-1 min-h-[80px]">
                         {t(`paths.${path.toLowerCase()}.desc`)}
                       </p>
 
@@ -307,16 +312,16 @@ export default function Landing() {
                         <div className="mb-4">
                           <div className="flex justify-between items-start mb-2">
                             <span className="text-sm font-medium text-foreground/80">
-                              One Hour Volunteer Session
+                              Volunteer Session
                             </span>
-                            <span className="text-lg font-bold text-highlight">
+                            <span className="text-lg font-bold text-foreground/80">
                               1 hour
                             </span>
                           </div>
                           <Button
                             variant="unstyled"
                             onClick={() => handleVolunteer(1)}
-                            className={`w-full ${config.color} text-white shadow-md hover:brightness-80 hover:shadow-[0_0_20px_rgba(189,209,211,0.6)] hover:scale-[1.02] transition-all duration-200`}
+                            className={`w-full ${config.color} text-foreground/70 shadow-md hover:brightness-80 ${config.shadowColor} ${config.hoverColor} transition-all hover:scale-[1.02] border-2 ${config.border}  transition-all duration-200`}
                           >
                             Volunteer 1 Hour
                           </Button>
@@ -326,16 +331,16 @@ export default function Landing() {
                         <div className="mb-4">
                           <div className="flex justify-between items-start mb-2">
                             <span className="text-sm font-medium text-foreground/80">
-                              Three Hour Volunteer Session
+                              Volunteer Session
                             </span>
-                            <span className="text-lg font-bold text-highlight">
-                              3 Hours
+                            <span className="text-lg font-bold text-foreground/80">
+                              3 hours
                             </span>
                           </div>
                           <Button
                             variant="unstyled"
                             onClick={() => handleVolunteer(3)}
-                            className={`w-full ${config.color} text-white shadow-md hover:brightness-80 hover:shadow-[0_0_20px_rgba(189,209,211,0.6)] hover:scale-[1.02] transition-all duration-200`}
+                            className={`w-full ${config.color} text-foreground/70 shadow-md hover:brightness-80 ${config.shadowColor} ${config.hoverColor} transition-all hover:scale-[1.02] border-2 ${config.border}  transition-all duration-200`}
                           >
                             Volunteer 3 Hours
                           </Button>
@@ -387,7 +392,7 @@ export default function Landing() {
                                     ? item.title_fr
                                     : item.title_en}
                                 </span>
-                                <span className="text-lg font-bold text-gray-900">
+                                <span className="text-lg font-bold text-foreground/80">
                                   ${item.suggested_amount}
                                 </span>
                               </div>
