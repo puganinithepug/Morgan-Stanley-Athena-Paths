@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Heart, Shield, Phone } from 'lucide-react';
+import { Sparkles, Heart, Shield, Phone, HandHeart } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import FindYourPathQuiz from '../components/FindYourPathQuiz';
 
@@ -48,7 +48,7 @@ export default function FindYourPath() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="grid md:grid-cols-3 gap-6 mb-12"
+          className="grid md:grid-cols-4 gap-6 mb-12"
         >
           <div className="bg-gradient-to-br from-highlight/20 to-highlight/10 border-2 border-highlight/40 rounded-xl p-6 text-center">
             <div className="inline-flex p-3 rounded-full bg-highlight/30 mb-3">
@@ -91,6 +91,21 @@ export default function FindYourPath() {
                 : 'Safe shelter & housing'}
             </p>
           </div>
+
+          <div className="bg-gradient-to-br from-accent/20 to-amber-100/10 border-2 border-accent/40 rounded-xl p-6 text-center">
+            <div className="inline-flex p-3 rounded-full bg-accent/30 mb-3">
+              <HandHeart className="w-8 h-8 text-accent" />
+            </div>
+            <h3 className="font-bold text-foreground mb-2">
+              {language === 'fr' ? 'Service' : 'Service'}
+            </h3>
+            <p className="text-sm text-foreground/70">
+              {language === 'fr'
+                ? 'Bénévolat & soutien pratique'
+                : 'Volunteering & hands-on support'}
+            </p>
+          </div>
+
         </motion.div>
 
         <motion.div

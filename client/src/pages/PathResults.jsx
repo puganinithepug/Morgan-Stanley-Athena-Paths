@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import dataService from '../services/dataService';
 import { Card, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { Phone, Heart, Home, ArrowRight } from 'lucide-react';
+import { Phone, Heart, Home, ArrowRight, HandHeart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import DonationSuccessModal from '../components/DonationSuccessModal';
 import CommunityGoals from '../components/CommunityGoals';
@@ -32,6 +32,13 @@ const PATH_CONFIG = {
     borderColor: 'border-secondary/40',
     textColor: 'text-secondary',
   },
+  SERVICE : {
+    icon: HandHeart,
+    color: 'from-accent to-primary',
+    bgColor: 'bg-accent/15',
+    borderColor: 'border-accent/40',
+    textColor: 'text-accent',
+  }
 };
 
 export default function PathResults() {

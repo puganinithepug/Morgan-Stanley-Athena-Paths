@@ -147,7 +147,7 @@ export default function ImpactStories() {
 
                   <CardContent className="p-8 flex flex-col justify-between">
                     <div>
-                      <Quote className="w-12 h-12 text-white/40 mb-4" />
+                      <Quote className="w-12 h-12 text-white/40 mb-4 mt-6" />
                       <blockquote className="text-xl md:text-2xl font-light leading-relaxed mb-6 italic">
                         "{currentStoryData.text}"
                       </blockquote>

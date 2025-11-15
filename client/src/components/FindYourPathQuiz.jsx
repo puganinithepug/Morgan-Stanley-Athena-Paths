@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
 import { Progress } from './ui/Progress';
-import { Phone, Heart, Home, ArrowRight } from 'lucide-react';
+import { Phone, Heart, Home, ArrowRight, HandHeart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,8 @@ import { useNavigate } from 'react-router-dom';
 const PATH_ICONS = {
   WISDOM: Phone,
   COURAGE: Heart,
-  PROTECTION: Home
+  PROTECTION: Home,
+  SERVICE: HandHeart, 
 };
 
 const PATH_COLORS = {
@@ -28,6 +29,11 @@ const PATH_COLORS = {
     bg: 'from-secondary to-primary-dark',
     light: 'bg-secondary/15',
     border: 'border-secondary/40',
+  },
+   SERVICE: {
+    bg: 'from-accent to-primary',      // to do: change gradient
+    light: 'bg-accent/40',
+    border: 'border-accent/40',
   },
 };
 
@@ -81,6 +87,18 @@ export default function FindYourPathQuiz() {
             fr: 'Financer des nuits d\'hébergement sûres pour que les familles puissent dormir sans peur'
           },
           weights: { PROTECTION: 1 }
+        },
+        {
+          id: 'service',
+          label: {
+            en: 'Supporting behind the scenes so every service stays running',
+            fr: 'Soutenir en coulisses pour que tous les services puissent fonctionner',
+          },
+          description: {
+            en: 'Helping with tasks, logistics, or volunteer shifts that keep the organization strong.',
+            fr: 'Aider aux tâches, à la logistique ou aux quarts de bénévolat qui renforcent l’organisation.',
+          },
+          weights: { SERVICE: 1 }
         }
       ]
     },
@@ -114,6 +132,18 @@ export default function FindYourPathQuiz() {
             fr: 'Savoir que ce soir, une famille a un endroit sûr où rester'
           },
           weights: { PROTECTION: 1 }
+        },
+        {
+          id: 'service_q2',
+          label: {
+            en: 'Showing up physically when support is needed',
+            fr: 'Être présent physiquement quand on a besoin de soutien',
+          },
+          description: {
+            en: 'I feel most helpful when I can offer my time and presence.',
+            fr: 'Je me sens le plus utile lorsque je peux offrir mon temps et ma présence.',
+          },
+          weights: { SERVICE: 1 }
         }
       ]
     },
@@ -147,6 +177,18 @@ export default function FindYourPathQuiz() {
             fr: 'Créer un bouclier: refuge d\'urgence et logement sûr'
           },
           weights: { PROTECTION: 1 }
+        },
+        {
+          id: 'service_q3',
+          label: {
+            en: 'Taking action through volunteering and day-to-day help',
+            fr: 'Agir par le bénévolat et l’aide quotidienne',
+          },
+          description: {
+            en: 'I like contributing through practical tasks, events, or shifts that support the mission.',
+            fr: 'J’aime contribuer par des tâches pratiques, des événements ou des quarts qui soutiennent la mission.',
+          },
+          weights: { SERVICE: 1 }
         }
       ]
     }
@@ -178,7 +220,7 @@ export default function FindYourPathQuiz() {
   };
 
   const computeResult = () => {
-    const scores = { WISDOM: 0, COURAGE: 0, PROTECTION: 0 };
+    const scores = { WISDOM: 0, COURAGE: 0, PROTECTION: 0, SERVICE: 0 };
 
     Object.values(answers).forEach(answer => {
       Object.entries(answer.weights).forEach(([path, weight]) => {

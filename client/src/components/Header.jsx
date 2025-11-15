@@ -114,15 +114,15 @@ export default function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
-            <Link
+            {/* <Link
               to="/landing"
               className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
             >
               {t("nav.home")}
-            </Link>
+            </Link> */}
             <Link
               to="/services"
-              className="text-foreground/80 hover:text-primarytransition-colors font-medium text-sm"
+              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
             >
               {t("nav.services")}
             </Link>
