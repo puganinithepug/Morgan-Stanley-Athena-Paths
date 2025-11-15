@@ -277,7 +277,7 @@ export default function OurServices() {
             <Link to="/find-your-path">
               <Button
                 size="lg"
-                className="bg-highlight text-foreground hover:bg-highlight/95 flex items-center gap-2 shadow-[0_0_18px_rgba(210,194,150,0.6)] hover:shadow-[0_0_24px_rgba(210,194,150,0.9)] hover:scale-[1.02] transition-all"
+                className="bg-highlight text-foreground hover:bg-highlight/95 flex items-center gap-2 shadow-primary-dark-glow hover:shadow-primary-dark-glow border-2 border-primary-dark hover:scale-[1.02] transition-all"
               >
                 {language === 'fr' ? 'Trouvez Votre Parcours' : 'Find Your Path'}
                 <ArrowRight className="w-5 h-5" />

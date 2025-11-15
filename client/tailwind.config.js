@@ -41,6 +41,8 @@ module.exports = {
                 'highlight-glow-strong': '0 0 20px rgba(232,187,64,0.9)',
                 'accent-glow': '0 0 10px rgba(189,209,211,0.6)', // #bdd1d3-ish
                 'accent-glow-strong': '0 0 20px rgba(189,209,211,0.9)',
+                'primary-dark-glow': '0 0 10px rgba(56,54,90,0.6)', // #38365a-ish
+                'primary-dark-glow-strong': '0 0 20px rgba(56,54,90,0.9)',
             },
         },
     },
