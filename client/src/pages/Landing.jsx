@@ -126,19 +126,19 @@ export default function Landing() {
   const pathConfig = {
     WISDOM: {
       icon: Phone,
-      color: "bg-secondary", // calm blue
+      color: "bg-gradient-to-r from-highlight to-secondary", // calm blue
       image:
         "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=600&fit=crop",
     },
     COURAGE: {
       icon: Heart,
-      color: "bg-muted", // warm brown
+      color: "bg-gradient-to-r from-muted to-primary", // warm brown
       image:
         "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop",
     },
     PROTECTION: {
       icon: Home,
-      color: "bg-primary", // brand purple
+      color: "bg-gradient-to-r from-secondary to-primary-dark", // brand purple
       image:
         "https://images.unsplash.com/photo-1560264280-88b68371db39?w=800&h=600&fit=crop",
     },
