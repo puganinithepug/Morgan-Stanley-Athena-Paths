@@ -16,7 +16,7 @@ export default function Footer() {
                 <img
                   src={"/logo.svg"}
                   alt="Shield of Athena"
-                  className="w-7 h-7 flex-shrink-0 object-contain"
+                  className="w-7 h-7 flex-shrink-0 object-contain filter invert brightness-200"
                 />
                 <div>
                   <div className="font-bold text-lg">Shield of Athena</div>
