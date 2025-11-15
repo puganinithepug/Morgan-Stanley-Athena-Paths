@@ -78,7 +78,7 @@ export default function PathTransitionSection() {
             role="button"
             tabIndex={0}
             aria-label="View Wisdom path"
-            className="relative w-[24rem] md:w-[130rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[100px] translate-y-[-40px]"
+            className="relative w-[24rem] md:w-[130rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[100px] translate-y-[-40px] cursor-pointer transition-transform duration-300 hover:scale-105"
             style={{
                 clipPath: "polygon(0% 30%, 21% 0, 100% 100%, 4% 75%)",
                 backgroundImage: `url(${wisdomImg})`,
@@ -97,7 +97,7 @@ export default function PathTransitionSection() {
             role="button"
             tabIndex={0}
             aria-label="View Courage path"
-            className="relative w-[18rem] md:w-[110rem] h-[24rem] md:h-[28rem] shadow-2xl origin-bottom z-10"
+            className="relative w-[18rem] md:w-[110rem] h-[24rem] md:h-[28rem] shadow-2xl origin-bottom z-10 cursor-pointer transition-transform duration-300 hover:scale-105"
             style={{
                 clipPath: "polygon(16% 0%, 84% 0%, 100% 24%, 50% 100%, 2% 24%)",
                 backgroundImage: `url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop')`,
@@ -116,7 +116,7 @@ export default function PathTransitionSection() {
             role="button"
             tabIndex={0}
             aria-label="View Protection path"
-            className="relative w-[24rem] md:w-[130rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[-100px] translate-y-[-40px]"
+            className="relative w-[24rem] md:w-[130rem] h-[30rem] md:h-[45rem] shadow-2xl origin-bottom translate-x-[-100px] translate-y-[-40px] cursor-pointer transition-transform duration-300 hover:scale-105"
             style={{
                 clipPath: "polygon(100% 30%, 79% 0, 0% 100%, 96% 75%)",
                 backgroundImage: `url(${protectionImg})`,
