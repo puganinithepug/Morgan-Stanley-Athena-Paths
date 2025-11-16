@@ -5,7 +5,7 @@ import dataService from "../services/dataService";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Card, CardContent } from "../components/ui/Card";
-import { ArrowRight, Heart, Shield, Phone, Home, Clock, Quote, Users, HandHeart } from "lucide-react";
+import { ArrowRight, Heart, Shield, Phone, Home, Quote, Users, HandHeart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import ImpactMetrics from "../components/ImpactMetrics";
@@ -15,7 +15,6 @@ import DonationSuccessModal from "../components/DonationSuccessModal";
 import CommunityGoals from "../components/CommunityGoals";
 import FirstTimeVisitorModal from "../components/FirstTimeVisitorModal";
 import { checkAndAwardBadges } from "../components/BadgeChecker";
-import VolunteerCard from "../components/VolunteerCard";
 import PathTransitionSection from "../components/PathTransitionSection";
 
 

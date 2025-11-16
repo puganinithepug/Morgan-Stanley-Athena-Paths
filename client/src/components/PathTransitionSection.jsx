@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "./ui/Button";
-import { ArrowRight, Phone, Heart, Shield, HandHeart } from "lucide-react";
+import { Phone, Heart, Shield, HandHeart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";

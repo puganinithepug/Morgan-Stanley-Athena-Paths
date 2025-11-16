@@ -10,6 +10,50 @@
       content="Support women and children fleeing family violence through Shield of Athena's guided giving platform"
     />
     <title>Athena Paths | Shield of Athena</title>
+    <style>
+      /* Hide Google Translate top banner */
+      body > .skiptranslate,
+      .goog-te-banner-frame.skiptranslate,
+      iframe.goog-te-banner-frame {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        position: absolute !important;
+        top: -9999px !important;
+      }
+      
+      body {
+        top: 0 !important;
+        position: relative !important;
+      }
+    </style>
+    <script>
+      // Immediately hide the Google Translate banner when it appears
+      (function() {
+        var style = document.createElement('style');
+        style.innerHTML = 'body > .skiptranslate { display: none !important; } .goog-te-banner-frame { display: none !important; }';
+        document.head.appendChild(style);
+        
+        // Continuously check and hide the banner
+        setInterval(function() {
+          var banner = document.querySelector('body > .skiptranslate');
+          if (banner) {
+            banner.style.display = 'none';
+            banner.style.visibility = 'hidden';
+            banner.style.opacity = '0';
+            banner.style.height = '0';
+            banner.style.position = 'absolute';
+            banner.style.top = '-9999px';
+          }
+          
+          var iframe = document.querySelector('.goog-te-banner-frame');
+          if (iframe) {
+            iframe.style.display = 'none';
+          }
+        }, 100);
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

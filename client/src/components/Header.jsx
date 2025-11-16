@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
-import { useAuth } from "../contexts/AuthContext";
 import { Globe, ChevronDown } from "lucide-react";
 import { Button } from "./ui/Button";
 import GoogleTranslate from "./GoogleTranslate";

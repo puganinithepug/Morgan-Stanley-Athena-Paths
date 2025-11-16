@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 
+// Minimal Google Translate wrapper: load script, expose changeLanguage,
+// and rely on global CSS to hide the default UI.
 const GoogleTranslate = forwardRef((props, ref) => {
   const translateElementRef = useRef(null);
   const scriptLoadedRef = useRef(false);
@@ -27,7 +29,7 @@ const GoogleTranslate = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     changeLanguage,
-    isLoaded: () => scriptLoadedRef.current && !!window.google?.translate
+    isLoaded: () => scriptLoadedRef.current && !!window.google?.translate,
   }));
 
   const initializeTranslate = () => {
@@ -39,7 +41,8 @@ const GoogleTranslate = forwardRef((props, ref) => {
       translateInstanceRef.current = new window.google.translate.TranslateElement(
         {
           pageLanguage: 'en',
-          includedLanguages: 'en,fr,es,de,it,pt,zh-CN,ja,ko,ar,hi,ru,pl,nl,sv,da,fi,no,tr,vi,th,id,ms,uk,cs,ro,hu,el,he,fa,bn,ta,te,ml,kn,gu,pa',
+          includedLanguages:
+            'en,fr,es,de,it,pt,zh-CN,ja,ko,ar,hi,ru,pl,nl,sv,da,fi,no,tr,vi,th,id,ms,uk,cs,ro,hu,el,he,fa,bn,ta,te,ml,kn,gu,pa',
           layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
           autoDisplay: false,
           multilanguagePage: true,
@@ -52,78 +55,27 @@ const GoogleTranslate = forwardRef((props, ref) => {
   };
 
   useEffect(() => {
-    const hideGoogleTranslateElements = () => {
-      const selectors = [
-        '.goog-te-banner-frame',
-        '.goog-te-banner-frame.skiptranslate',
-        '#google_translate_element',
-        '.goog-te-gadget',
-        '.goog-te-gadget-simple',
-        '.goog-te-menu-frame',
-        '.goog-te-menu-value',
-        '.goog-te-combo',
-        '.goog-te-menu',
-        '.goog-te-menu2',
-        '.goog-te-gadget-icon',
-        '.skiptranslate',
-        'iframe.goog-te-banner-frame',
-        'iframe.goog-te-menu-frame',
-        'select.goog-te-combo'
-      ];
-      
-      selectors.forEach(selector => {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach(el => {
-          if (el instanceof HTMLElement) {
-            el.style.display = 'none';
-            el.style.visibility = 'hidden';
-            el.style.opacity = '0';
-            el.style.height = '0';
-            el.style.width = '0';
-            el.style.position = 'absolute';
-            el.style.left = '-9999px';
-          }
-        });
-      });
-    };
-
-    const observer = new MutationObserver(() => {
-      hideGoogleTranslateElements();
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-
-    hideGoogleTranslateElements();
-
-    if (scriptLoadedRef.current) {
-      return () => {
-        observer.disconnect();
-      };
-    }
-
     const existingScript = document.querySelector('script[src*="translate.google.com"]');
+
+    // If the script is already present, just initialize
     if (existingScript) {
       scriptLoadedRef.current = true;
       if (window.google && window.google.translate && translateElementRef.current) {
         initializeTranslate();
-        setTimeout(hideGoogleTranslateElements, 100);
       }
-      return () => {
-        observer.disconnect();
-      };
+      return;
     }
 
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
     script.async = true;
-    
+
     script.onload = () => {
       scriptLoadedRef.current = true;
-      hideGoogleTranslateElements();
+      if (window.google && window.google.translate) {
+        initializeTranslate();
+      }
     };
 
     script.onerror = () => {
@@ -133,14 +85,10 @@ const GoogleTranslate = forwardRef((props, ref) => {
     document.body.appendChild(script);
 
     window.googleTranslateElementInit = () => {
-      if (window.google && window.google.translate) {
-        initializeTranslate();
-        setTimeout(hideGoogleTranslateElements, 100);
-      }
+      initializeTranslate();
     };
 
     return () => {
-      observer.disconnect();
       const translateElement = document.getElementById('google_translate_element');
       if (translateElement) {
         translateElement.innerHTML = '';
@@ -148,42 +96,10 @@ const GoogleTranslate = forwardRef((props, ref) => {
     };
   }, []);
 
+  // Keep the element in the DOM but visually hidden via CSS/layout.
   return (
-    <div className="google-translate-wrapper">
-      <div 
-        id="google_translate_element" 
-        ref={translateElementRef}
-        className="inline-block"
-      />
-      <style>{`
-        .goog-te-banner-frame,
-        .goog-te-banner-frame.skiptranslate,
-        #google_translate_element,
-        .goog-te-gadget,
-        .goog-te-gadget-simple,
-        .goog-te-menu-frame,
-        .goog-te-menu-value,
-        .goog-te-combo,
-        .goog-te-menu,
-        .goog-te-menu2,
-        .goog-te-gadget-icon,
-        .skiptranslate,
-        iframe.goog-te-banner-frame,
-        iframe.goog-te-menu-frame,
-        select.goog-te-combo {
-          display: none !important;
-          visibility: hidden !important;
-          opacity: 0 !important;
-          height: 0 !important;
-          width: 0 !important;
-          position: absolute !important;
-          left: -9999px !important;
-        }
-        
-        body {
-          top: 0 !important;
-        }
-      `}</style>
+    <div className="google-translate-wrapper" style={{ display: 'none' }}>
+      <div id="google_translate_element" ref={translateElementRef} />
     </div>
   );
 });
