@@ -16,7 +16,7 @@ export default function Layout({ children }) {
   return (
     <LanguageProvider>
       <AuthProvider>
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 via-white to-indigo-50">
+        <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 via-white to-indigo-50 overflow-x-hidden">
           <Header />
           <main className="flex-1 pt-16">{children}</main>
           <Footer />
