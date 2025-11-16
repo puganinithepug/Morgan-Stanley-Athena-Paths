@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
 import { Globe, ChevronDown } from "lucide-react";
@@ -115,44 +115,41 @@ export default function Header({hide}) {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
-            {/* <Link
-              to="/landing"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
-            >
-              {t("nav.home")}
-            </Link> */}
-            <Link
+            <NavLink
               to="/services"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
+              className={({ isActive }) =>
+                `nav-link ${isActive ? "nav-link-active" : ""}`
+              }
             >
               {t("nav.services")}
-            </Link>
-            <Link
+            </NavLink>
+
+            <NavLink
               to="/find-your-path"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
+              className={({ isActive }) =>
+                `nav-link ${isActive ? "nav-link-active" : ""}`
+              }
             >
               {t("nav.findPath")}
-            </Link>
-            <Link
+            </NavLink>
+
+            <NavLink
               to="/leaderboard"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
+              className={({ isActive }) =>
+                `nav-link ${isActive ? "nav-link-active" : ""}`
+              }
             >
               {t("nav.leaderboard")}
-            </Link>
-            {/* {user && (
-              <Link
-                to="/profile"
-                className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
-              >
-                {t("nav.profile")}
-              </Link>
-            )} */}
-            <Link
+            </NavLink>
+
+            <NavLink
               to="/support-wall"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
+              className={({ isActive }) =>
+                `nav-link ${isActive ? "nav-link-active" : ""}`
+              }
             >
               {t("nav.supportWall")}
-            </Link>
+            </NavLink>
           </nav>
 
           <div className="flex items-center gap-3">
