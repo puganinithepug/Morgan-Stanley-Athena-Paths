@@ -15,12 +15,16 @@ function adaptBackendUserToFrontend(backendUser) {
     email: backendUser.email,
     full_name: backendUser.full_name || fullNameFromParts || backendUser.email,
     total_points: backendUser.total_points ?? 0,
+    total_donations: backendUser.total_donations ?? 0,
+    total_amount: backendUser.total_amount ?? 0,
+    volunteer_hours: backendUser.volunteer_hours ?? 0,
     badges: backendUser.badges ?? [],
     primary_path: backendUser.primary_path ?? null,
     is_anonymous: false,
     preferred_language: backendUser.preferred_language || 'en',
     referral_code: backendUser.referral_code,
     avatar_url: backendUser.avatar_url || null,
+    team_id: backendUser.team_id ?? null,
   };
 
   // Persist into the local dataService so the rest of the app can use it

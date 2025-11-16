@@ -25,6 +25,11 @@ app.add_middleware(
 
 def load_users():
     df = pd.read_csv("users.csv")
+    # Ensure team_id column exists and uses empty string instead of NaN/null
+    if "team_id" not in df.columns:
+        df["team_id"] = ""
+    else:
+        df["team_id"] = df["team_id"].fillna("")
     return df
 
 
@@ -171,6 +176,7 @@ def signup(data: dict, response: Response):
         "password": encrypted_password,
         "fname": fname,
         "lname": lname,
+        "team_id": "",
     }
 
     new_user_df = pd.DataFrame([new_user])
@@ -373,6 +379,274 @@ def assign_badge(uuid: str, data: dict):
     return {"status": "ok", "message": "Badge assigned"}
 
 
+@app.get("/teams/{team_id}")
+def get_team(team_id: str):
+    """Return basic information about a team, including leader name."""
+    try:
+        teams_df = pd.read_csv("teams.csv")
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    team_df = teams_df[teams_df["team_id"] == team_id]
+    if team_df.empty:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    team = team_df.iloc[0].to_dict()
+
+    # Look up leader name from users.csv
+    users_df = load_users()
+    leader_df = users_df[users_df["uuid"] == team["leader_uuid"]]
+    leader_name = None
+    if not leader_df.empty:
+        leader_row = leader_df.iloc[0].to_dict()
+        leader_name = (
+            f"{leader_row.get('fname', '')} {leader_row.get('lname', '')}".strip()
+            or leader_row.get("email")
+        )
+
+    # Get member count
+    member_count = len(users_df[users_df["team_id"] == team_id])
+
+    team_payload = {
+        "team_id": team["team_id"],
+        "name": team["name"],
+        "leader_uuid": team["leader_uuid"],
+        "leader_name": leader_name,
+        "member_count": member_count,
+    }
+
+    return {"team": team_payload}
+
+
+@app.post("/create_team")
+def create_team(data: dict):
+    name = data.get("name")
+    leader_uuid = data.get("leader_uuid")
+
+    if not name or not leader_uuid:
+        raise HTTPException(status_code=400, detail="name and leader_uuid are required")
+
+    # Load or initialize teams.csv
+    try:
+        teams_df = pd.read_csv("teams.csv")
+    except FileNotFoundError:
+        teams_df = pd.DataFrame(columns=["team_id", "name", "leader_uuid"])
+
+    new_team = {
+        "team_id": gen_uuid(),
+        "name": name,
+        "leader_uuid": leader_uuid,
+    }
+    teams_df = pd.concat([teams_df, pd.DataFrame([new_team])], ignore_index=True)
+    teams_df.to_csv("teams.csv", index=False)
+
+    # Ensure the leader is a member of their new team
+    users_df = load_users()
+    users_df.loc[users_df["uuid"] == leader_uuid, "team_id"] = new_team["team_id"]
+    users_df.to_csv("users.csv", index=False)
+
+    return {"status": "ok", "message": "Team created", "team": new_team}
+
+
+@app.post("/join_team")
+def join_team(data: dict):
+    team_id = data.get("team_id")
+    member_uuid = data.get("member_uuid")
+
+    if not team_id or not member_uuid:
+        raise HTTPException(
+            status_code=400, detail="team_id and member_uuid are required"
+        )
+
+    # Verify team exists
+    try:
+        teams_df = pd.read_csv("teams.csv")
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    if team_id not in teams_df["team_id"].values:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    # Update the member's team_id in users.csv
+    users_df = load_users()
+    users_df.loc[users_df["uuid"] == member_uuid, "team_id"] = team_id
+    users_df.to_csv("users.csv", index=False)
+
+    return {"status": "ok", "message": "Joined team"}
+
+
+@app.post("/leave_team")
+def leave_team(data: dict):
+    member_uuid = data.get("member_uuid")
+
+    if not member_uuid:
+        raise HTTPException(status_code=400, detail="member_uuid is required")
+
+    users_df = load_users()
+
+    users_df.loc[users_df["uuid"] == member_uuid, "team_id"] = None
+    users_df.to_csv("users.csv", index=False)
+
+    return {"status": "ok", "message": "Left team"}
+
+
+@app.post("/transfer_team_leadership")
+def transfer_team_leadership(data: dict):
+    team_id = data.get("team_id")
+    new_leader_uuid = data.get("new_leader_uuid")
+
+    if not team_id or not new_leader_uuid:
+        raise HTTPException(
+            status_code=400, detail="team_id and new_leader_uuid are required"
+        )
+
+    try:
+        teams_df = pd.read_csv("teams.csv")
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    if team_id not in teams_df["team_id"].values:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    teams_df.loc[teams_df["team_id"] == team_id, "leader_uuid"] = new_leader_uuid
+    teams_df.to_csv("teams.csv", index=False)
+
+    return {"status": "ok", "message": "Team leadership transferred"}
+
+
+@app.get("/leaderboard/supporters")
+def get_top_supporters(path: Optional[str] = None):
+    """Return top supporters (users) ranked by impact points from donations.
+
+    Optional query param 'path' to filter by donation path (e.g., WISDOM, COURAGE, etc.).
+    """
+    donations_df = load_donations()
+    users_df = load_users()
+
+    # Filter by path if specified
+    if path and path != "ALL":
+        donations_df = donations_df[donations_df["path"] == path]
+
+    # Group by user and sum impact_points
+    user_stats = (
+        donations_df.groupby("uuid")
+        .agg({"impact_points": "sum", "amount": "sum"})
+        .reset_index()
+    )
+
+    # Count donations per user
+    donation_counts = (
+        donations_df.groupby("uuid").size().reset_index(name="donation_count")
+    )
+    user_stats = user_stats.merge(donation_counts, on="uuid")
+
+    # Determine primary path for each user (most donations in that path)
+    path_counts = (
+        donations_df.groupby(["uuid", "path"]).size().reset_index(name="count")
+    )
+    primary_paths = path_counts.loc[path_counts.groupby("uuid")["count"].idxmax()][
+        ["uuid", "path"]
+    ]
+    primary_paths.rename(columns={"path": "primary_path"}, inplace=True)
+    user_stats = user_stats.merge(primary_paths, on="uuid", how="left")
+
+    # Join with user info
+    user_stats = user_stats.merge(
+        users_df[["uuid", "fname", "lname", "email"]], on="uuid", how="left"
+    )
+
+    # Build display name
+    user_stats["display_name"] = user_stats.apply(
+        lambda row: (
+            f"{row['fname']} {row['lname']}".strip()
+            if pd.notna(row["fname"]) and pd.notna(row["lname"])
+            else row["email"]
+        ),
+        axis=1,
+    )
+
+    # Sort by impact_points descending
+    user_stats = user_stats.sort_values("impact_points", ascending=False)
+
+    # Build result
+    leaderboard = []
+    for _, row in user_stats.iterrows():
+        leaderboard.append(
+            {
+                "user_id": row["uuid"],
+                "display_name": row["display_name"],
+                "total_points": (
+                    int(row["impact_points"]) if pd.notna(row["impact_points"]) else 0
+                ),
+                "total_donations": int(row["donation_count"]),
+                "primary_path": (
+                    row["primary_path"] if pd.notna(row["primary_path"]) else None
+                ),
+            }
+        )
+
+    return {"supporters": leaderboard}
+
+
+@app.get("/leaderboard/teams")
+def get_top_teams():
+    """Return top teams ranked by total impact points of all members."""
+    try:
+        teams_df = pd.read_csv("teams.csv")
+    except FileNotFoundError:
+        return {"teams": []}
+
+    users_df = load_users()
+    donations_df = load_donations()
+
+    # Calculate total points per user from donations
+    user_points = donations_df.groupby("uuid")["impact_points"].sum().reset_index()
+    user_points.rename(columns={"impact_points": "total_points"}, inplace=True)
+
+    # Build team leaderboard
+    team_leaderboard = []
+    for _, team in teams_df.iterrows():
+        team_id = team["team_id"]
+        team_name = team["name"]
+        leader_uuid = team["leader_uuid"]
+
+        # Get all members of this team
+        members = users_df[users_df["team_id"] == team_id]
+        member_count = len(members)
+
+        # Sum points from all members
+        member_uuids = members["uuid"].tolist()
+        team_points = user_points[user_points["uuid"].isin(member_uuids)][
+            "total_points"
+        ].sum()
+
+        # Get leader name
+        leader_row = users_df[users_df["uuid"] == leader_uuid]
+        leader_name = None
+        if not leader_row.empty:
+            leader = leader_row.iloc[0]
+            leader_name = (
+                f"{leader.get('fname', '')} {leader.get('lname', '')}".strip()
+                or leader.get("email")
+            )
+
+        team_leaderboard.append(
+            {
+                "team_id": team_id,
+                "name": team_name,
+                "leader_uuid": leader_uuid,
+                "leader_name": leader_name,
+                "member_count": member_count,
+                "total_points": int(team_points) if pd.notna(team_points) else 0,
+            }
+        )
+
+    # Sort by total_points descending
+    team_leaderboard.sort(key=lambda t: t["total_points"], reverse=True)
+
+    return {"teams": team_leaderboard}
+
+
 @app.get("/me")
 def me(session: Optional[str] = Cookie(default=None)):
     """Return the current logged in user based on the session cookie.
@@ -390,5 +664,36 @@ def me(session: Optional[str] = Cookie(default=None)):
 
     user = user_df.iloc[0].to_dict()
     user_sanitized = {k: v for k, v in user.items() if k != "password"}
+
+    # Derive aggregate stats from donations
+    donations_df = load_donations()
+    user_donations = donations_df[donations_df["uuid"] == session]
+
+    if not user_donations.empty:
+        total_points = user_donations["impact_points"].fillna(0).sum()
+        total_amount = (
+            user_donations["amount"].fillna(0).sum()
+            if "amount" in user_donations.columns
+            else 0
+        )
+        total_donations = len(user_donations)
+
+        volunteer_hours = 0
+        if "hours" in user_donations.columns:
+            volunteer_hours = (
+                user_donations[user_donations["path"] == "SERVICE"]["hours"]
+                .fillna(0)
+                .sum()
+            )
+    else:
+        total_points = 0
+        total_amount = 0
+        total_donations = 0
+        volunteer_hours = 0
+
+    user_sanitized["total_points"] = int(total_points)
+    user_sanitized["total_amount"] = float(total_amount)
+    user_sanitized["total_donations"] = int(total_donations)
+    user_sanitized["volunteer_hours"] = float(volunteer_hours)
 
     return {"logged_in": True, "user": user_sanitized}
