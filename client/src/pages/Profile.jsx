@@ -312,13 +312,14 @@ export default function Profile() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-primary" />
-              {language === 'fr' ? 'Vos Statistiques par Parcours' : 'Your Path Statistics'}
+              {language === 'fr'
+                ? 'Vos Statistiques par Parcours'
+                : 'Your Path Statistics'}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            {/* 2×2 grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
+          <CardContent>
+            <div className="grid grid-cols-1 gap-4">
               {/* WISDOM */}
               {(() => {
                 const stats = pathStats.WISDOM;
@@ -334,31 +335,33 @@ export default function Profile() {
 
                 return (
                   <div className="p-3 rounded-lg bg-highlight/15 border border-highlight/40 group">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="space-y-0.5">
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-highlight" />
-                          <span className="font-medium text-foreground">
-                            {language === 'fr' ? 'Sagesse' : 'Wisdom'}
-                          </span>
-                        </div>
+                    {/* TITLE ROW: icon + title + level + XP */}
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Phone className="w-4 h-4 text-highlight" />
+                        <span className="font-medium text-foreground">
+                          {language === 'fr' ? 'Sagesse' : 'Wisdom'}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-4">
                         <span className="text-xs text-foreground/60">
                           {language === 'fr'
                             ? `Niveau ${stats.level} – ${levelLabel}`
                             : `Level ${stats.level} – ${levelLabel}`}
                         </span>
-                        <span className="text-[11px] text-foreground/60 block">
-                          {language === 'fr' ? story.fr : story.en}
-                        </span>
-                      </div>
-                      <div className="text-right">
-                        <div className="font-bold text-foreground">
+                        <span className="font-bold text-foreground text-sm">
                           {stats.xp} XP
-                        </div>
+                        </span>
                       </div>
                     </div>
 
-                    {/*higher-contrast bar */}
+                    {/* STORY */}
+                    <p className="text-[11px] text-foreground/60 mb-2">
+                      {language === 'fr' ? story.fr : story.en}
+                    </p>
+
+                    {/* PROGRESS BAR */}
                     <div className="w-full h-3 rounded-full bg-foreground/10 overflow-hidden">
                       <div
                         className="h-3 rounded-full bg-highlight"
@@ -368,6 +371,7 @@ export default function Profile() {
                       />
                     </div>
 
+                    {/* NEXT LEVEL HINT */}
                     {stats.nextLevelXp != null && (
                       <p className="mt-1 text-[11px] text-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity text-right">
                         {language === 'fr'
@@ -394,29 +398,29 @@ export default function Profile() {
 
                 return (
                   <div className="p-3 rounded-lg bg-muted/15 border border-muted/40 group">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="space-y-0.5">
-                        <div className="flex items-center gap-2">
-                          <Heart className="w-4 h-4 text-muted" />
-                          <span className="font-medium text-foreground">
-                            {language === 'fr' ? 'Courage' : 'Courage'}
-                          </span>
-                        </div>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Heart className="w-4 h-4 text-muted" />
+                        <span className="font-medium text-foreground">
+                          {language === 'fr' ? 'Courage' : 'Courage'}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-4">
                         <span className="text-xs text-foreground/60">
                           {language === 'fr'
                             ? `Niveau ${stats.level} – ${levelLabel}`
                             : `Level ${stats.level} – ${levelLabel}`}
                         </span>
-                        <span className="text-[11px] text-foreground/60 block">
-                          {language === 'fr' ? story.fr : story.en}
+                        <span className="font-bold text-foreground text-sm">
+                          {stats.xp} XP
                         </span>
                       </div>
-                      <div className="text-right">
-                        <div className="font-bold text-foreground">
-                          {stats.xp} XP
-                        </div>
-                      </div>
                     </div>
+
+                    <p className="text-[11px] text-foreground/60 mb-2">
+                      {language === 'fr' ? story.fr : story.en}
+                    </p>
 
                     <div className="w-full h-3 rounded-full bg-foreground/10 overflow-hidden">
                       <div
@@ -454,29 +458,29 @@ export default function Profile() {
 
                 return (
                   <div className="p-3 rounded-lg bg-secondary/15 border border-secondary/40 group">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="space-y-0.5">
-                        <div className="flex items-center gap-2">
-                          <Home className="w-4 h-4 text-secondary" />
-                          <span className="font-medium text-foreground">
-                            {language === 'fr' ? 'Protection' : 'Protection'}
-                          </span>
-                        </div>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Home className="w-4 h-4 text-secondary" />
+                        <span className="font-medium text-foreground">
+                          {language === 'fr' ? 'Protection' : 'Protection'}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-4">
                         <span className="text-xs text-foreground/60">
                           {language === 'fr'
                             ? `Niveau ${stats.level} – ${levelLabel}`
                             : `Level ${stats.level} – ${levelLabel}`}
                         </span>
-                        <span className="text-[11px] text-foreground/60 block">
-                          {language === 'fr' ? story.fr : story.en}
+                        <span className="font-bold text-foreground text-sm">
+                          {stats.xp} XP
                         </span>
                       </div>
-                      <div className="text-right">
-                        <div className="font-bold text-foreground">
-                          {stats.xp} XP
-                        </div>
-                      </div>
                     </div>
+
+                    <p className="text-[11px] text-foreground/60 mb-2">
+                      {language === 'fr' ? story.fr : story.en}
+                    </p>
 
                     <div className="w-full h-3 rounded-full bg-foreground/10 overflow-hidden">
                       <div
@@ -513,29 +517,29 @@ export default function Profile() {
 
                 return (
                   <div className="p-3 rounded-lg bg-accent/15 border border-accent/40 group">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="space-y-0.5">
-                        <div className="flex items-center gap-2">
-                          <HandHeart className="w-4 h-4 text-accent" />
-                          <span className="font-medium text-foreground">
-                            {language === 'fr' ? 'Service' : 'Service'}
-                          </span>
-                        </div>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <HandHeart className="w-4 h-4 text-accent" />
+                        <span className="font-medium text-foreground">
+                          {language === 'fr' ? 'Service' : 'Service'}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-4">
                         <span className="text-xs text-foreground/60">
                           {language === 'fr'
                             ? `Niveau ${stats.level} – ${levelLabel}`
                             : `Level ${stats.level} – ${levelLabel}`}
                         </span>
-                        <span className="text-[11px] text-foreground/60 block">
-                          {language === 'fr' ? story.fr : story.en}
+                        <span className="font-bold text-foreground text-sm">
+                          {stats.xp} XP
                         </span>
                       </div>
-                      <div className="text-right">
-                        <div className="font-bold text-foreground">
-                          {stats.xp} XP
-                        </div>
-                      </div>
                     </div>
+
+                    <p className="text-[11px] text-foreground/60 mb-2">
+                      {language === 'fr' ? story.fr : story.en}
+                    </p>
 
                     <div className="w-full h-3 rounded-full bg-foreground/10 overflow-hidden">
                       <div
@@ -556,11 +560,10 @@ export default function Profile() {
                   </div>
                 );
               })()}
-
             </div>
           </CardContent>
-
         </Card>
+
 
         {/* BADGES – RIGHT, 1/3 width */}
         <Card className="md:col-span-1">
@@ -592,13 +595,12 @@ export default function Profile() {
                       />
                     </div>
 
-                    {/* Name – on hover */}
+                    {/* Name */}
                     <p
-                      className={`
-                        text-[11px] font-medium text-center mt-1 
-                        opacity-0 group-hover:opacity-100 transition-opacity
-                        ${isUnlocked ? 'text-foreground' : 'text-foreground/60'}
-                      `}
+                      className="
+                        text-xs text-center leading-tight
+                        h-8 flex items-center justify-center
+                      "
                     >
                       {badge.name[language]}
                     </p>
