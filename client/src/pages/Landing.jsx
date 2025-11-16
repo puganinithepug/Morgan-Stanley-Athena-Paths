@@ -20,6 +20,7 @@ import PathTransitionSection from "../components/PathTransitionSection";
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";
 import courageImg from "../assets/hero_courage.jpeg";
+import aboutImg from "../assets/about_image.jpeg"
 
 
 export default function Landing() {
@@ -596,7 +597,7 @@ function VideoEmbed({ videoId }) {
             >
               <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
                 <img
-                  src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&h=600&fit=crop"
+                  src={aboutImg}
                   alt={
                     language === "fr" ? "Shield of Athena" : "Shield of Athena"
                   }
