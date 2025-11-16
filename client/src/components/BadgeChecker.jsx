@@ -1,101 +1,127 @@
 import dataService from '../services/dataService';
 
+import firstStep from '../assets/badges/first_donation.png';
+import wisdomSupporter from '../assets/badges/wisdom_supporter.png';
+import courageSupporter from '../assets/badges/courage_supporter.png';
+import protectionSupporter from '../assets/badges/protection_supporter.png';
+import allPaths from '../assets/badges/all_paths.png';
+import hundredClub from '../assets/badges/hundred_club.png';
+import fiveHundredClub from '../assets/badges/five_hundred_club.png';
+import communityLeader from '../assets/badges/community_leader.png';
+import serviceSupporter from '../assets/badges/service_supporter.png';
+import serviceVolunteer from '../assets/badges/service_volunteer.png';
+import teamPlayer from '../assets/badges/team_player.png';
+import teamLeader from '../assets/badges/team_leader.png';
+
+
 export const BADGE_DEFINITIONS = {
   FIRST_DONATION: {
     id: 'first_donation',
     name: { en: 'First Step', fr: 'Premier Pas' },
     description: { en: 'Made your first donation', fr: 'Fait votre premier don' },
-    icon: '🌟',
-    // Earned when user has at least one donation
+    icon: firstStep,
     condition: (user, donations, referrals, teams) => donations.length >= 1
   },
+
   WISDOM_SUPPORTER: {
     id: 'wisdom_supporter',
     name: { en: 'Wisdom Keeper', fr: 'Gardien de la Sagesse' },
     description: { en: 'Donated to Wisdom path 5 times', fr: 'Donné au parcours Sagesse 5 fois' },
-    icon: '📞',
-    condition: (user, donations, referrals, teams) => donations.filter(d => d.path === 'WISDOM').length >= 5
+    icon: wisdomSupporter,
+    condition: (user, donations, referrals, teams) =>
+      donations.filter(d => d.path === 'WISDOM').length >= 5
   },
+
   COURAGE_SUPPORTER: {
     id: 'courage_supporter',
     name: { en: 'Courage Champion', fr: 'Champion du Courage' },
     description: { en: 'Donated to Courage path 5 times', fr: 'Donné au parcours Courage 5 fois' },
-    icon: '❤️',
-    condition: (user, donations, referrals, teams) => donations.filter(d => d.path === 'COURAGE').length >= 5
+    icon: courageSupporter,
+    condition: (user, donations, referrals, teams) =>
+      donations.filter(d => d.path === 'COURAGE').length >= 5
   },
+
   PROTECTION_SUPPORTER: {
     id: 'protection_supporter',
     name: { en: 'Protection Guardian', fr: 'Gardien de la Protection' },
     description: { en: 'Donated to Protection path 5 times', fr: 'Donné au parcours Protection 5 fois' },
-    icon: '🛡️',
-    condition: (user, donations, referrals, teams) => donations.filter(d => d.path === 'PROTECTION').length >= 5
+    icon: protectionSupporter,
+    condition: (user, donations, referrals, teams) =>
+      donations.filter(d => d.path === 'PROTECTION').length >= 5
   },
+
   ALL_PATHS: {
     id: 'all_paths',
     name: { en: 'Complete Supporter', fr: 'Soutien Complet' },
     description: { en: 'Donated to all three paths', fr: 'Donné aux trois parcours' },
-    icon: '⭐',
+    icon: allPaths,
     condition: (user, donations, referrals, teams) => {
       const paths = new Set(donations.map(d => d.path));
       return paths.has('WISDOM') && paths.has('COURAGE') && paths.has('PROTECTION');
     }
   },
+
   HUNDRED_CLUB: {
     id: 'hundred_club',
     name: { en: 'Hundred Club', fr: 'Club des Cent' },
     description: { en: 'Reached 100 impact points', fr: 'Atteint 100 points d\'impact' },
-    icon: '💯',
-    // Still uses user.total_points (currently UI-calculated)
-    condition: (user, donations, referrals, teams) => (user.total_points || 0) >= 100
+    icon: hundredClub,
+    condition: (user, teams) => (user.total_points || 0) >= 100
   },
+
   FIVE_HUNDRED_CLUB: {
     id: 'five_hundred_club',
     name: { en: 'Elite Supporter', fr: 'Soutien d\'Élite' },
     description: { en: 'Reached 500 impact points', fr: 'Atteint 500 points d\'impact' },
-    icon: '🏆',
-    condition: (user, donations, referrals, teams) => (user.total_points || 0) >= 500
+    icon: fiveHundredClub,
+    condition: (user, teams) => (user.total_points || 0) >= 500
   },
+
   COMMUNITY_LEADER: {
     id: 'community_leader',
     name: { en: 'Community Leader', fr: 'Leader Communautaire' },
     description: { en: 'Referred 5 friends', fr: 'Parrainé 5 amis' },
-    icon: '👥',
-    condition: (user, donations, referrals, teams) => {
-      return referrals.length >= 5;
-    }
+    icon: communityLeader,
+    condition: (user, donations, referrals, teams) => referrals.length >= 5
   },
+
   SERVICE_SUPPORTER: {
     id: 'service_supporter',
     name: { en: 'Service Champion', fr: 'Champion du Service' },
     description: { en: 'Donated to Service path 5 times', fr: 'Donné au parcours Service 5 fois' },
-    icon: '⏰',
-    condition: (user, donations, referrals, teams) => donations.filter(d => d.path === 'SERVICE').length >= 5
+    icon: serviceSupporter,
+    condition: (user, donations, referrals, teams) =>
+      donations.filter(d => d.path === 'SERVICE').length >= 5
   },
+
   SERVICE_VOLUNTEER: {
     id: 'service_volunteer',
     name: { en: 'Service Volunteer', fr: 'Bénévole de Service' },
     description: { en: 'Completed 10 volunteer hours', fr: 'Complété 10 heures de bénévolat' },
-    icon: '🙌',
+    icon: serviceVolunteer,
     condition: (user, donations, referrals, teams) => (user.volunteer_hours || 0) >= 10
   },
+
   TEAM_PLAYER: {
     id: 'team_player',
     name: { en: 'Team Player', fr: 'Joueur d\'Équipe' },
     description: { en: 'Joined a community team', fr: 'Rejoint une équipe communautaire' },
-    icon: '🤝',
+    icon: teamPlayer,
     condition: (user, donations, referrals, teams) => !!user.team_id
   },
+
   TEAM_LEADER: {
     id: 'team_leader',
     name: { en: 'Team Leader', fr: 'Leader d\'Équipe' },
     description: { en: 'Created and led a team with 5+ members', fr: 'Créé et dirigé une équipe de 5+ membres' },
-    icon: '⭐',
+    icon: teamLeader,
     condition: (user, donations, referrals, teams) => {
       const userTeam = teams.leader_uuid === user.id ? teams : null;
       return userTeam && userTeam.member_count >= 5;
     }
   }
 };
+
 
 async function fetchJson(url) {
   const res = await fetch(url, { credentials: 'include' });
