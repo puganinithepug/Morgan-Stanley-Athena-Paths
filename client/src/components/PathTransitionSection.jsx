@@ -82,7 +82,7 @@ export default function PathTransitionSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[110vh] flex flex-col items-center bg-white overflow-hidden pt-24 pb-16"
+      className="relative min-h-[70vh] flex flex-col items-center bg-white overflow-hidden pt-24 pb-16"
     >
       {/* TEXT + CTA */}
       <div className="relative z-20 flex flex-col items-center text-center px-4">
