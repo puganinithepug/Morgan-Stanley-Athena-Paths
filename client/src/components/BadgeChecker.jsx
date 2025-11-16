@@ -156,8 +156,11 @@ export async function checkAndAwardBadges(user) {
   await Promise.all(
     Object.values(BADGE_DEFINITIONS).map(async (badgeDef) => {
       const id = badgeDef.id;
+      console.log(id);
       const hasBadge = existingBadges.has(id);
       const meetsCondition = badgeDef.condition(user, donations, referrals);
+      // console.log(meetsCondition, hasBadge);
+      console.log(user);
 
       if (meetsCondition && !hasBadge) {
         // Assign badge in backend

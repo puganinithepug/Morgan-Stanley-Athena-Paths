@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import dataService from '../services/dataService';
+import { useAuth } from '../contexts/AuthContext';
 import { Card, CardContent } from '../components/ui/Card';
 import { Trophy, Crown, Shield, Phone, Heart, Home, HandHeart, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -22,70 +22,61 @@ const PATH_COLORS = {
 
 export default function Leaderboard() {
   const { language } = useLanguage();
+  const { user } = useAuth();
   const [selectedPath, setSelectedPath] = useState('ALL');
-  const donations = dataService.getDonations();
-  const users = dataService.getAllUsers();
-  const teams = dataService.getTeams();
+  const [supporters, setSupporters] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const userStats = {};
-  const pathCounts = {};
-  
-  donations.forEach(donation => {
-    if (selectedPath !== 'ALL' && donation.path !== selectedPath) return;
-    
-    if (!userStats[donation.user_id]) {
-      userStats[donation.user_id] = {
-        userId: donation.user_id,
-        totalPoints: 0,
-        totalDonations: 0,
-        pathCounts: {},
-      };
-      pathCounts[donation.user_id] = {};
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadLeaderboard() {
+      setLoading(true);
+      try {
+        const qs = selectedPath && selectedPath !== 'ALL' ? `?path=${selectedPath}` : '';
+        const [supportersRes, teamsRes] = await Promise.all([
+          fetch(`http://localhost:8000/leaderboard/supporters${qs}`, {
+            credentials: 'include',
+          }),
+          fetch('http://localhost:8000/leaderboard/teams', {
+            credentials: 'include',
+          }),
+        ]);
+
+        if (!supportersRes.ok || !teamsRes.ok) {
+          throw new Error('Failed to load leaderboard');
+        }
+
+        const supportersData = await supportersRes.json();
+        const teamsData = await teamsRes.json();
+
+        if (!cancelled) {
+          setSupporters(supportersData.supporters || []);
+          setTeams(teamsData.teams || []);
+        }
+      } catch (e) {
+        console.error(e);
+        if (!cancelled) {
+          setSupporters([]);
+          setTeams([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
     }
-    
-    userStats[donation.user_id].totalPoints += donation.points_awarded || 0;
-    userStats[donation.user_id].totalDonations += 1;
-    
-    if (!pathCounts[donation.user_id][donation.path]) {
-      pathCounts[donation.user_id][donation.path] = 0;
-    }
-    pathCounts[donation.user_id][donation.path] += 1;
-  });
 
-  Object.keys(userStats).forEach(userId => {
-    const paths = pathCounts[userId];
-    const primaryPath = Object.keys(paths).reduce((a, b) => paths[a] > paths[b] ? a : b);
-    userStats[userId].primaryPath = primaryPath;
-  });
+    loadLeaderboard();
 
-  const leaderboard = Object.values(userStats)
-    .map(stat => {
-      const user = users.find(u => u.id === stat.userId);
-      const firstDonation = donations.find(d => d.user_id === stat.userId);
-      const displayName = user 
-        ? (user.is_anonymous ? 'Anonymous' : (user.full_name || 'Anonymous'))
-        : (firstDonation?.user_name || 'Anonymous');
-      return {
-        ...stat,
-        displayName: displayName,
-        path: stat.primaryPath,
-      };
-    })
-    .sort((a, b) => b.totalPoints - a.totalPoints);
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedPath]);
 
-  const teamLeaderboard = teams
-    .map(team => {
-      const teamMembers = users.filter(user => team.members?.includes(user.id));
-      const totalTeamPoints = teamMembers.reduce((sum, user) => sum + (user.total_points || 0), 0);
-      
-      return {
-        ...team,
-        totalPoints: totalTeamPoints,
-        memberCount: team.member_count,
-        leader: users.find(u => u.id === team.leader_id)
-      };
-    })
-    .sort((a, b) => b.totalPoints - a.totalPoints);
+  const leaderboard = supporters;
+  const teamLeaderboard = teams;
 
   const getRankIcon = (rank) => {
     if (rank === 0) return <Crown className="w-6 h-6 text-highlight" />;
@@ -163,20 +154,25 @@ export default function Leaderboard() {
                   </h2>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
                   {leaderboard.length > 0 ? (
                     leaderboard.map((entry, idx) => {
-                      const PathIcon = PATH_ICONS[entry.path];
-                      const pathColors = PATH_COLORS[entry.path] || PATH_COLORS.WISDOM;
+                      const PathIcon = PATH_ICONS[entry.primary_path];
+                      const pathColors = PATH_COLORS[entry.primary_path] || PATH_COLORS.WISDOM;
                       const rankIcon = getRankIcon(idx);
+                      const isCurrentUser = user && entry.user_id === user.id;
 
                       return (
                         <motion.div
-                          key={entry.userId}
+                          key={entry.user_id}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: idx * 0.05 }}
-                          className="flex items-center justify-between p-4 bg-background rounded-lg mb-2 border border-foreground/10 hover:shadow-sm transition-shadow"
+                          className={`flex items-center justify-between p-4 rounded-lg mb-2 border transition-shadow ${
+                            isCurrentUser
+                              ? 'bg-primary/10 border-primary/60 shadow-md'
+                              : 'bg-background border-foreground/10 hover:shadow-sm'
+                          }`}
                         >
                           <div className="flex items-center gap-4 flex-1">
                             <div className="flex items-center gap-3">
@@ -187,7 +183,12 @@ export default function Leaderboard() {
                             </div>
                             <div className="flex-1">
                               <div className="font-bold text-foreground mb-1">
-                                {entry.displayName}
+                                {entry.display_name}
+                                {isCurrentUser && (
+                                  <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary font-semibold">
+                                    {language === 'fr' ? 'Vous' : 'You'}
+                                  </span>
+                                )}
                               </div>
                               <div className="flex items-center gap-2">
                                 {PathIcon && (
@@ -195,24 +196,29 @@ export default function Leaderboard() {
                                 )}
                                 <span className={`text-sm font-medium ${pathColors.text}`}>
                                   {language === 'fr'
-                                    ? entry.path === 'WISDOM'
+                                    ? entry.primary_path === 'WISDOM'
                                       ? 'Sagesse'
-                                      : entry.path === 'COURAGE'
+                                      : entry.primary_path === 'COURAGE'
                                       ? 'Courage'
-                                      : entry.path === 'PROTECTION'
+                                      : entry.primary_path === 'PROTECTION'
                                       ? 'Protection'
                                       : 'Service'
-                                    : entry.path}
+                                    : entry.primary_path}
                                 </span>
                               </div>
                             </div>
                           </div>
                           <div className="text-right">
                             <div className="font-bold text-primary text-2xl mb-1">
-                              {entry.totalPoints}
+                              {entry.total_points}
                             </div>
                             <div className="text-sm text-foreground/60">
-                              {entry.totalDonations} {language === 'fr' ? 'don(s)' : entry.totalDonations === 1 ? 'donation' : 'donations'}
+                              {entry.total_donations}{' '}
+                              {language === 'fr'
+                                ? 'don(s)'
+                                : entry.total_donations === 1
+                                ? 'donation'
+                                : 'donations'}
                             </div>
                           </div>
                         </motion.div>
@@ -245,18 +251,23 @@ export default function Leaderboard() {
                   </h2>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
                   {teamLeaderboard.length > 0 ? (
                     teamLeaderboard.map((team, idx) => {
                       const rankIcon = getRankIcon(idx);
+                      const isUserTeam = user && user.team_id && team.team_id === user.team_id;
 
                       return (
                         <motion.div
-                          key={team.id}
+                          key={team.team_id}
                           initial={{ opacity: 0, x: 20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: idx * 0.05 }}
-                          className="flex items-center justify-between p-4 bg-background rounded-lg mb-2 border border-foreground/10 hover:shadow-sm transition-shadow"
+                          className={`flex items-center justify-between p-4 rounded-lg mb-2 border transition-shadow ${
+                            isUserTeam
+                              ? 'bg-primary/10 border-primary/60 shadow-md'
+                              : 'bg-background border-foreground/10 hover:shadow-sm'
+                          }`}
                         >
                           <div className="flex items-center gap-4 flex-1 min-w-0">
                             <div className="flex items-center gap-3">
@@ -268,16 +279,22 @@ export default function Leaderboard() {
                             <div className="flex-1 min-w-0">
                               <div className="font-bold text-foreground mb-2 truncate">
                                 {team.name}
+                                {isUserTeam && (
+                                  <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary font-semibold">
+                                    {language === 'fr' ? 'Votre équipe' : 'Your team'}
+                                  </span>
+                                )}
                               </div>
                               <div className="flex items-center gap-3 text-sm flex-wrap">
                                 <div className="flex items-center gap-1 text-foreground/60">
                                   <Users className="w-4 h-4" />
-                                  {team.memberCount} {language === 'fr' ? 'membres' : 'members'}
+                                  {team.member_count}{' '}
+                                  {language === 'fr' ? 'membres' : 'members'}
                                 </div>
                               <div className="w-px h-3 bg-foreground/20"></div>
-                              {team.leader && (
+                              {team.leader_name && (
                                 <div className="text-xs text-foreground/50">
-                                  {language === 'fr' ? 'Dirigé par' : 'Led by'} {team.leader.full_name}
+                                  {language === 'fr' ? 'Dirigé par' : 'Led by'} {team.leader_name}
                                 </div>
                               )}
                               </div>
@@ -285,7 +302,7 @@ export default function Leaderboard() {
                           </div>
                           <div className="text-right flex-shrink-0 ml-4">
                             <div className="font-bold text-primary text-2xl mb-1">
-                              {team.totalPoints}
+                              {team.total_points}
                             </div>
                             <div className="text-sm text-foreground/60">
                               {language === 'fr' ? 'points' : 'points'}

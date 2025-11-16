@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { User, Award, Trophy, Heart, Phone, Home, Sparkles } from 'lucide-react';
+import { User, Award, Trophy, Heart, Phone, Home, Sparkles, HandHeart } from 'lucide-react';
 import { BADGE_DEFINITIONS, checkAndAwardBadges } from '../components/BadgeChecker';
 import ReferralSection from '../components/ReferralSection';
 import TeamSection from '../components/TeamSection';
@@ -126,8 +126,10 @@ export default function Profile() {
   }
   
   const realDonations = donations.filter((d) => (d.amount || 0) > 0);
-  const totalAmount = realDonations.reduce((sum, d) => sum + (d.amount || 0), 0);
-  const totalImpactPoints = donations.reduce((sum, d) => sum + (d.impact_points || 0), 0);
+  const totalAmount =
+    user?.total_amount ?? realDonations.reduce((sum, d) => sum + (d.amount || 0), 0);
+  const totalImpactPoints =
+    user?.total_points ?? donations.reduce((sum, d) => sum + (d.impact_points || 0), 0);
 
   // Normalize and sort donations with date information for the history section
   const donationsWithDates = donations
@@ -160,8 +162,11 @@ export default function Profile() {
 
   console.log("Volunteering hours:", volunteerHoursFromDonations);
 
-  // Fallback for older/demo data where hours were only stored on the user object
-  const volunteerHours = volunteerHoursFromDonations || user.volunteer_hours || 0;
+  // Prefer backend-computed volunteer_hours, fall back to donations-derived
+  const volunteerHours =
+    (typeof user?.volunteer_hours === 'number' ? user.volunteer_hours : 0) ||
+    volunteerHoursFromDonations;
+
   const backendBadgeIds = new Set(
     (backendBadges || []).map((b) => b.badge_id || b.id)
   );
@@ -174,7 +179,6 @@ export default function Profile() {
     .filter(Boolean);
 
   const pathStats = computePathStats(donations);
-  console.log("Service path stats on Profile page:", pathStats.SERVICE);
 
   const donationPathOptions = [
     { id: 'ALL', labelEn: 'All', labelFr: 'Tous', color: 'bg-primary/80', border: 'border-primary', hover: 'hover:bg-primary/40' },
@@ -508,7 +512,7 @@ export default function Profile() {
                     <div className="flex items-start justify-between mb-3">
                       <div className="space-y-0.5">
                         <div className="flex items-center gap-2">
-                          <Home className="w-4 h-4 text-accent" />
+                          <HandHeart className="w-4 h-4 text-accent" />
                           <span className="font-medium text-foreground">
                             {language === 'fr' ? 'Service' : 'Service'}
                           </span>
