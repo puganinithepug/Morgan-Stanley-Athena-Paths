@@ -210,7 +210,7 @@ export default function CommunityGoals({ onDonate }) {
             {/* Card padding: 32px (p-8) for consistent internal spacing */}
             <CardContent className="p-8">
               {/* Header section: 24px bottom margin */}
-              <div className="text-center mb-6">
+              <div className="text-center mb-6 mt-6">
                 <h3 className="text-3xl font-bold text-foreground mb-4">
                   {language === 'fr' 
                     ? `Chaque 100 $ fournit 1 nuit d'hébergement sécuritaire. Nous avons besoin de ${communityTotal.nightsNeeded} nuits pour protéger les familles cet hiver.`
@@ -349,7 +349,7 @@ export default function CommunityGoals({ onDonate }) {
                     {/* Card padding: 24px (p-6) for consistent internal spacing */}
                     <CardContent className="p-6 flex flex-col flex-1">
                       {/* Header section: 16px bottom margin */}
-                      <div className="flex items-start gap-3 mb-4">
+                      <div className="flex items-start gap-3 mb-4 mt-4">
                         {/* Icon: 12px padding (p-3) */}
                         <div className={`p-3 rounded-xl bg-gradient-to-br ${colors.bg} text-white flex-shrink-0 shadow-md`}>
                           <ItemIcon className="w-6 h-6" />

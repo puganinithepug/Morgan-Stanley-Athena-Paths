@@ -794,7 +794,7 @@ function VideoEmbed({ videoId }) {
               >
                 <Card className="bg-white/10 backdrop-blur-lg border-white/20 h-full">
                   <CardContent className="p-6 flex flex-col h-full">
-                    <Quote className="w-8 h-8 text-highlight/60 mb-4" />
+                    <Quote className="w-8 h-8 text-highlight/60 mb-4 mt-4" />
                     <blockquote className="text-lg font-light leading-relaxed mb-6 italic flex-grow">
                       "{testimonial.quote}"
                     </blockquote>
