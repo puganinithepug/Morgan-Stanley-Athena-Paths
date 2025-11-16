@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Quote, Heart, Share2, Home, Flower, Shield, Users, Phone } from 'lucide-react';
+import { Quote, Heart, Share2, Home, Flower, Shield, Users, Phone, Briefcase, Scale, Building2, Sparkles } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import dataService from '../services/dataService';
 
@@ -54,6 +54,42 @@ const stories = [
     // supportive, calm: accent -> primary
     color: "from-accent to-primary",
     // VERIFIED: Tens of thousands reached annually through community outreach, education, and awareness
+  },
+  {
+    id: 'story-6',
+    text: "The legal support team at Shield of Athena helped me understand my rights and navigate the court system. They provided an interpreter and stood by me through every step. I finally got the protection order I needed to keep my children safe.",
+    impact: "Legal aid and advocacy services",
+    icon: Scale,
+    image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400&h=300&fit=crop",
+    // justice, strength: secondary -> highlight
+    color: "from-secondary to-highlight",
+  },
+  {
+    id: 'story-7',
+    text: "After leaving the shelter, I thought I'd be stuck. But Shield of Athena's employment program helped me update my resume, practice interviews, and find a job that supports me and my kids. I'm financially independent for the first time in my life.",
+    impact: "Employment and career support",
+    icon: Briefcase,
+    image: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400&h=300&fit=crop",
+    // empowerment, growth: primary-light -> accent
+    color: "from-primary-light to-accent",
+  },
+  {
+    id: 'story-8',
+    text: "The group therapy sessions became my lifeline. Meeting other women who understood what I'd been through made me realize I wasn't broken—I was healing. We supported each other, and I found my voice again.",
+    impact: "Group support and therapy programs",
+    icon: Sparkles,
+    image: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=400&h=300&fit=crop",
+    // healing, transformation: muted -> highlight
+    color: "from-muted to-highlight",
+  },
+  {
+    id: 'story-9',
+    text: "Transitional housing gave me the time I needed to rebuild. Shield of Athena helped me find an apartment I could afford and provided support during those first months on my own. My children have their own rooms now, and we're building a new life together.",
+    impact: "Transitional housing support",
+    icon: Building2,
+    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop",
+    // stability, home: primary -> primary-dark
+    color: "from-primary to-primary-dark",
   },
 ];
 
