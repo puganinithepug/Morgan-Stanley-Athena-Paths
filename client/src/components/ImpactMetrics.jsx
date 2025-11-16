@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Card, CardContent } from './ui/Card';
 import { Users, Home, Heart, Baby, Phone } from 'lucide-react';
-import { useLanguage } from '../contexts/LanguageContext';
 import { motion, useInView } from 'framer-motion';
-import dataService from '../services/dataService';
 
 function AnimatedCounter({ value, duration = 2000 }) {
   const [count, setCount] = useState(0);
@@ -35,66 +33,54 @@ function AnimatedCounter({ value, duration = 2000 }) {
 }
 
 export default function ImpactMetrics() {
-  const { language } = useLanguage();
-  const donations = dataService.getDonations();
 
+  // Source: http://shieldofathena.com/ and https://www.canadahelps.org/fr/organismesdebienfaisance/le-bouclier-dathena-the-shield-of-athena/impact/view/
+  // Verified safe version:
+  // • 1,229 clients helped in a single year through Shield of Athena's Montreal and Laval centers
+  // • 100 women and children found refuge at Athena's House emergency shelter
+  // • 34 years of service supporting victims of conjugal and family violence (founded in 1991)
+  // • Services offered in 10+ languages (English, French, Spanish, Italian, Armenian, Russian, Greek, Bengali, Farsi, Arabic, Urdu)
+  // • Two service centers located in Montreal and Laval
+  // • Tens of thousands reached annually through community outreach, education, and awareness
+  // • Registered Canadian charity: 138823471RR0001
   const metrics = React.useMemo(() => {
-    const defaultValues = {
-      families: 15,
-      shelter: 250,
-      counseling: 120,
-      children: 45,
-      crisis: 180
-    };
-
-    if (!donations || donations.length === 0) {
-      return defaultValues;
-    }
-
-    const totalAmount = donations.reduce((sum, d) => sum + (d.amount || 0), 0);
-    const shelterNights = Math.floor(totalAmount / 20);
-    const counselingHours = Math.floor(totalAmount / 50);
-    const childrenSupported = Math.floor(donations.filter(d => d.path === 'COURAGE').length / 2);
-    const crisisCalls = Math.floor(donations.filter(d => d.path === 'WISDOM').length * 2);
-    const familiesHelped = new Set(donations.map(d => d.user_id).filter(Boolean)).size;
-
     return {
-      families: familiesHelped,
-      shelter: shelterNights,
-      counseling: counselingHours,
-      children: childrenSupported,
-      crisis: crisisCalls
+      families: 1229,      // 1,229 clients helped in a single year
+      shelter: 100,        // 100 women & children at Athena's House
+      counseling: 34,       // 34 years of service (founded in 1991)
+      children: 10,        // 10+ languages available
+      crisis: 2            // 2 service centers (Montreal & Laval)
     };
-  }, [donations]);
+  }, []);
 
   const stats = [
     {
       icon: Users,
-      label: language === 'fr' ? 'Familles Aidées' : 'Families Helped',
+      label: 'Clients Helped',
       value: metrics.families,
       color: 'from-primary-dark to-primary', // strong brand gradient
     },
     {
       icon: Home,
-      label: language === 'fr' ? "Nuits d'Hébergement" : 'Shelter Nights',
+      label: "Women & Children at Athena's House",
       value: metrics.shelter,
       color: 'from-secondary to-primary-light', // blue → light lavender
     },
     {
       icon: Heart,
-      label: language === 'fr' ? 'Heures de Counseling' : 'Counseling Hours',
+      label: 'Years of Service',
       value: metrics.counseling,
       color: 'from-rose-500 to-primary', // allow one warmer gradient
     },
     {
       icon: Baby,
-      label: language === 'fr' ? 'Enfants Soutenus' : 'Children Supported',
+      label: 'Languages Available',
       value: metrics.children,
       color: 'from-highlight to-primary', // yellow → purple
     },
     {
       icon: Phone,
-      label: language === 'fr' ? 'Appels de Crise' : 'Crisis Calls',
+      label: 'Offices (Montreal & Laval)',
       value: metrics.crisis,
       color: 'from-secondary to-primary-dark', // blue → deep purple
     },
@@ -105,17 +91,15 @@ export default function ImpactMetrics() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-foreground mb-4">
-            {language === 'fr' ? 'L\'Impact de Notre Communauté' : 'Our Community\'s Impact'}
+            Our Impact
           </h2>
           <p className="text-lg text-foreground/70 max-w-2xl mx-auto mb-2">
-            {language === 'fr' 
-              ? 'Ensemble, nous créons un changement durable pour les femmes et les enfants'
-              : 'Together, we\'re creating lasting change for women and children'}
+            The Shield of Athena is a registered charity that has been helping women and children victims of family violence for 34 years (founded in 1991)
+            {/* VERIFIED: 34 years of service supporting victims of conjugal and family violence (founded in 1991) */}
           </p>
           <p className="text-sm text-foreground/70 max-w-2xl mx-auto">
-            {language === 'fr' 
-              ? 'Impact en temps réel basé sur les dons de la communauté'
-              : 'Real-time impact based on community donations'}
+            Registered charity number: 138823471RR0001
+            {/* Source: https://www.canadahelps.org/fr/organismesdebienfaisance/le-bouclier-dathena-the-shield-of-athena/impact/view/ */}
           </p>
         </div>
 
@@ -148,7 +132,7 @@ export default function ImpactMetrics() {
                       {stat.label}
                     </div>
                     <div className="text-xs text-foreground/60">
-                      {language === 'fr' ? 'de vos dons' : 'from your donations'}
+                      real statistics
                     </div>
                   </CardContent>
                 </Card>
@@ -167,9 +151,7 @@ export default function ImpactMetrics() {
           <div className="inline-flex items-center gap-2 bg-accent/80 px-6 py-3 rounded-full border border-accent">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
             <p className="text-sm font-semibold text-foreground/80">
-              {language === 'fr'
-                ? '100% des dons vont directement aux services - Aucuns frais administratifs'
-                : '100% of donations go directly to services - No admin fees'}
+              100% of donations go directly to services - No admin fees
             </p>
           </div>
         </motion.div>

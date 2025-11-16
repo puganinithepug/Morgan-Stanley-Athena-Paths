@@ -86,11 +86,13 @@ export default function PathTransitionSection() {
     >
       {/* TEXT + CTA */}
       <div className="relative z-20 flex flex-col items-center text-center px-4">
+        {/* Source: https://www.canadahelps.org/fr/organismesdebienfaisance/le-bouclier-dathena-the-shield-of-athena/impact/view/ */}
         <h1 className="text-4xl max-w-2xl md:text-5xl font-bold text-gray-900 mb-3">
-          Help women and children find safety, healing, and hope.
+          Supporting Women and Children Affected by Family Violence
         </h1>
         <p className="text-gray-600 max-w-2xl mx-auto mb-6">
-          Athena Paths transforms donating into a guided journey—Wisdom, Courage, and Protection—that mirrors the real stages of a survivor's healing.
+          The Shield of Athena is a non-profit organization offering culturally and linguistically adapted professional support, intervention, and prevention services to women victims of family violence and their children, as well as members of ethnocultural communities.
+          {/* Source: https://www.canadahelps.org/fr/organismesdebienfaisance/le-bouclier-dathena-the-shield-of-athena/impact/view/ - "Le Bouclier d'Athéna Services familiaux est un organisme communautaire sans but lucratif qui offre des services professionnels de soutien, d'intervention et de prévention culturellement et linguistiquement adaptés aux besoins des femmes victimes de violence familiale et leurs enfants ainsi qu'aux membres des communautés ethnoculturelles." */}
         </p>
         <Button
           size="lg"

@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
 import dataService from "../services/dataService";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Card, CardContent } from "../components/ui/Card";
-import { ArrowRight, Heart, Shield, Phone, Home, Quote, Users, HandHeart } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Heart, Shield, Phone, Home, Quote, Users, HandHeart } from "lucide-react";
 import { motion } from "framer-motion";
 import ImpactMetrics from "../components/ImpactMetrics";
 import ImpactStories from "../components/ImpactStories";
@@ -18,7 +17,7 @@ import PathTransitionSection from "../components/PathTransitionSection";
 
 
 export default function Landing() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const { user } = useAuth();
   const [donationAmount, setDonationAmount] = useState("");
   const [selectedPath, setSelectedPath] = useState(null);
@@ -48,7 +47,7 @@ export default function Landing() {
     }
   }, [user, hasVisited]);
 
-  const handleDonate = async (item, customAmount = null, triggeredAfterLogin = false) => {
+  const handleDonate = useCallback(async (item, customAmount = null, triggeredAfterLogin = false) => {
     if (!user && !triggeredAfterLogin) {
       // Remember what the user wanted to donate, then open login popup
       setPendingDonation({ item, customAmount });
@@ -100,7 +99,7 @@ export default function Landing() {
     } finally {
       setProcessing(false);
     }
-  };
+  }, [user, referralCode]);
 
   const handleVolunteer = async (hours = null) => {
     if (!user) {
@@ -140,7 +139,7 @@ export default function Landing() {
 
     window.addEventListener("login-success", handler);
     return () => window.removeEventListener("login-success", handler);
-  }, [pendingDonation]);
+  }, [pendingDonation, handleDonate]);
 
   const pathConfig = {
     WISDOM: {
@@ -198,6 +197,7 @@ function VideoEmbed({ videoId }) {
           src={`https://www.youtube.com/embed/${videoId}?autoplay=0`}
           className="absolute top-0 left-0 w-full h-full rounded-xl shadow-xl"
           frameBorder="0"
+          title="Shield of Athena Video"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
@@ -236,8 +236,7 @@ function VideoEmbed({ videoId }) {
               Choose Your Path to Make a Difference
             </h2>
             <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
-              Every contribution directly supports women and children on their
-              journey to safety and healing
+              Every contribution directly supports women and children victims of family violence on their journey to safety and healing
             </p>
           </div>
 
@@ -367,9 +366,7 @@ function VideoEmbed({ videoId }) {
                             <div key={item.id} className="mb-4">
                               <div className="flex justify-between items-start mb-2">
                                 <span className="text-sm font-medium text-foreground/80">
-                                  {language === "fr"
-                                    ? item.title_fr
-                                    : item.title_en}
+                                  {item.title_en}
                                 </span>
                                 <span className="text-lg font-bold text-foreground/80">
                                   ${item.suggested_amount}
@@ -473,34 +470,32 @@ function VideoEmbed({ videoId }) {
               <Heart className="w-10 h-10 text-highlight" />
             </motion.div>
             <h2 className="text-4xl font-bold mb-4">
-              {language === "fr" ? "Témoignages" : "Testimonials"}
+              Testimonials
             </h2>
             <p className="text-white/80 text-lg max-w-2xl mx-auto">
-              {language === "fr"
-                ? "Voici ce que disent les survivantes et notre équipe sur l'impact de votre soutien"
-                : "Hear from survivors and our team about the impact of your support"}
+              Hear from survivors and our team about the impact of your support
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
               {
-                quote: "A mother and her daughter arrived safely at a shelter last night. Your support made that moment of safety possible.",
+                quote: "Through our extensive network, 1,229 clients were helped in a single year at our Montreal and Laval centers. In addition, 100 women and children found refuge at Athena's House emergency shelter.",
                 author: "Shield of Athena Team",
-                impact: "5,000+ women & children helped this year",
-                number: "5,000+"
+                impact: "1,229 clients helped in a single year",
+                number: "1,229"
               },
               {
-                quote: "Every donation directly funds critical services. Last month alone, your contributions provided 247 shelter nights and 89 counseling sessions.",
+                quote: "Our multilingual services are offered by professional social workers, assisted by trained cultural intermediaries at our offices in Laval and Montréal. Every donation directly supports these critical services.",
                 author: "Program Director",
-                impact: "247 shelter nights funded last month",
-                number: "247"
+                impact: "100 women & children at Athena's House",
+                number: "100"
               },
               {
-                quote: "The community's generosity has enabled us to answer over 1,200 crisis calls this year. Each call represents a life that matters.",
-                author: "Crisis Line Coordinator",
-                impact: "1,200+ crisis calls answered",
-                number: "1,200+"
+                quote: "For 34 years (founded in 1991), we have been helping victims of conjugal and family violence. Our community outreach reaches tens of thousands annually through education, awareness, information sessions, and media engagement.",
+                author: "Community Outreach Coordinator",
+                impact: "34 years of service (founded 1991)",
+                number: "34"
               }
             ].map((testimonial, idx) => (
               <motion.div
@@ -541,10 +536,10 @@ function VideoEmbed({ videoId }) {
           >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
               {[
-                { label: language === "fr" ? "Familles aidées" : "Families Helped", value: "1,247", icon: Users },
-                { label: language === "fr" ? "Nuits d'hébergement" : "Shelter Nights", value: "3,892", icon: Home },
-                { label: language === "fr" ? "Heures de counseling" : "Counseling Hours", value: "2,156", icon: Heart },
-                { label: language === "fr" ? "Appels de crise" : "Crisis Calls", value: "1,200+", icon: Phone }
+                { label: "Clients Helped in a Single Year", value: "1,229", icon: Users },
+                { label: "Women & Children at Athena's House", value: "100", icon: Home },
+                { label: "Years of Service (founded 1991)", value: "34", icon: Heart },
+                { label: "Languages Available", value: "10+", icon: Phone }
               ].map((stat, idx) => {
                 const Icon = stat.icon;
                 return (

@@ -126,9 +126,7 @@ export default function FirstTimeVisitorModal({
                     transition={{ delay: 0.3 }}
                     className="text-3xl font-bold text-foreground mb-3"
                   >
-                    {language === "fr"
-                      ? "Bienvenue sur Athena Paths!"
-                      : "Welcome to Athena Paths!"}{" "}
+                    Welcome to Shield of Athena!{" "}
                     👋
                   </motion.h2>
 
@@ -138,9 +136,7 @@ export default function FirstTimeVisitorModal({
                     transition={{ delay: 0.4 }}
                     className="text-foreground/70 text-base"
                   >
-                    {language === "fr"
-                      ? "Est-ce votre première visite? Répondez à un quiz rapide pour découvrir quel parcours résonne le plus avec vos valeurs."
-                      : "Is this your first time here? Take a quick quiz to discover which path resonates most with your values."}
+                    Is this your first time here? Discover how you can help women and children victims of family violence by choosing your donation path.
                   </motion.p>
                 </div>
 
