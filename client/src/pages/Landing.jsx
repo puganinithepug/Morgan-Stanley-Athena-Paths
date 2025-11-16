@@ -25,7 +25,7 @@ import aboutImg from "../assets/about_image.jpeg"
 
 
 export default function Landing() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const { user } = useAuth();
   const [donationAmount, setDonationAmount] = useState("");
   const [selectedPath, setSelectedPath] = useState(null);
@@ -129,7 +129,7 @@ export default function Landing() {
               points_awarded: points,
               impact_item_id: item.id,
               impact_item_title:
-                language === "fr" ? item.title_fr : item.title_en,
+                item.title_en,
             });
 
             const newPoints = (user.total_points || 0) + points;
@@ -232,17 +232,41 @@ export default function Landing() {
 
 /* -------------------- VIDEO EMBED COMPONENT -------------------- */
 function loadYouTubeAPI() {
-  return new Promise((resolve) => {
-    if (window.YT) {
+  return new Promise((resolve, reject) => {
+    // Check if YT is already loaded and Player is available
+    if (window.YT && window.YT.Player && typeof window.YT.Player === 'function') {
       resolve(window.YT);
       return;
     }
 
+    // If script is already being loaded, wait for it
+    if (window.onYouTubeIframeAPIReady) {
+      const originalCallback = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => {
+        originalCallback();
+        if (window.YT && window.YT.Player && typeof window.YT.Player === 'function') {
+          resolve(window.YT);
+        } else {
+          reject(new Error('YouTube API loaded but Player constructor not available'));
+        }
+      };
+      return;
+    }
+
+    // Load the script
     const tag = document.createElement("script");
     tag.src = "https://www.youtube.com/iframe_api";
+    tag.async = true;
+    tag.onerror = () => reject(new Error('Failed to load YouTube API'));
     document.body.appendChild(tag);
 
-    window.onYouTubeIframeAPIReady = () => resolve(window.YT);
+    window.onYouTubeIframeAPIReady = () => {
+      if (window.YT && window.YT.Player && typeof window.YT.Player === 'function') {
+        resolve(window.YT);
+      } else {
+        reject(new Error('YouTube API loaded but Player constructor not available'));
+      }
+    };
   });
 }
 
@@ -254,48 +278,84 @@ function VideoEmbed({ videoId }) {
   useEffect(() => {
     let observer;
     let player;
+    let isMounted = true;
 
-    loadYouTubeAPI().then((YT) => {
-      // Ensure the element has an ID before creating the player
-      if (playerRef.current && !playerRef.current.id) {
-        playerRef.current.id = playerIdRef.current;
-      }
+    loadYouTubeAPI()
+      .then((YT) => {
+        if (!isMounted) return;
 
-      // Use the element ID string instead of the element directly
-      const elementId = playerRef.current?.id || playerIdRef.current;
-      
-      player = new YT.Player(elementId, {
-        videoId,
-        playerVars: {
-          autoplay: 0,
-          controls: 1,
-          mute: 1,
-          playsinline: 1,
-        },
-        events: {
-          onReady: () => {
-            observer = new IntersectionObserver(
-              (entries) => {
-                entries.forEach((entry) => {
-                  if (entry.isIntersecting) {
-                    player.playVideo();
-                  } else {
-                    player.pauseVideo();
-                  }
-                });
+        // Ensure the element exists and has an ID before creating the player
+        if (!playerRef.current) {
+          console.warn('Player element not found');
+          return;
+        }
+
+        if (!playerRef.current.id) {
+          playerRef.current.id = playerIdRef.current;
+        }
+
+        // Verify YT.Player is still available (race condition check)
+        if (!YT.Player || typeof YT.Player !== 'function') {
+          console.error('YT.Player is not a constructor');
+          return;
+        }
+
+        // Use the element ID string instead of the element directly
+        const elementId = playerRef.current.id;
+        
+        try {
+          player = new YT.Player(elementId, {
+            videoId,
+            playerVars: {
+              autoplay: 0,
+              controls: 1,
+              mute: 1,
+              playsinline: 1,
+            },
+            events: {
+              onReady: () => {
+                if (!isMounted || !player) return;
+                
+                observer = new IntersectionObserver(
+                  (entries) => {
+                    entries.forEach((entry) => {
+                      if (entry.isIntersecting) {
+                        // Video is in view - play it
+                        if (player && typeof player.playVideo === 'function') {
+                          player.playVideo();
+                        }
+                      } else {
+                        // Video is out of view - pause it
+                        if (player && typeof player.pauseVideo === 'function') {
+                          player.pauseVideo();
+                        }
+                      }
+                    });
+                  },
+                  { threshold: 0.5 }
+                );
+
+                if (containerRef.current) {
+                  observer.observe(containerRef.current);
+                }
               },
-              { threshold: 0.5 }
-            );
-
-            observer.observe(containerRef.current);
-          },
-        },
+              onError: (event) => {
+                console.error('YouTube player error:', event.data);
+              },
+            },
+          });
+        } catch (error) {
+          console.error('Error creating YouTube player:', error);
+        }
+      })
+      .catch((error) => {
+        console.error('Failed to load YouTube API:', error);
       });
-    });
 
     return () => {
+      isMounted = false;
       observer?.disconnect();
-      if (player && player.destroy) {
+      if (player && typeof player.destroy === 'function') {
         try {
           player.destroy();
         } catch (e) {
@@ -589,14 +649,10 @@ function VideoEmbed({ videoId }) {
                 <Shield className="w-8 h-8 text-primary" />
               </div>
               <h2 className="text-4xl font-bold text-foreground mb-6">
-                {language === "fr"
-                  ? "À propos de Shield of Athena"
-                  : "About Shield of Athena"}
+                About Shield of Athena
               </h2>
               <p className="text-lg text-foreground/70 mb-6 leading-relaxed">
-                {language === "fr"
-                  ? "Depuis plus de 30 ans, Shield of Athena offre un refuge sûr et des services complets aux femmes et aux enfants fuyant la violence familiale à Montréal."
-                  : "For over 30 years, Shield of Athena has provided safe shelter and comprehensive services to women and children fleeing family violence in Montreal."}
+                For over 30 years, Shield of Athena has provided safe shelter and comprehensive services to women and children fleeing family violence in Montreal.
               </p>
 
               <div className="grid grid-cols-2 gap-4 mb-6">
@@ -605,15 +661,13 @@ function VideoEmbed({ videoId }) {
                     2,000+
                   </div>
                   <div className="text-sm text-foreground/70">
-                    {language === "fr"
-                      ? "Femmes et enfants aidés/an"
-                      : "Women & children helped/year"}
+                    Women & children helped/year
                   </div>
                 </div>
                 <div className="bg-gradient-to-br from-muted/10 to-muted/5 rounded-lg p-4 border border-muted/40">
                   <div className="text-3xl font-bold text-muted mb-1">24/7</div>
                   <div className="text-sm text-foreground/70">
-                    {language === "fr" ? "Ligne de crise" : "Crisis line"}
+                    Crisis line
                   </div>
                 </div>
                 <div className="bg-gradient-to-br from-highlight/20 to-highlight/10 rounded-lg p-4 border border-highlight/40">
@@ -621,9 +675,7 @@ function VideoEmbed({ videoId }) {
                     30+
                   </div>
                   <div className="text-sm text-foreground/70">
-                    {language === "fr"
-                      ? "Années de service"
-                      : "Years of service"}
+                    Years of service
                   </div>
                 </div>
                 <div className="bg-gradient-to-br from-accent/20 to-accent/10 rounded-lg p-4 border border-accent/50">
@@ -631,7 +683,7 @@ function VideoEmbed({ videoId }) {
                     100%
                   </div>
                   <div className="text-sm text-foreground/70">
-                    {language === "fr" ? "Services gratuits" : "Free services"}
+                    Free services
                   </div>
                 </div>
               </div>
@@ -642,9 +694,7 @@ function VideoEmbed({ videoId }) {
                     size="lg"
                     className="shadow-md hover:shadow-[0_0_20px_rgba(111,106,168,0.6)] hover:scale-[1.02] transition-all duration-200"
                   >
-                    {language === "fr"
-                      ? "Découvrir Nos Services"
-                      : "Discover Our Services"}
+                    Discover Our Services
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </Link>
@@ -654,7 +704,7 @@ function VideoEmbed({ videoId }) {
                     variant="outline"
                     className="border-primary/40 text-primary hover:border-primary hover:text-primary-dark"
                   >
-                    {language === "fr" ? "Commencer à Aider" : "Start Helping"}
+                    Start Helping
                     <Heart className="ml-2 w-5 h-5" />
                   </Button>
                 </Link>
@@ -671,22 +721,16 @@ function VideoEmbed({ videoId }) {
               <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
                 <img
                   src={aboutImg}
-                  alt={
-                    language === "fr" ? "Shield of Athena" : "Shield of Athena"
-                  }
+                  alt="Shield of Athena"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/60 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <p className="text-lg font-semibold mb-2">
-                    {language === "fr"
-                      ? "Un refuge sûr pour chaque femme et enfant"
-                      : "A safe haven for every woman and child"}
+                    A safe haven for every woman and child
                   </p>
                   <p className="text-sm opacity-90">
-                    {language === "fr"
-                      ? "Ensemble, nous créons un avenir sans violence"
-                      : "Together, we create a future free from violence"}
+                    Together, we create a future free from violence
                   </p>
                 </div>
               </div>
@@ -853,4 +897,5 @@ function VideoEmbed({ videoId }) {
     </div>
   );
 }
+
 

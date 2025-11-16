@@ -63,7 +63,7 @@ export default function TeamSection() {
     return () => {
       cancelled = true;
     };
-  }, [user?.team_id]);
+  }, [user, user?.team_id]);
 
   if (!user) {
     return null; // Section only makes sense for logged-in users

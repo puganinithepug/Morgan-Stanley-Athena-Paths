@@ -42,7 +42,7 @@ const languages = [
 ];
 
 export default function Header() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const { user, logout } = useAuth();
   const translateRef = useRef(null);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
@@ -139,7 +139,7 @@ export default function Header() {
               className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-orange-500 text-white px-4 py-2 rounded-lg font-bold text-sm hover:from-red-700 hover:to-orange-600 transition-all shadow-md hover:shadow-lg"
             >
               <AlertTriangle className="w-4 h-4" />
-              {language === "fr" ? "Êtes-vous une victime?" : "Are you a victim?"}
+              Are you a victim?
             </Link>
 
             <Link
@@ -147,7 +147,7 @@ export default function Header() {
               className="flex items-center gap-2 bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-lg font-bold text-sm hover:from-primary-dark hover:to-secondary-dark transition-all shadow-md hover:shadow-lg"
             >
               <Heart className="w-4 h-4" />
-              {language === "fr" ? "Faire un Don" : "Donate"}
+              Donate
             </Link>
 
             {/* Find Your Path */}
@@ -221,7 +221,7 @@ export default function Header() {
                 `nav-link ${isActive ? "nav-link-active" : ""}`
               }
             >
-              {language === "fr" ? "Contact" : "Contact"}
+              Contact
             </NavLink>
           </nav>
 
@@ -426,7 +426,7 @@ export default function Header() {
                     className="flex items-center gap-3 bg-gradient-to-r from-red-600 to-orange-500 text-white px-6 py-4 rounded-lg font-bold text-base hover:from-red-700 hover:to-orange-600 transition-all shadow-md"
                   >
                     <AlertTriangle className="w-5 h-5" />
-                    {language === 'fr' ? 'Êtes-vous une victime?' : 'Are you a victim?'}
+                    Are you a victim?
                   </Link>
 
                   <Link
@@ -435,7 +435,7 @@ export default function Header() {
                     className="flex items-center gap-3 bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-lg font-bold text-base hover:from-primary-dark hover:to-secondary-dark transition-all shadow-md"
                   >
                     <Heart className="w-5 h-5" />
-                    {language === 'fr' ? 'Faire un Don' : 'Donate'}
+                    Donate
                   </Link>
 
                   {/* Divider */}
@@ -529,7 +529,7 @@ export default function Header() {
                       }`
                     }
                   >
-                    {language === 'fr' ? 'Contact' : 'Contact'}
+                    Contact
                   </NavLink>
                 </nav>
               </div>

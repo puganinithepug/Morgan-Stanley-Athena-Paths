@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useLanguage } from '../contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { User, Award, Trophy, Heart, Phone, Home, Sparkles, HandHeart } from 'lucide-react';
 import { BADGE_DEFINITIONS, checkAndAwardBadges } from '../components/BadgeChecker';
 import ReferralSection from '../components/ReferralSection';
 import TeamSection from '../components/TeamSection';
-import { motion, AnimatePresence, color } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { PATH_STORIES, PATH_LEVEL_LABELS } from '../contexts/PathStories';
 import { computePathStats } from '../components/PathProgress';
 import dataService from '../services/dataService';
@@ -15,7 +14,6 @@ import { Button } from '../components/ui/Button';
 export default function Profile() {
   const { user } = useAuth();
   const userId = user?.id;
-  const { language } = useLanguage();
   const [newBadges, setNewBadges] = useState([]);
   const [showBadgeNotification, setShowBadgeNotification] = useState(false);
   const [backendBadges, setBackendBadges] = useState([]);
@@ -161,12 +159,6 @@ export default function Profile() {
     }, 0);
 
   console.log("Volunteering hours:", volunteerHoursFromDonations);
-
-  // Prefer backend-computed volunteer_hours, fall back to donations-derived
-  const volunteerHours =
-    (typeof user?.volunteer_hours === 'number' ? user.volunteer_hours : 0) ||
-    volunteerHoursFromDonations;
-
   const backendBadgeIds = new Set(
     (backendBadges || []).map((b) => b.badge_id || b.id)
   );
@@ -208,10 +200,10 @@ export default function Profile() {
                 </motion.div>
                 <div className="flex-1">
                   <h3 className="font-bold text-foreground mb-1">
-                    {language === 'fr' ? 'Nouveau Badge Débloqué!' : 'New Badge Unlocked!'}
+                    New Badge Unlocked!
                   </h3>
                   <p className="text-sm text-foreground/70">
-                    {newBadges[0].name[language]}
+                    {newBadges[0].name.en}
                   </p>
                 </div>
                 <button
@@ -234,7 +226,7 @@ export default function Profile() {
             <User className="w-10 h-10 text-primary" />
           </div>
                <h1 className="text-4xl font-bold text-foreground mb-2">
-            {language === 'fr' ? 'Votre Profil Athena' : 'Your Athena Profile'}
+            Your Athena Profile
           </h1>
           <p className="text-foreground/70">
             {user.full_name || user.email || 'Anonymous User'}
@@ -253,7 +245,7 @@ export default function Profile() {
                 <Award className="mt-6 w-8 h-8 mx-auto mb-2 opacity-90 relative z-10" />
                 <div className="text-3xl font-bold mb-1 relative z-10">{totalImpactPoints}</div>
                 <div className="text-sm opacity-90 relative z-10">
-                  {language === 'fr' ? 'Points d\'Impact' : 'Impact Points'}
+                  Impact Points
                 </div>
               </CardContent>
             </Card>
@@ -270,7 +262,7 @@ export default function Profile() {
                 <Heart className="mt-6 w-8 h-8 mx-auto mb-2 opacity-90 relative z-10" />
                 <div className="text-3xl font-bold mb-1 relative z-10">{realDonations.length}</div>
                 <div className="text-sm opacity-90 relative z-10">
-                  {language === 'fr' ? 'Dons Totaux' : 'Total Donations'}
+                  Total Donations
                 </div>
                 <div className="text-xs opacity-75 mt-1 relative z-10">
                   ${totalAmount.toLocaleString()}
@@ -290,7 +282,7 @@ export default function Profile() {
                 <Trophy className="mt-6 w-8 h-8 mx-auto mb-2 opacity-90 relative z-10" />
                 <div className="text-3xl font-bold mb-1 relative z-10">{earnedBadges.length}</div>
                 <div className="text-sm opacity-90 relative z-10">
-                  {language === 'fr' ? 'Badges' : 'Badges'}
+                  Badges
                 </div>
               </CardContent>
             </Card>
@@ -308,7 +300,7 @@ export default function Profile() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-primary" />
-              {language === 'fr' ? 'Vos Statistiques par Parcours' : 'Your Path Statistics'}
+              Your Path Statistics
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -335,16 +327,14 @@ export default function Profile() {
                         <div className="flex items-center gap-2">
                           <Phone className="w-4 h-4 text-highlight" />
                           <span className="font-medium text-foreground">
-                            {language === 'fr' ? 'Sagesse' : 'Wisdom'}
+                            Wisdom
                           </span>
                         </div>
                         <span className="text-xs text-foreground/60">
-                          {language === 'fr'
-                            ? `Niveau ${stats.level} – ${levelLabel}`
-                            : `Level ${stats.level} – ${levelLabel}`}
+                          {`Level ${stats.level} – ${levelLabel}`}
                         </span>
                         <span className="text-[11px] text-foreground/60 block">
-                          {language === 'fr' ? story.fr : story.en}
+                          {story.en}
                         </span>
                       </div>
                       <div className="text-right">
@@ -366,9 +356,7 @@ export default function Profile() {
 
                     {stats.nextLevelXp != null && (
                       <p className="mt-1 text-[11px] text-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity text-right">
-                        {language === 'fr'
-                          ? `Encore ${stats.nextLevelXp - stats.xp} XP pour le prochain niveau.`
-                          : `${stats.nextLevelXp - stats.xp} XP to your next level.`}
+                        {`${stats.nextLevelXp - stats.xp} XP to your next level.`}
                       </p>
                     )}
                   </div>
@@ -395,16 +383,14 @@ export default function Profile() {
                         <div className="flex items-center gap-2">
                           <Heart className="w-4 h-4 text-muted" />
                           <span className="font-medium text-foreground">
-                            {language === 'fr' ? 'Courage' : 'Courage'}
+                            Courage
                           </span>
                         </div>
                         <span className="text-xs text-foreground/60">
-                          {language === 'fr'
-                            ? `Niveau ${stats.level} – ${levelLabel}`
-                            : `Level ${stats.level} – ${levelLabel}`}
+                          {`Level ${stats.level} – ${levelLabel}`}
                         </span>
                         <span className="text-[11px] text-foreground/60 block">
-                          {language === 'fr' ? story.fr : story.en}
+                          {story.en}
                         </span>
                       </div>
                       <div className="text-right">
@@ -425,9 +411,7 @@ export default function Profile() {
 
                     {stats.nextLevelXp != null && (
                       <p className="mt-1 text-[11px] text-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity text-right">
-                        {language === 'fr'
-                          ? `Encore ${stats.nextLevelXp - stats.xp} XP pour le prochain niveau.`
-                          : `${stats.nextLevelXp - stats.xp} XP to your next level.`}
+                        {`${stats.nextLevelXp - stats.xp} XP to your next level.`}
                       </p>
                     )}
                   </div>
@@ -455,16 +439,14 @@ export default function Profile() {
                         <div className="flex items-center gap-2">
                           <Home className="w-4 h-4 text-secondary" />
                           <span className="font-medium text-foreground">
-                            {language === 'fr' ? 'Protection' : 'Protection'}
+                            Protection
                           </span>
                         </div>
                         <span className="text-xs text-foreground/60">
-                          {language === 'fr'
-                            ? `Niveau ${stats.level} – ${levelLabel}`
-                            : `Level ${stats.level} – ${levelLabel}`}
+                          {`Level ${stats.level} – ${levelLabel}`}
                         </span>
                         <span className="text-[11px] text-foreground/60 block">
-                          {language === 'fr' ? story.fr : story.en}
+                          {story.en}
                         </span>
                       </div>
                       <div className="text-right">
@@ -485,9 +467,7 @@ export default function Profile() {
 
                     {stats.nextLevelXp != null && (
                       <p className="mt-1 text-[11px] text-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity text-right">
-                        {language === 'fr'
-                          ? `Encore ${stats.nextLevelXp - stats.xp} XP pour le prochain niveau.`
-                          : `${stats.nextLevelXp - stats.xp} XP to your next level.`}
+                        {`${stats.nextLevelXp - stats.xp} XP to your next level.`}
                       </p>
                     )}
                   </div>
@@ -514,16 +494,14 @@ export default function Profile() {
                         <div className="flex items-center gap-2">
                           <HandHeart className="w-4 h-4 text-accent" />
                           <span className="font-medium text-foreground">
-                            {language === 'fr' ? 'Service' : 'Service'}
+                            Service
                           </span>
                         </div>
                         <span className="text-xs text-foreground/60">
-                          {language === 'fr'
-                            ? `Niveau ${stats.level} – ${levelLabel}`
-                            : `Level ${stats.level} – ${levelLabel}`}
+                          {`Level ${stats.level} – ${levelLabel}`}
                         </span>
                         <span className="text-[11px] text-foreground/60 block">
-                          {language === 'fr' ? story.fr : story.en}
+                          {story.en}
                         </span>
                       </div>
                       <div className="text-right">
@@ -544,9 +522,7 @@ export default function Profile() {
 
                     {stats.nextLevelXp != null && (
                       <p className="mt-1 text-[11px] text-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity text-right">
-                        {language === 'fr'
-                          ? `Encore ${stats.nextLevelXp - stats.xp} XP pour le prochain niveau.`
-                          : `${stats.nextLevelXp - stats.xp} XP to your next level.`}
+                        {`${stats.nextLevelXp - stats.xp} XP to your next level.`}
                       </p>
                     )}
                   </div>
@@ -563,7 +539,7 @@ export default function Profile() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Award className="w-5 h-5 text-primary" />
-              {language === 'fr' ? 'Vos Badges' : 'Your Badges'}
+              Your Badges
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -598,7 +574,7 @@ export default function Profile() {
                         ${isUnlocked ? 'text-foreground' : 'text-foreground/60'}
                       `}
                     >
-                      {badge.name[language]}
+                      {badge.name.en}
                     </p>
                   </motion.div>
                 );
@@ -612,14 +588,12 @@ export default function Profile() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 mb-2">
             <Heart className="w-5 h-5 text-primary" />
-            {language === 'fr'
-              ? 'Historique de vos contributions'
-              : 'Your Contribution History'}
+            Your Contribution History
           </CardTitle>
           <div className="flex flex-wrap gap-2 mt-2">
             {donationPathOptions.map((opt) => {
               const isActive = donationPathFilter === opt.id;
-              const label = language === 'fr' ? opt.labelFr : opt.labelEn;
+              const label = opt.labelEn;
               return (
                 <Button
                   key={opt.id}
@@ -641,9 +615,7 @@ export default function Profile() {
         <CardContent>
           {filteredDonationsForHistory.length === 0 ? (
             <p className="text-sm text-foreground/70">
-              {language === 'fr'
-                ? 'Aucune contribution pour ce parcours.'
-                : 'No contributions for this path.'}
+              No contributions for this path.
             </p>
           ) : (
             <div className="space-y-3">
@@ -657,24 +629,16 @@ export default function Profile() {
                   >
                     <div>
                       <div className="font-medium text-foreground">
-                        {isService
-                          ? language === 'fr'
-                            ? 'Service bénévole'
-                            : 'Volunteer Service'
-                          : language === 'fr'
-                            ? 'Don'
-                            : 'Donation'}
+                        {isService ? 'Volunteer Service' : 'Donation'}
                       </div>
                       <div className="text-xs text-foreground/60">
                         {date
                           ? date.toLocaleDateString()
-                          : language === 'fr'
-                            ? 'Date inconnue'
-                            : 'Date unknown'}
+                          : 'Date unknown'}
                       </div>
                       {d.path && (
                         <div className="text-[11px] text-foreground/60 mt-0.5">
-                          {language === 'fr' ? 'Parcours: ' : 'Path: '}
+                          Path: 
                           {d.path}
                         </div>
                       )}
@@ -688,15 +652,13 @@ export default function Profile() {
                       {d.hours ? (
                         <div className="font-semibold">
                           {d.hours}{' '}
-                          {language === 'fr' ? 'heures' : 'hours'}
+                          hours
                         </div>
                       ) : null}
                       {d.impact_points ? (
                         <div className="text-[11px] text-foreground/60 mt-0.5">
                           {d.impact_points}{' '}
-                          {language === 'fr'
-                            ? "points d'impact"
-                            : 'impact points'}
+                          impact points
                         </div>
                       ) : null}
                     </div>

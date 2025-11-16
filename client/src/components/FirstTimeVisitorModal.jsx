@@ -2,7 +2,6 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/Button";
 import { Sparkles, X, ArrowRight, Clock } from "lucide-react";
-import { useLanguage } from "../contexts/LanguageContext";
 
 const COOKIE_NAME = "athena_has_seen_first_time_modal";
 const COOKIE_MAX_DURATION = 1 * 24 * 3600;
@@ -33,7 +32,6 @@ export default function FirstTimeVisitorModal({
   isOpen = false,
   onClose = () => {},
 }) {
-  const { language } = useLanguage();
   const [shouldShow, setShouldShow] = React.useState(false);
 
   React.useEffect(() => {
@@ -155,9 +153,7 @@ export default function FirstTimeVisitorModal({
                     }}
                     className="flex-1 bg-gradient-to-r from-primary-dark to-primary hover:from-primary hover:to-primary-light text-white hover:text-foreground py-3"
                   >
-                    {language === "fr"
-                      ? "Oui, commençons!"
-                      : "Yes, let's start!"}
+                    Yes, let's start!
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
                   <Button
@@ -165,9 +161,7 @@ export default function FirstTimeVisitorModal({
                     variant="outline"
                     className="border-foreground/20 text-foreground/80 hover:border-primary hover:text-primary"
                   >
-                    {language === "fr"
-                      ? "Non merci, explorer"
-                      : "No thanks, explore"}
+                    No thanks, explore
                   </Button>
                 </motion.div>
 
@@ -178,9 +172,7 @@ export default function FirstTimeVisitorModal({
                   className="text-center text-sm text-foreground/60 flex items-center justify-center gap-1"
                 >
                   <Clock className="w-4 h-4" />
-                  {language === "fr"
-                    ? "Prend environ 1 minute"
-                    : "Takes about 1 minute"}
+                  Takes about 1 minute
                 </motion.div>
               </div>
             </motion.div>

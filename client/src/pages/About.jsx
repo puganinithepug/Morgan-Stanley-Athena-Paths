@@ -1,5 +1,4 @@
 import React from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
 import { Card, CardContent } from '../components/ui/Card';
 import { 
   Shield, 
@@ -12,43 +11,36 @@ import {
 import { motion } from 'framer-motion';
 
 export default function About() {
-  const { language } = useLanguage();
 
   const milestones = [
-    { year: '1991', event: language === 'fr' ? 'Fondation du Bouclier d\'Athéna' : 'Shield of Athena founded' },
-    { year: '2011', event: language === 'fr' ? 'Gala du 20e anniversaire amasse 200 000$' : '20th Anniversary Gala raises $200,000' },
-    { year: '2012', event: language === 'fr' ? 'Prix d\'Excellence du Ministère de la Santé et des Services sociaux' : 'Excellence Award from Ministry of Health and Social Services' },
-    { year: '2017', event: language === 'fr' ? 'Ville de Laval fait un don de 200 000$ pour le refuge Second Step' : 'City of Laval donates $200,000 for Second Step Shelter' },
-    { year: '2018', event: language === 'fr' ? 'Directrice générale présente aux Nations Unies' : 'Executive Director presents at United Nations' },
-    { year: '2020-2024', event: language === 'fr' ? 'Pause des événements et collectes de fonds en raison de la COVID-19' : 'Pause in events and fundraising due to COVID-19' },
-    { year: '2025', event: language === 'fr' ? '34 ans de service, continuant à soutenir les survivantes' : '34 years of service, continuing to support survivors' }
+    { year: '1991', event: 'Shield of Athena founded' },
+    { year: '2011', event: '20th Anniversary Gala raises $200,000' },
+    { year: '2012', event: 'Excellence Award from Ministry of Health and Social Services' },
+    { year: '2017', event: 'City of Laval donates $200,000 for Second Step Shelter' },
+    { year: '2018', event: 'Executive Director presents at United Nations' },
+    { year: '2020-2024', event: 'Pause in events and fundraising due to COVID-19' },
+    { year: '2025', event: '34 years of service, continuing to support survivors' }
   ];
 
   const team = [
     {
       name: 'Melpa Kamateros',
-      role: language === 'fr' ? 'Directrice générale' : 'Executive Director',
-      description: language === 'fr'
-        ? 'Dirige l\'organisation depuis plus de 20 ans, a présenté aux Nations Unies sur "L\'égalité pour les femmes rurales et éloignées au Canada"'
-        : 'Led the organization for over 20 years, presented at the United Nations on "Equality for Rural & Remote Women in Canada"'
+      role: 'Executive Director',
+      description: 'Led the organization for over 20 years, presented at the United Nations on "Equality for Rural & Remote Women in Canada"'
     },
     {
       name: 'Maud Pontel',
-      role: language === 'fr' ? 'Coordonnatrice' : 'Coordinator',
-      description: language === 'fr'
-        ? 'Fait partie de la Délégation des femmes canadiennes, présentant aux Nations Unies'
-        : 'Part of the Canadian Women\'s Delegation, presenting at the United Nations'
+      role: 'Coordinator',
+      description: 'Part of the Canadian Women\'s Delegation, presenting at the United Nations'
     }
   ];
 
   const awards = [
     {
-      title: language === 'fr' ? 'Prix d\'Excellence 2012' : 'Excellence Award 2012',
-      organization: language === 'fr' ? 'Ministère de la Santé et des Services sociaux du Québec' : 'Ministry of Health and Social Services of Québec',
-      category: language === 'fr' ? 'Soutien aux personnes et groupes vulnérables' : 'Support to vulnerable persons and groups',
-      description: language === 'fr'
-        ? 'Décerné au Département de sensibilisation communautaire multilingue pour service exceptionnel'
-        : 'Awarded to the Multilingual Community Outreach Department for outstanding service',
+      title: 'Excellence Award 2012',
+      organization: 'Ministry of Health and Social Services of Québec',
+      category: 'Support to vulnerable persons and groups',
+      description: 'Awarded to the Multilingual Community Outreach Department for outstanding service',
       icon: Award
     }
   ];
@@ -68,12 +60,10 @@ export default function About() {
               <Shield className="w-12 h-12 text-white" />
             </motion.div>
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              {language === 'fr' ? 'Qui Nous Sommes' : 'Who We Are'}
+              Who We Are
             </h1>
             <p className="text-xl text-white/90 max-w-3xl mx-auto">
-              {language === 'fr'
-                ? 'Le Bouclier d\'Athéna Services familiaux est un organisme communautaire sans but lucratif offrant des services professionnels de soutien, d\'intervention et de prévention culturellement et linguistiquement adaptés.'
-                : 'The Shield of Athena Family Services is a non-profit community organization offering culturally and linguistically adapted professional support, intervention, and prevention services.'}
+              The Shield of Athena Family Services is a non-profit community organization offering culturally and linguistically adapted professional support, intervention, and prevention services.
             </p>
           </div>
         </div>
@@ -89,12 +79,10 @@ export default function About() {
                   <Heart className="w-10 h-10 text-primary" />
                 </div>
                 <h2 className="text-3xl font-bold text-foreground mb-4">
-                  {language === 'fr' ? 'Notre Mission' : 'Our Mission'}
+                  Our Mission
                 </h2>
                 <p className="text-lg text-foreground/70 max-w-3xl mx-auto leading-relaxed">
-                  {language === 'fr'
-                    ? 'Créer un monde où toutes les femmes et enfants touchés par la violence familiale ont accès à un soutien culturellement approprié, un refuge sûr et les ressources nécessaires pour reconstruire leur vie avec dignité et espoir.'
-                    : 'To create a world where all women and children affected by family violence have access to culturally appropriate support, safe shelter, and the resources they need to rebuild their lives with dignity and hope.'}
+                  To create a world where all women and children affected by family violence have access to culturally appropriate support, safe shelter, and the resources they need to rebuild their lives with dignity and hope.
                 </p>
               </div>
             </CardContent>
@@ -107,12 +95,10 @@ export default function About() {
         <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-foreground mb-4">
-              {language === 'fr' ? 'Notre Histoire' : 'Our History'}
+              Our History
             </h2>
             <p className="text-lg text-foreground/70">
-              {language === 'fr'
-                ? '34 ans de service dédié aux femmes et enfants victimes de violence familiale'
-                : '34 years of dedicated service to women and children victims of family violence'}
+              34 years of dedicated service to women and children victims of family violence
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -151,7 +137,7 @@ export default function About() {
         <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-foreground mb-4">
-              {language === 'fr' ? 'Notre Équipe' : 'Our Team'}
+              Our Team
             </h2>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
@@ -195,13 +181,11 @@ export default function About() {
             <CardContent className="p-8">
               <div className="text-center mb-6">
                 <h2 className="text-3xl font-bold text-foreground mb-4">
-                  {language === 'fr' ? 'Impact de la COVID-19' : 'COVID-19 Impact'}
+                  COVID-19 Impact
                 </h2>
               </div>
               <p className="text-foreground/70 leading-relaxed text-lg max-w-4xl mx-auto text-center">
-                {language === 'fr'
-                  ? 'Les organismes communautaires comme le nôtre ont souffert pendant cette période car, en raison des restrictions liées à la COVID-19, nous avons également été limités dans nos événements et activités de collecte de fonds. Le conseil d\'administration du Bouclier a pris la perspective que nous ne pouvons pas exposer les gens à une possible contamination et a arrêté toutes ces activités dans l\'intérêt de la santé publique. Malgré ces défis, nous avons continué à fournir nos services essentiels aux femmes et enfants victimes de violence familiale.'
-                  : 'Community organizations like ours have suffered during this period as due to COVID-19 restrictions we have also been limited in our events and fundraising activities. The Board of the Shield has taken the perspective that we cannot subject people to possible contamination and have stopped all of these activities in the interests of public health. Despite these challenges, we have continued to provide our essential services to women and children victims of family violence.'}
+                Community organizations like ours have suffered during this period as due to COVID-19 restrictions we have also been limited in our events and fundraising activities. The Board of the Shield has taken the perspective that we cannot subject people to possible contamination and have stopped all of these activities in the interests of public health. Despite these challenges, we have continued to provide our essential services to women and children victims of family violence.
               </p>
             </CardContent>
           </Card>
@@ -213,7 +197,7 @@ export default function About() {
         <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-foreground mb-4">
-              {language === 'fr' ? 'Reconnaissance' : 'Recognition'}
+              Recognition
             </h2>
           </div>
           <div className="max-w-3xl mx-auto">
@@ -261,29 +245,29 @@ export default function About() {
         <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">
-              {language === 'fr' ? 'Notre Impact' : 'Our Impact'}
+              Our Impact
             </h2>
           </div>
           <div className="grid md:grid-cols-4 gap-8">
             {[
               { 
                 value: '1,229', 
-                label: language === 'fr' ? 'Clients aidés en une année' : 'Clients helped in a single year',
+                label: 'Clients helped in a single year',
                 icon: Users 
               },
               { 
                 value: '100', 
-                label: language === 'fr' ? 'Femmes et enfants à Athena\'s House' : 'Women & children at Athena\'s House',
+                label: 'Women & children at Athena\'s House',
                 icon: Building2 
               },
               { 
                 value: '34', 
-                label: language === 'fr' ? 'Années de service (fondé en 1991)' : 'Years of service (founded 1991)',
+                label: 'Years of service (founded 1991)',
                 icon: Calendar 
               },
               { 
                 value: '10+', 
-                label: language === 'fr' ? 'Langues disponibles' : 'Languages available',
+                label: 'Languages available',
                 icon: Heart 
               }
             ].map((stat, idx) => {

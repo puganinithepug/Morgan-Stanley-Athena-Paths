@@ -26,13 +26,11 @@ export default function Leaderboard() {
   const [selectedPath, setSelectedPath] = useState('ALL');
   const [supporters, setSupporters] = useState([]);
   const [teams, setTeams] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
 
     async function loadLeaderboard() {
-      setLoading(true);
       try {
         const qs = selectedPath && selectedPath !== 'ALL' ? `?path=${selectedPath}` : '';
         const [supportersRes, teamsRes] = await Promise.all([
@@ -60,10 +58,6 @@ export default function Leaderboard() {
         if (!cancelled) {
           setSupporters([]);
           setTeams([]);
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
         }
       }
     }
