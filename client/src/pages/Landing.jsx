@@ -364,7 +364,7 @@ function VideoEmbed({ videoId }) {
                   key={path}
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
+                  viewport={{ once: false, margin: "-100px" }}
                   transition={{ duration: 0.6, delay: idx * 0.15 }}
                 >
                   <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full flex flex-col">
@@ -557,7 +557,7 @@ function VideoEmbed({ videoId }) {
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ duration: 0.6 }}
             >
               <div className="inline-flex p-3 rounded-full bg-primary/10 mb-4">
@@ -639,7 +639,7 @@ function VideoEmbed({ videoId }) {
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="relative"
             >
@@ -697,13 +697,13 @@ function VideoEmbed({ videoId }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             className="text-center mb-16"
           >
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ duration: 0.6, type: "spring" }}
               className="inline-flex p-4 rounded-full bg-white/10 border border-highlight/40 mb-8"
             >
@@ -744,7 +744,7 @@ function VideoEmbed({ videoId }) {
                 key={idx}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: false }}
                 transition={{ duration: 0.6, delay: idx * 0.15 }}
               >
                 <Card className="bg-white/10 backdrop-blur-lg border-white/20 h-full">
@@ -772,7 +772,7 @@ function VideoEmbed({ videoId }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             transition={{ duration: 0.8, delay: 0.5 }}
             className="text-center"
           >
@@ -789,7 +789,7 @@ function VideoEmbed({ videoId }) {
                     key={idx}
                     initial={{ scale: 0, opacity: 0 }}
                     whileInView={{ scale: 1, opacity: 1 }}
-                    viewport={{ once: true }}
+                    viewport={{ once: false }}
                     transition={{ duration: 0.5, delay: 0.6 + idx * 0.1, type: "spring" }}
                     className="text-center"
                   >

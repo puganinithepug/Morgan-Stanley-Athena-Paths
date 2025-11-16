@@ -21,7 +21,7 @@ const MotionSection = forwardRef(function MotionSection(
       variants={variants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.25 }}
+      viewport={{ amount: 0.25 }}
       {...rest}
     >
       {children}

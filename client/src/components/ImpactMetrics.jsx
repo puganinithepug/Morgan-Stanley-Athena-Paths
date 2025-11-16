@@ -8,7 +8,7 @@ import dataService from '../services/dataService';
 function AnimatedCounter({ value, duration = 2000 }) {
   const [count, setCount] = useState(0);
   const countRef = useRef(null);
-  const isInView = useInView(countRef, { once: true, margin: "-100px" });
+  const isInView = useInView(countRef, { once: false, margin: "-100px" });
 
   useEffect(() => {
     if (!isInView) return;
@@ -127,7 +127,7 @@ export default function ImpactMetrics() {
                 key={idx}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
+                viewport={{ once: false, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
               >
                 <Card className="text-center hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 bg-background/90 backdrop-blur-sm border border-primary/10">
@@ -135,7 +135,7 @@ export default function ImpactMetrics() {
                     <motion.div
                       initial={{ scale: 0 }}
                       whileInView={{ scale: 1 }}
-                      viewport={{ once: true }}
+                      viewport={{ once: false }}
                       transition={{ duration: 0.5, delay: idx * 0.1 + 0.2, type: "spring" }}
                       className="inline-flex p-3 rounded-full bg-gradient-to-br from-primary-light/70 to-primary/70 mb-4 mt-4"
                     >
@@ -160,7 +160,7 @@ export default function ImpactMetrics() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mt-12 text-center"
         >

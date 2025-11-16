@@ -56,7 +56,7 @@ export default function CommunityGoals({ onDonate }) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           className="text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 bg-primary/15 px-4 py-2 rounded-full mb-4">
@@ -85,7 +85,7 @@ export default function CommunityGoals({ onDonate }) {
                 key={goal.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: false }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
               >
                 {/* <Card className="h-full hover:shadow-xl transition-all duration-300 overflow-hidden"> */}
