@@ -22,7 +22,7 @@ export default function LilacGala() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-purple-600 via-purple-500 to-pink-500 py-20 md:py-24">
+      <div className="relative bg-gradient-to-br from-primary-dark via-primary to-secondary py-20 md:py-24">
         <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <motion.div
@@ -42,7 +42,7 @@ export default function LilacGala() {
                 : 'Join us on November 29th, 2025 to celebrate 34 years of service and support women and children victims of family violence.'}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="bg-white text-purple-600 hover:bg-white/90 text-lg px-8 py-6 font-bold shadow-lg">
+              <Button className="bg-highlight text-foreground hover:bg-highlight/90 text-lg px-8 py-6 font-bold shadow-lg">
                 <Ticket className="w-5 h-5 mr-2" />
                 {language === 'fr' ? 'Acheter des billets' : 'Buy Tickets'}
               </Button>
@@ -113,9 +113,9 @@ export default function LilacGala() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <Card className="bg-gradient-to-br from-purple/10 to-pink/10 border-2 border-purple/20">
+              <Card className="bg-gradient-to-br from-primary/10 to-secondary/10 border-2 border-primary/20">
                 <CardContent className="p-8">
-                  <h3 className="text-2xl font-bold text-foreground mb-6">
+                  <h3 className="text-2xl font-bold text-foreground mb-6 mt-6">
                     {language === 'fr' ? 'Pourquoi Participer?' : 'Why Attend?'}
                   </h3>
                   <div className="space-y-4">
@@ -161,7 +161,7 @@ export default function LilacGala() {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <Card>
               <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-3 mb-4 mt-4">
                   <Download className="w-6 h-6 text-primary" />
                   <h3 className="text-xl font-bold text-foreground">
                     {language === 'fr' ? 'Documents de Commandite' : 'Sponsorship Documents'}
@@ -198,7 +198,7 @@ export default function LilacGala() {
 
             <Card>
               <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-3 mb-4 mt-4">
                   <Users className="w-6 h-6 text-primary" />
                   <h3 className="text-xl font-bold text-foreground">
                     {language === 'fr' ? 'Contactez-Nous' : 'Contact Us'}
@@ -240,7 +240,7 @@ export default function LilacGala() {
       </div>
 
       {/* Call to Action */}
-      <div className="py-16 bg-gradient-to-br from-purple-600 via-purple-500 to-pink-500 text-white">
+      <div className="py-16 bg-gradient-to-br from-primary-dark via-primary to-secondary text-white">
         <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">
             {language === 'fr' ? 'Rejoignez-Nous le 29 Novembre!' : 'Join Us on November 29th!'}
@@ -251,12 +251,12 @@ export default function LilacGala() {
               : 'Be there to make a difference in the lives of women and children who need our help.'}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-white text-purple-600 hover:bg-white/90 text-lg px-8 py-6 font-bold">
-              <Ticket className="w-5 h-5 mr-2" style={{ color: '#9333EA' }} />
+            <Button className="bg-highlight text-foreground hover:bg-highlight/90 text-lg px-8 py-6 font-bold">
+              <Ticket className="w-5 h-5 mr-2" />
               {language === 'fr' ? 'Acheter des Billets' : 'Buy Tickets'}
             </Button>
             <Link to="/contact">
-              <Button className="bg-white border-2 border-white text-purple-600 hover:bg-white/95 text-lg px-8 py-6 font-bold" style={{ backgroundColor: '#FFFFFF' }}>
+              <Button className="bg-white/20 text-white border-2 border-white hover:bg-white/30 text-lg px-8 py-6 font-bold">
                 {language === 'fr' ? 'Nous Contacter' : 'Contact Us'}
               </Button>
             </Link>
