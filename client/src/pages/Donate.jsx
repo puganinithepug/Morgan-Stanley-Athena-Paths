@@ -251,81 +251,23 @@ export default function Donate() {
 
                       {path === "SERVICE" ? (
                         <div className="space-y-4">
-                          {/* One Hour Volunteer Session */}
                           <div className="mb-4">
-                            <div className="flex justify-between items-start mb-2">
-                              <span className="text-sm font-medium text-foreground/80">
-                                {language === 'fr' ? 'Session de bénévolat' : 'Volunteer Session'}
-                              </span>
-                              <span className="text-lg font-bold text-foreground/80 text-right min-w-fit">
-                                1 {language === 'fr' ? 'heure' : 'hour'}
-                              </span>
-                            </div>
-                            <Button
-                              variant="unstyled"
-                              onClick={() => handleVolunteer(1)}
-                              className={`w-full ${config.color} text-foreground/70 shadow-md hover:brightness-80 ${config.shadowColor} ${config.hoverColor} transition-all hover:scale-[1.02] border-2 ${config.border} transition-all duration-200`}
-                            >
-                              {language === 'fr' ? 'Bénévole 1 Heure' : 'Volunteer 1 Hour'}
-                            </Button>
-                          </div>
-
-                          {/* Three Hour Volunteer Session */}
-                          <div className="mb-4">
-                            <div className="flex justify-between items-start mb-2">
-                              <span className="text-sm font-medium text-foreground/80">
-                                {language === 'fr' ? 'Session de bénévolat' : 'Volunteer Session'}
-                              </span>
-                              <span className="text-lg font-bold text-foreground/80 text-right min-w-fit">
-                                3 {language === 'fr' ? 'heures' : 'hours'}
-                              </span>
-                            </div>
-                            <Button
-                              variant="unstyled"
-                              onClick={() => handleVolunteer(3)}
-                              className={`w-full ${config.color} text-foreground/70 shadow-md hover:brightness-80 ${config.shadowColor} ${config.hoverColor} transition-all hover:scale-[1.02] border-2 ${config.border} transition-all duration-200`}
-                            >
-                              {language === 'fr' ? 'Bénévole 3 Heures' : 'Volunteer 3 Hours'}
-                            </Button>
-                          </div>
-                          <div className="pt-4 border-t border-foreground/10">
-                            <label className="text-sm font-medium text-foreground/80 block mb-2">
-                              {language === 'fr' ? 'Ou choisissez des heures personnalisées:' : 'Or choose custom hours:'}
-                            </label>
-                            <div className="flex gap-2">
-                              <div className="relative flex-1">
-                                <Input
-                                  type="number"
-                                  placeholder="0"
-                                  value={selectedPath === path ? donationAmount : ""}
-                                  onChange={(e) => {
-                                    setDonationAmount(e.target.value);
-                                    setSelectedPath(path);
-                                  }}
-                                  className="border-foreground/20 focus:border-primary focus:ring-primary/30 min-w-[30%]"
-                                  min="1"
-                                />
-                                <span className="absolute right-10 top-1/2 -translate-y-1/2 text-foreground/50">
-                                  {language === 'fr' ? 'heures' : 'hours'}
+                              <div className="flex justify-between items-start mb-2">
+                                <span className="text-sm font-medium text-foreground/80">
+                                  Volunteer your time
                                 </span>
+                                {/* <span className="text-lg font-bold text-foreground/80 text-right min-w-fit">
+                                  1 hour
+                                </span> */}
                               </div>
                               <Button
-                                onClick={() =>
-                                  donationAmount &&
-                                  handleVolunteer(parseInt(donationAmount))
-                                }
-                                disabled={
-                                  processing ||
-                                  !donationAmount ||
-                                  selectedPath !== path
-                                }
-                                variant="outline"
-                                className="whitespace-nowrap max-w-[50%] text-wrap"
+                                variant="unstyled"
+                                onClick={() => handleVolunteer(1)}
+                                className={`w-full ${config.color} text-foreground/70 shadow-md hover:brightness-80 ${config.shadowColor} ${config.hoverColor} transition-all hover:scale-[1.02] border-2 ${config.border}  transition-all duration-200`}
                               >
-                                {language === 'fr' ? 'Bénévole' : 'Volunteer'}
+                                Volunteer 
                               </Button>
                             </div>
-                          </div>
                         </div>
                       ) : (
                         <div className="space-y-4">
