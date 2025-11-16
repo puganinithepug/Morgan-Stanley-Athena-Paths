@@ -3,6 +3,8 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "./ui/Button";
 import { Phone, Heart, Shield, HandHeart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import EventBanner from "./EventBanner";
+
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";
 import courageImg from "../assets/hero_courage.jpeg";
@@ -84,6 +86,10 @@ export default function PathTransitionSection({ onAboutClick }) {
       ref={sectionRef}
       className="relative min-h-[70vh] flex flex-col items-center bg-white overflow-hidden pt-24 pb-16"
     >
+      <div className="absolute top-6 left-6 z-20 max-w-md w-[min(100%,24rem)]">
+        <EventBanner />
+      </div>
+
       {/* TEXT + CTA */}
       <div className="relative z-20 flex flex-col items-center text-center px-4">
         {/* Source: https://www.canadahelps.org/fr/organismesdebienfaisance/le-bouclier-dathena-the-shield-of-athena/impact/view/ */}

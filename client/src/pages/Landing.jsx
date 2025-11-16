@@ -343,35 +343,8 @@ function VideoEmbed({ videoId }) {
         onClose={() => setShowAboutModal(false)}
       />
 
-      {/* 2025 Lilac Gala Announcement */}
-      <section className="bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 py-8">
-        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <Heart className="w-8 h-8 text-white" />
-              <div>
-                <h3 className="text-xl font-bold text-white">
-                  {language === 'fr' 
-                    ? 'Gala Annuel Lilas 2025 - 29 Novembre' 
-                    : '2025 Annual Lilac Gala - November 29th'}
-                </h3>
-                <p className="text-white/90 text-sm">
-                  {language === 'fr'
-                    ? 'Rejoignez-nous pour célébrer 34 ans de service. Achetez vos billets maintenant!'
-                    : 'Join us to celebrate 34 years of service. Buy your tickets now!'}
-                </p>
-              </div>
-            </div>
-            <Link to="/lilac-gala">
-              <Button className="bg-white hover:bg-white/90 font-bold" style={{ color: '#9333EA' }}>
-                {language === 'fr' ? 'Acheter des Billets' : 'Buy Tickets'}
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
       <PathTransitionSection onAboutClick={() => setShowAboutModal(true)} />
+
       <VideoEmbed videoId="WGND5Fvt2NA" />
 
       <MotionSection id="ways-to-help" className="py-20 bg-gray-50" variants={fromLeft}>
