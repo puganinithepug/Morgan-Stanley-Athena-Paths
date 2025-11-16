@@ -44,6 +44,7 @@ export default function Header() {
   const translateRef = useRef(null);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     const cookie = document.cookie.split(';').find(c => c.trim().startsWith('googtrans='));
@@ -54,6 +55,28 @@ export default function Header() {
       }
     }
   }, []);
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+
+      // hide header when scrolling down
+      if (currentY > lastY && currentY > 50) {
+        setHidden(true);
+      } else {
+        // show header when scrolling up
+        setHidden(false);
+      }
+
+      lastY = currentY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
 
   const handleLanguageChange = (langCode) => {
     setSelectedLanguage(langCode);
@@ -82,7 +105,8 @@ export default function Header() {
         <GoogleTranslate ref={translateRef} />
       </div>
       <header
-        className="fixed top-0 left-0 right-0 z-50 shadow-sm bg-background border-b border-secondary/2"
+        className={`fixed top-0 left-0 right-0 z-50 shadow-sm bg-background border-b border-secondary/2 
+                    transition-transform duration-300 ${hidden ? "-translate-y-20" : "translate-y-0"}`}
       >
       <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
