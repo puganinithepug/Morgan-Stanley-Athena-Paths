@@ -5,10 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card'
 import { User, Award, Trophy, Heart, Phone, Home, Sparkles } from 'lucide-react';
 import { BADGE_DEFINITIONS, checkAndAwardBadges } from '../components/BadgeChecker';
 import ReferralSection from '../components/ReferralSection';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, color } from 'framer-motion';
 import { PATH_STORIES, PATH_LEVEL_LABELS } from '../contexts/PathStories';
 import { computePathStats } from '../components/PathProgress';
 import dataService from '../services/dataService';
+import { Button } from '../components/ui/Button';
 
 export default function Profile() {
   const { user } = useAuth();
@@ -18,6 +19,7 @@ export default function Profile() {
   const [showBadgeNotification, setShowBadgeNotification] = useState(false);
   const [backendBadges, setBackendBadges] = useState([]);
   const [donations, setDonations] = useState([]);
+  const [donationPathFilter, setDonationPathFilter] = useState('ALL');
 
   useEffect(() => {
     if (!userId) return;
@@ -85,6 +87,8 @@ export default function Profile() {
             path: d.path,
             impact_points: d.points_awarded || 0,
             hours: d.hours || 0,
+            // Surface date information for offline/demo donations so the history section can display it
+            created_at: d.created_date,
           }));
           if (!cancelled) {
             setDonations(mapped);
@@ -124,6 +128,27 @@ export default function Profile() {
   const totalAmount = realDonations.reduce((sum, d) => sum + (d.amount || 0), 0);
   const totalImpactPoints = donations.reduce((sum, d) => sum + (d.impact_points || 0), 0);
 
+  // Normalize and sort donations with date information for the history section
+  const donationsWithDates = donations
+    .filter((d) => (d.amount || 0) > 0 || (d.hours || 0) > 0)
+    .map((d) => ({
+      ...d,
+      _created: d.created_at || d.created_date || null,
+    }))
+    .sort((a, b) => {
+      if (!a._created || !b._created) return 0;
+      return new Date(b._created) - new Date(a._created);
+    });
+
+  const filteredDonationsForHistory = donationsWithDates
+    .filter((d) =>
+      donationPathFilter === 'ALL' ? true : d.path === donationPathFilter
+    )
+    .sort((a, b) => {
+      if (!a._created || !b._created) return 0;
+      return new Date(b._created) - new Date(a._created);
+    });
+
   // Primary source of volunteer hours: SERVICE entries in donations
   const volunteerHoursFromDonations = donations
     .filter((d) => d.path === 'SERVICE')
@@ -150,6 +175,13 @@ export default function Profile() {
   const pathStats = computePathStats(donations);
   console.log("Service path stats on Profile page:", pathStats.SERVICE);
 
+  const donationPathOptions = [
+    { id: 'ALL', labelEn: 'All', labelFr: 'Tous', color: 'bg-primary/80', border: 'border-primary', hover: 'hover:bg-primary/40' },
+    { id: 'WISDOM', labelEn: 'Wisdom', labelFr: 'Sagesse', color: 'bg-highlight', border: 'border-highlight', hover: 'hover:bg-highlight/40' },
+    { id: 'COURAGE', labelEn: 'Courage', labelFr: 'Courage', color: 'bg-muted', border: 'border-muted', hover: 'hover:bg-muted/40' },
+    { id: 'PROTECTION', labelEn: 'Protection', labelFr: 'Protection', color: 'bg-secondary', border: 'border-secondary', hover: 'hover:bg-secondary/40' },
+    { id: 'SERVICE', labelEn: 'Service', labelFr: 'Service', color: 'bg-accent', border: 'border-accent', hover: 'hover:bg-accent/40' },
+  ];
   return (
     <div className="min-h-screen py-12 bg-gradient-to-br from-background via-background to-primary/10">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -567,6 +599,105 @@ export default function Profile() {
         </Card>
       </div>
 
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 mb-2">
+            <Heart className="w-5 h-5 text-primary" />
+            {language === 'fr'
+              ? 'Historique de vos contributions'
+              : 'Your Contribution History'}
+          </CardTitle>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {donationPathOptions.map((opt) => {
+              const isActive = donationPathFilter === opt.id;
+              const label = language === 'fr' ? opt.labelFr : opt.labelEn;
+              return (
+                <Button
+                  key={opt.id}
+                  type="button"
+                  variant="unstyled"
+                  size='pill'
+                  onClick={() => setDonationPathFilter(opt.id)}
+                  className={`px-3 py-1 rounded-full text-xs border transition-colors
+                    ${isActive
+                      ? `${opt.color} text-primary-foreground ${opt.border}`
+                      : `bg-background text-foreground/80 border-border ${opt.hover}`}`}
+                >
+                  {label}
+                </Button>
+              );
+            })}
+          </div>
+        </CardHeader>
+        <CardContent>
+          {filteredDonationsForHistory.length === 0 ? (
+            <p className="text-sm text-foreground/70">
+              {language === 'fr'
+                ? 'Aucune contribution pour ce parcours.'
+                : 'No contributions for this path.'}
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {filteredDonationsForHistory.map((d, idx) => {
+                const date = d._created ? new Date(d._created) : null;
+                const isService = d.path === 'SERVICE';
+                return (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between text-sm border-b last:border-b-0 border-border/40 pb-2"
+                  >
+                    <div>
+                      <div className="font-medium text-foreground">
+                        {isService
+                          ? language === 'fr'
+                            ? 'Service bénévole'
+                            : 'Volunteer Service'
+                          : language === 'fr'
+                            ? 'Don'
+                            : 'Donation'}
+                      </div>
+                      <div className="text-xs text-foreground/60">
+                        {date
+                          ? date.toLocaleDateString()
+                          : language === 'fr'
+                            ? 'Date inconnue'
+                            : 'Date unknown'}
+                      </div>
+                      {d.path && (
+                        <div className="text-[11px] text-foreground/60 mt-0.5">
+                          {language === 'fr' ? 'Parcours: ' : 'Path: '}
+                          {d.path}
+                        </div>
+                      )}
+                    </div>
+                    <div className="text-right">
+                      {d.amount ? (
+                        <div className="font-semibold">
+                          ${Number(d.amount).toLocaleString()}
+                        </div>
+                      ) : null}
+                      {d.hours ? (
+                        <div className="font-semibold">
+                          {d.hours}{' '}
+                          {language === 'fr' ? 'heures' : 'hours'}
+                        </div>
+                      ) : null}
+                      {d.impact_points ? (
+                        <div className="text-[11px] text-foreground/60 mt-0.5">
+                          {d.impact_points}{' '}
+                          {language === 'fr'
+                            ? "points d'impact"
+                            : 'impact points'}
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
         <ReferralSection />
       </div>

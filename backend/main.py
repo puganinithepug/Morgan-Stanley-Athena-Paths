@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import hashlib, base64, re, time, secrets, bcrypt
 from typing import Optional
 import pandas as pd
+import datetime
 
 salt = bcrypt.gensalt()
 
@@ -29,9 +30,18 @@ def load_users():
 
 def load_donations():
     try:
-        return pd.read_csv("donations.csv")
+        df = pd.read_csv("donations.csv")
     except FileNotFoundError:
-        return pd.DataFrame(columns=["uuid", "amount", "path", "impact_points"])
+        df = pd.DataFrame(
+            columns=["uuid", "amount", "path", "impact_points", "hours", "created_at"]
+        )
+
+    # Ensure newer columns exist even if older CSVs don't have them yet
+    for col in ["hours", "created_at"]:
+        if col not in df.columns:
+            df[col] = None
+
+    return df
 
 
 def load_referrals():
@@ -196,6 +206,7 @@ def volunteer(data: dict):
     """Record volunteer hours as zero-amount SERVICE entries in donations.csv."""
     uuid = data.get("uuid")
     hours = data.get("hours")
+    start_date = data.get("date")
 
     if uuid is None or hours is None:
         raise HTTPException(status_code=400, detail="uuid and hours are required")
@@ -212,6 +223,7 @@ def volunteer(data: dict):
         "path": "SERVICE",
         "impact_points": hours_val * 10,  # 10 impact points per hour
         "hours": hours_val,
+        "created_at": start_date,
     }
     donations_df = pd.concat(
         [donations_df, pd.DataFrame([new_volunteer])], ignore_index=True
@@ -241,6 +253,8 @@ def donate(data: dict, response: Response):
         "amount": amount,
         "path": path,
         "impact_points": impact,
+        "hours": 0,
+        "created_at": datetime.datetime.now(datetime.UTC).isoformat(),
     }
     donations_df = pd.concat(
         [donations_df, pd.DataFrame([new_donation])], ignore_index=True
@@ -299,6 +313,8 @@ def donate(data: dict, response: Response):
                     "amount": 0,
                     "path": "Referral Bonus",
                     "impact_points": 10,
+                    "hours": None,
+                    "created_at": datetime.utcnow().isoformat(),
                 }
                 donations_df = pd.concat(
                     [donations_df, pd.DataFrame([bonus])], ignore_index=True

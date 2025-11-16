@@ -568,7 +568,8 @@ export const dataService = {
     const donation = {
       id: generateId(),
       ...donationData,
-      created_date: new Date().toISOString(),
+      // Allow callers (like demo/offline flows) to specify an explicit date; otherwise default to now
+      created_date: donationData.created_date || new Date().toISOString(),
     };
     memoryStorage.DONATIONS.push(donation);
 
