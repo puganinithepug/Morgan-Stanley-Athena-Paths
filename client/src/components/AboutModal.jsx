@@ -229,9 +229,9 @@ export default function AboutModal({ isOpen, onClose }) {
                     <h3 className="text-2xl font-bold text-foreground mb-8 text-center">Financial Transparency</h3>
                     <Card className="bg-gray-50 max-w-4xl mx-auto">
                       <CardContent className="!p-6 !pt-6">
-                        <div className="flex items-center justify-center gap-3 mb-5">
+                        {/* <div className="flex items-center justify-center gap-3 mb-5">
                           <FileText className="w-6 h-6 text-primary" />
-                        </div>
+                        </div> */}
                         <div className="grid md:grid-cols-2 gap-6">
                           <div>
                             <h4 className="font-semibold text-foreground mb-2 text-base">Registered Charity</h4>

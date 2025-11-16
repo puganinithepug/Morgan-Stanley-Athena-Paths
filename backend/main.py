@@ -347,9 +347,25 @@ def get_user_donations(uuid: str):
     """Return all donations for a user from donations.csv."""
     df = load_donations()
     user_df = df[df["uuid"] == uuid]
-    # Sanitize the json output by replacing empty cells with None
+    # Sanitize the json output by replacing empty cells with a placeholder
     user_df = user_df.where(pd.notnull(user_df), " ")
     return {"donations": user_df.to_dict(orient="records")}
+
+
+@app.get("/donations")
+def get_donations(path: Optional[str] = None):
+    """Return donations from donations.csv, optionally filtered by path.
+
+    Query params:
+    - path: if provided, only donations matching this path (e.g. WISDOM, COURAGE) are returned.
+    """
+    df = load_donations()
+    if path:
+        df = df[df["path"] == path]
+
+    # Replace NaN/None with a placeholder string so JSON serialization is consistent
+    df = df.where(pd.notnull(df), " ")
+    return {"donations": df.to_dict(orient="records")}
 
 
 @app.get("/users/{uuid}/referrals")

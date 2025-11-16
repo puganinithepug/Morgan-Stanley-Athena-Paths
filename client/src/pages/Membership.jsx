@@ -121,7 +121,7 @@ export default function Membership() {
                 >
                   <Card className="h-full hover:shadow-lg transition-all">
                     <CardContent className="p-6 text-center">
-                      <div className="inline-flex p-4 rounded-full bg-primary/10 mb-4">
+                      <div className="inline-flex p-4 rounded-full bg-primary/10 mb-4 mt-4">
                         <Icon className="w-8 h-8 text-primary" />
                       </div>
                       <h3 className="text-xl font-bold text-foreground mb-2">
@@ -163,7 +163,7 @@ export default function Membership() {
                 <Card className="h-full hover:shadow-lg transition-all">
                   <CardContent className="p-6">
                     <div className="text-center mb-6">
-                      <h3 className="text-2xl font-bold text-primary mb-2">
+                      <h3 className="text-2xl font-bold text-primary mb-2 mt-4">
                         {level.name}
                       </h3>
                       <div className="text-3xl font-bold text-foreground">
@@ -194,8 +194,8 @@ export default function Membership() {
         <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <Card className="bg-gradient-to-br from-primary/10 to-secondary/10 border-2 border-primary/20">
             <CardContent className="p-8">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-foreground mb-4">
+              <div className="text-center mb-8 mt-8">
+                <h2 className="text-3xl font-bold text-foreground mb-4 mt-4">
                   {language === 'fr' ? 'Comment Devenir Membre' : 'How to Become a Member'}
                 </h2>
                 <p className="text-lg text-foreground/70 max-w-3xl mx-auto">

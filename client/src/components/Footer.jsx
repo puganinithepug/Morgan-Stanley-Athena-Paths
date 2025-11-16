@@ -99,14 +99,14 @@ export default function Footer() {
                     Contact
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link
                     to="/about"
                     className="text-white/80 hover:text-white transition-colors"
                   >
                     About Us
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link
                     to="/lilac-gala"
