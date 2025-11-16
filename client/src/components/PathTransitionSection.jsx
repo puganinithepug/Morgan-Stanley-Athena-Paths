@@ -112,9 +112,9 @@ export default function PathTransitionSection({ onAboutClick }) {
           {onAboutClick && (
             <Button
               size="lg"
-              variant="outline"
+              variant="unstyled"
               onClick={onAboutClick}
-              className="bg-white/90 hover:bg-white text-gray-900 px-8 py-5 rounded-full shadow-lg border-2 border-gray-200"
+              className="bg-primary/70 hover:bg-primary/90 text-white px-8 py-5 rounded-full shadow-lg flex items-center gap-2 shadow-primary-glow hover:shadow-primary-glow-strong"
             >
               Learn More About Us
             </Button>

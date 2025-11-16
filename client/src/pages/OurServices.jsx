@@ -292,7 +292,7 @@ export default function OurServices() {
               return (
                 <Card key={index} className="hover:shadow-lg transition-all">
                   <CardContent className="p-6 text-center">
-                    <div className={`inline-flex p-4 ${resource.bgColor} rounded-full mb-4`}>
+                    <div className={`inline-flex p-4 ${resource.bgColor} rounded-full mb-4 mt-4`}>
                       <Icon className={`w-6 h-6 ${resource.color}`} />
                     </div>
                     <h3 className="text-lg font-bold text-foreground mb-2">{resource.title}</h3>
@@ -306,12 +306,12 @@ export default function OurServices() {
           {/* Second Step Resource */}
           <Card className="bg-gradient-to-br from-primary/10 to-secondary/10 border-2 border-primary/20">
             <CardContent className="p-8">
-              <div className="flex items-start gap-6 pt-4">
-                <div className="p-4 bg-primary/20 rounded-lg flex-shrink-0">
+              <div className="flex items-start gap-6">
+                <div className="p-4 bg-primary/20 rounded-lg flex-shrink-0 mt-6">
                   <Building2 className="w-8 h-8 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-foreground mb-3">
+                  <h3 className="text-2xl font-bold text-foreground mb-3 mt-6">
                     Second Step Resource - Laval
                   </h3>
                   <p className="text-foreground/70 mb-4 leading-relaxed">
