@@ -1,23 +1,32 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { X } from 'lucide-react';
 
 const DialogContext = React.createContext();
 
 export function Dialog({ open, onOpenChange, children }) {
   if (!open) return null;
-  
-  return (
+
+  const content = (
     <DialogContext.Provider value={{ open, onOpenChange }}>
-      <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="fixed inset-0 z-50">
         {children}
       </div>
     </DialogContext.Provider>
   );
+
+  // Render in a portal so it's not constrained by any transformed ancestors (like the sticky header)
+  if (typeof document !== 'undefined') {
+    return ReactDOM.createPortal(content, document.body);
+  }
+
+  // Fallback (shouldn't normally hit in the browser)
+  return content;
 }
 
 export function DialogOverlay({ className = '' }) {
   const context = React.useContext(DialogContext);
-  
+
   return (
     <div
       className={`fixed inset-0 bg-black/50 backdrop-blur-sm ${className}`}
@@ -28,21 +37,15 @@ export function DialogOverlay({ className = '' }) {
 
 export function DialogContent({ className = '', children, ...props }) {
   const context = React.useContext(DialogContext);
-  
+
   return (
     <>
       <DialogOverlay />
       <div
-        className={`fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 sm:rounded-lg ${className}`}
+        className={`fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 border p-6 shadow-lg duration-200 sm:rounded-lg ${className}`}
         {...props}
       >
         {children}
-        <button
-          onClick={() => context.onOpenChange(false)}
-          className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        >
-          <X className="h-4 w-4" />
-        </button>
       </div>
     </>
   );
@@ -56,4 +59,3 @@ export function DialogHeader({ className = '', ...props }) {
     />
   );
 }
-
