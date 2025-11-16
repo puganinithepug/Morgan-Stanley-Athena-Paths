@@ -11,6 +11,7 @@ import { computePathStats } from '../components/PathProgress';
 
 export default function Profile() {
   const { user } = useAuth();
+  const userId = user?.id;
   const { language } = useLanguage();
   const [newBadges, setNewBadges] = useState([]);
   const [showBadgeNotification, setShowBadgeNotification] = useState(false);
@@ -19,7 +20,7 @@ export default function Profile() {
   const [loadingDonations, setLoadingDonations] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
 
     let cancelled = false;
 
@@ -52,11 +53,11 @@ export default function Profile() {
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [userId]);
 
   // Load donations for this user from backend
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
 
     let cancelled = false;
 
@@ -84,7 +85,7 @@ export default function Profile() {
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [userId]);
 
   if (!user) {
     return (

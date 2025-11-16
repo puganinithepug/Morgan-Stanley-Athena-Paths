@@ -10,7 +10,7 @@ export function computePathStats(donations) {
       const pathDonations = realDonations.filter((d) => d.path === pathKey);
 
       const xp = pathDonations.reduce(
-        (sum, d) => sum + (d.impact_points || 0),
+        (sum, d) => sum + Number(d.impact_points || 0),
         0
       );
 
@@ -29,12 +29,12 @@ export function computePathStats(donations) {
     const serviceDonations = donations.filter((d) => d.path === 'SERVICE');
 
     const hoursCount = serviceDonations.reduce(
-      (sum, d) => sum + (d.hours || 0),
+      (sum, d) => sum + Number(d.hours || 0),
       0
     );
 
     const xp = serviceDonations.reduce(
-      (sum, d) => sum + (d.impact_points || 0),
+      (sum, d) => sum + Number(d.impact_points || 0),
       0
     );
 
