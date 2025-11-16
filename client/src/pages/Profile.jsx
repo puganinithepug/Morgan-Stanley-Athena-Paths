@@ -15,9 +15,8 @@ export default function Profile() {
   const { language } = useLanguage();
   const [newBadges, setNewBadges] = useState([]);
   const [showBadgeNotification, setShowBadgeNotification] = useState(false);
-  const [backendBadges, setBackendBadges] = useState([]); // badges from backend
-  const [donations, setDonations] = useState([]); // donations from backend
-  const [loadingDonations, setLoadingDonations] = useState(true);
+  const [backendBadges, setBackendBadges] = useState([]);
+  const [donations, setDonations] = useState([]);
 
   useEffect(() => {
     if (!userId) return;
@@ -26,7 +25,6 @@ export default function Profile() {
 
     async function syncBadges() {
       try {
-        // First, check and award any new badges based on backend data
         const earned = await checkAndAwardBadges(user);
         if (!cancelled && earned.length > 0) {
           setNewBadges(earned);
@@ -34,7 +32,6 @@ export default function Profile() {
           setTimeout(() => setShowBadgeNotification(false), 5000);
         }
 
-        // Then load the full badge list from backend
         const res = await fetch(`http://localhost:8000/users/${user.id}/badges`, {
           credentials: 'include',
         });
@@ -53,9 +50,8 @@ export default function Profile() {
     return () => {
       cancelled = true;
     };
-  }, [userId]);
+  }, [userId, user]);
 
-  // Load donations for this user from backend
   useEffect(() => {
     if (!userId) return;
 
@@ -70,13 +66,9 @@ export default function Profile() {
         const data = await res.json();
         if (!cancelled) {
           setDonations(data.donations || []);
-          setLoadingDonations(false);
         }
       } catch (err) {
         console.error('Failed to load donations', err);
-        if (!cancelled) {
-          setLoadingDonations(false);
-        }
       }
     }
 
@@ -85,7 +77,7 @@ export default function Profile() {
     return () => {
       cancelled = true;
     };
-  }, [userId]);
+  }, [userId, user?.id]);
 
   if (!user) {
     return (
@@ -95,19 +87,14 @@ export default function Profile() {
     );
   }
   
-  // Separate real donations from bonus entries (referral bonuses have amount 0 / no path)
   const realDonations = donations.filter((d) => (d.amount || 0) > 0);
   const totalAmount = realDonations.reduce((sum, d) => sum + (d.amount || 0), 0);
   const totalImpactPoints = donations.reduce((sum, d) => sum + (d.impact_points || 0), 0);
-  const volunteerHours = donations
-    .filter((d) => d.path === 'SERVICE')
-    .reduce((sum, d) => sum + (d.hours || 0), 0);
+
   const backendBadgeIds = new Set(
     (backendBadges || []).map((b) => b.badge_id || b.id)
   );
 
-  // Map backend badge ids to local BADGE_DEFINITIONS entries so we inherit
-  // icons and localized names/descriptions.
   const earnedBadges = (backendBadges || [])
     .map((b) => {
       const id = b.badge_id || b.id;

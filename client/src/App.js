@@ -17,6 +17,7 @@ import About from './pages/About';
 import Resources from './pages/Resources';
 import Sponsorship from './pages/Sponsorship';
 import Membership from './pages/Membership';
+import Donate from './pages/Donate';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/resources" element={<Resources />} />
           <Route path="/sponsorship" element={<Sponsorship />} />
           <Route path="/membership" element={<Membership />} />
+          <Route path="/donate" element={<Donate />} />
         </Routes>
       </Layout>
     </Router>

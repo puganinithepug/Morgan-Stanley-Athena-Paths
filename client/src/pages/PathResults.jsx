@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -57,7 +57,7 @@ export default function PathResults() {
   const donations = dataService.getDonations().filter((d) => d.path === path);
   const pathGoals = dataService.getGoals(true).filter((g) => g.path === path);
 
-  const handleDonate = async (item, customAmount = null, triggeredAfterLogin = false) => {
+  const handleDonate = useCallback(async (item, customAmount = null, triggeredAfterLogin = false) => {
     if (!user && !triggeredAfterLogin) {
       setPendingDonation({ item, customAmount });
       window.dispatchEvent(new CustomEvent("open-login-modal"));
@@ -70,7 +70,6 @@ export default function PathResults() {
     else if (path === 'COURAGE') points = Math.floor(amount * 1.2);
 
     try {
-      // Record donation in backend
       try {
         await fetch("http://localhost:8000/donate", {
           method: "POST",
@@ -89,7 +88,6 @@ export default function PathResults() {
         console.error("Backend donation error:", err);
       }
 
-      // Maintain existing local data for UI stats
       dataService.createDonation({
         user_id: user.id,
         user_name: user.full_name || 'Anonymous',
@@ -116,9 +114,8 @@ export default function PathResults() {
       console.error('Donation error:', error);
       alert('Unable to process donation. Please try again.');
     }
-  };
+  }, [user, path, language]);
 
-  // When login succeeds and there is a pending donation, resume it
   useEffect(() => {
     const handler = () => {
       if (pendingDonation) {
@@ -130,7 +127,7 @@ export default function PathResults() {
 
     window.addEventListener("login-success", handler);
     return () => window.removeEventListener("login-success", handler);
-  }, [pendingDonation]);
+  }, [pendingDonation, handleDonate]);
 
   const totalAmount = donations.reduce((sum, d) => sum + d.amount, 0);
   const totalDonations = donations.length;

@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 
-// Minimal Google Translate wrapper: load script, expose changeLanguage,
-// and rely on global CSS to hide the default UI.
 const GoogleTranslate = forwardRef((props, ref) => {
   const translateElementRef = useRef(null);
   const scriptLoadedRef = useRef(false);

@@ -9,7 +9,8 @@ import {
   Home, 
   AlertTriangle, 
   Users, 
-  ArrowRight
+  ArrowRight,
+  X
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -154,6 +155,28 @@ export default function AreYouAVictim() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Sticky Quick Exit Button */}
+      <button
+        onClick={quickExit}
+        className="fixed top-20 right-4 z-[60] bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 font-semibold text-sm md:text-base"
+        style={{
+          backgroundColor: '#DC2626',
+          boxShadow: '0 4px 12px rgba(220, 38, 38, 0.4)'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = '#B91C1C';
+          e.currentTarget.style.boxShadow = '0 6px 16px rgba(220, 38, 38, 0.5)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = '#DC2626';
+          e.currentTarget.style.boxShadow = '0 4px 12px rgba(220, 38, 38, 0.4)';
+        }}
+        aria-label={language === 'fr' ? 'Sortie rapide' : 'Quick Exit'}
+      >
+        <X className="w-4 h-4 md:w-5 md:h-5" />
+        <span className="hidden sm:inline">{language === 'fr' ? 'Sortie Rapide' : 'Quick Exit'}</span>
+      </button>
+
       {/* Hero Section */}
       <div className="relative py-16 md:py-20 overflow-hidden" style={{
         background: 'linear-gradient(to bottom, #6A6CF6, #8B7FD9)'

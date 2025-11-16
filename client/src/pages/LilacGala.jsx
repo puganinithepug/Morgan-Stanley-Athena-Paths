@@ -251,12 +251,12 @@ export default function LilacGala() {
               : 'Be there to make a difference in the lives of women and children who need our help.'}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-white text-purple-600 hover:bg-white/90 text-lg px-8 py-6">
-              <Ticket className="w-5 h-5 mr-2" />
+            <Button className="bg-white text-purple-600 hover:bg-white/90 text-lg px-8 py-6 font-bold">
+              <Ticket className="w-5 h-5 mr-2" style={{ color: '#9333EA' }} />
               {language === 'fr' ? 'Acheter des Billets' : 'Buy Tickets'}
             </Button>
             <Link to="/contact">
-              <Button className="bg-white/20 text-white border-2 border-white hover:bg-white/30 text-lg px-8 py-6">
+              <Button className="bg-white border-2 border-white text-purple-600 hover:bg-white/95 text-lg px-8 py-6 font-bold" style={{ backgroundColor: '#FFFFFF' }}>
                 {language === 'fr' ? 'Nous Contacter' : 'Contact Us'}
               </Button>
             </Link>

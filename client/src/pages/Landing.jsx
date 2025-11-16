@@ -42,7 +42,6 @@ export default function Landing() {
   const [referralCode, setReferralCode] = useState(null);
 
 
-  // Animation variants
   const fadeUp = {
     hidden: { opacity: 0, y: 40 },
     visible: {
@@ -87,7 +86,6 @@ export default function Landing() {
 
   const handleDonate = useCallback(async (item, customAmount = null, triggeredAfterLogin = false) => {
     if (!user && !triggeredAfterLogin) {
-      // Remember what the user wanted to donate, then open login popup
       setPendingDonation({ item, customAmount });
       window.dispatchEvent(new CustomEvent("open-login-modal"));
       return;
@@ -100,7 +98,6 @@ export default function Landing() {
     else if (item.path === "COURAGE") points = Math.floor(amount * 1.2);
 
     try {
-      // Record donation in backend
       try {
         await fetch("http://localhost:8000/donate", {
           method: "POST",
@@ -119,9 +116,6 @@ export default function Landing() {
       } catch (err) {
         console.error("Backend donation error:", err);
       }
-
-      // Donation is stored in backend only now; UI stats and badges
-      // will be driven from backend in future steps.
 
       setLastDonation({
         amount,
@@ -146,7 +140,6 @@ export default function Landing() {
     }
     
     if (hours) {
-      // Record volunteer hours in backend
       try {
         await fetch("http://localhost:8000/volunteer", {
           method: "POST",
@@ -161,11 +154,9 @@ export default function Landing() {
       }
     }
     
-    // Navigate to volunteer schedule page
     window.location.href = "/volunteer-schedule";
   };
 
-  // When login succeeds and there is a pending donation, resume it
   useEffect(() => {
     const handler = () => {
       if (pendingDonation) {
@@ -241,85 +232,62 @@ function loadYouTubeAPI() {
   });
 }
 
-// function VideoEmbed({ videoId }) {
-//   const playerRef = useRef(null);
-//   const containerRef = useRef(null);
-
-//   useEffect(() => {
-//   let observer;
-//   let player;
-
-//   loadYouTubeAPI().then((YT) => {
-//     player = new YT.Player(playerRef.current, {
-//       videoId,
-//       playerVars: {
-//         autoplay: 0,
-//         controls: 1,
-//         mute: 1,
-//         playsinline: 1,
-//       },
-//       events: {
-//         onReady: () => {
-//           // Player is ready — now start observing
-//           observer = new IntersectionObserver(
-//             (entries) => {
-//               entries.forEach((entry) => {
-//                 if (entry.isIntersecting) {
-//                   player.playVideo();
-//                 } else {
-//                   player.pauseVideo();
-//                 }
-//               });
-//             },
-//             { threshold: 0.5 }
-//           );
-
-//           observer.observe(containerRef.current);
-//         },
-//       },
-//     });
-//   });
-
-//   return () => observer?.disconnect();
-// }, [videoId]);
-
-//   return (
-//     <div
-//       ref={containerRef}
-//       className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
-//     >
-//       <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-//         <div
-//           ref={playerRef}
-//           className="absolute top-0 left-0 w-full h-full rounded-xl shadow-xl"
-//         />
-//       </div>
-//     </div>
-//   );
-// }
-
 function VideoEmbed({ videoId }) {
-  return (
+  const playerRef = useRef(null);
+  const containerRef = useRef(null);
 
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  useEffect(() => {
+    let observer;
+    let player;
+
+    loadYouTubeAPI().then((YT) => {
+      player = new YT.Player(playerRef.current, {
+        videoId,
+        playerVars: {
+          autoplay: 0,
+          controls: 1,
+          mute: 1,
+          playsinline: 1,
+        },
+        events: {
+          onReady: () => {
+            observer = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (entry.isIntersecting) {
+                    player.playVideo();
+                  } else {
+                    player.pauseVideo();
+                  }
+                });
+              },
+              { threshold: 0.5 }
+            );
+
+            observer.observe(containerRef.current);
+          },
+        },
+      });
+    });
+
+    return () => observer?.disconnect();
+  }, [videoId]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
+    >
       <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-        <iframe
-          src={`https://www.youtube.com/embed/${videoId}?autoplay=0`}
+        <div
+          ref={playerRef}
           className="absolute top-0 left-0 w-full h-full rounded-xl shadow-xl"
-          frameBorder="0"
-          title="Shield of Athena Video"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
         />
       </div>
     </div>
   );
 }
 
-/* --------------------------------------------------------------- */
-
-// export default function Home() {
-//   const { language } = useLanguage();
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -504,7 +472,6 @@ function VideoEmbed({ videoId }) {
                         </div>
                       </div>
                     ) : (
-                      // REGULAR DONATION PATHS (WISDOM, COURAGE, PROTECTION)
                       <div className="space-y-4">
                           {pathItems.slice(0, 2).map((item) => (
                             <div key={item.id} className="mb-4">

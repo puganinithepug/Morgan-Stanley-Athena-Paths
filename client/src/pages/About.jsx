@@ -20,6 +20,7 @@ export default function About() {
     { year: '2012', event: language === 'fr' ? 'Prix d\'Excellence du Ministère de la Santé et des Services sociaux' : 'Excellence Award from Ministry of Health and Social Services' },
     { year: '2017', event: language === 'fr' ? 'Ville de Laval fait un don de 200 000$ pour le refuge Second Step' : 'City of Laval donates $200,000 for Second Step Shelter' },
     { year: '2018', event: language === 'fr' ? 'Directrice générale présente aux Nations Unies' : 'Executive Director presents at United Nations' },
+    { year: '2020-2024', event: language === 'fr' ? 'Pause des événements et collectes de fonds en raison de la COVID-19' : 'Pause in events and fundraising due to COVID-19' },
     { year: '2025', event: language === 'fr' ? '34 ans de service, continuant à soutenir les survivantes' : '34 years of service, continuing to support survivors' }
   ];
 
@@ -184,6 +185,26 @@ export default function About() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* COVID-19 Impact Section */}
+      <div className="py-16 bg-background">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+          <Card className="bg-gradient-to-br from-orange-50 to-yellow-50 border-2 border-orange-200">
+            <CardContent className="p-8">
+              <div className="text-center mb-6">
+                <h2 className="text-3xl font-bold text-foreground mb-4">
+                  {language === 'fr' ? 'Impact de la COVID-19' : 'COVID-19 Impact'}
+                </h2>
+              </div>
+              <p className="text-foreground/70 leading-relaxed text-lg max-w-4xl mx-auto text-center">
+                {language === 'fr'
+                  ? 'Les organismes communautaires comme le nôtre ont souffert pendant cette période car, en raison des restrictions liées à la COVID-19, nous avons également été limités dans nos événements et activités de collecte de fonds. Le conseil d\'administration du Bouclier a pris la perspective que nous ne pouvons pas exposer les gens à une possible contamination et a arrêté toutes ces activités dans l\'intérêt de la santé publique. Malgré ces défis, nous avons continué à fournir nos services essentiels aux femmes et enfants victimes de violence familiale.'
+                  : 'Community organizations like ours have suffered during this period as due to COVID-19 restrictions we have also been limited in our events and fundraising activities. The Board of the Shield has taken the perspective that we cannot subject people to possible contamination and have stopped all of these activities in the interests of public health. Despite these challenges, we have continued to provide our essential services to women and children victims of family violence.'}
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
 

@@ -1,12 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
-import { Globe, ChevronDown, AlertTriangle } from "lucide-react";
+import { Globe, ChevronDown, AlertTriangle, Heart } from "lucide-react";
 import { Button } from "./ui/Button";
 import GoogleTranslate from "./GoogleTranslate";
 import ProfileDropdown from "./ProfileDropdown";
 
-// Language options with Google Translate language codes
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
@@ -46,7 +45,6 @@ export default function Header() {
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
-  // Get current language from cookie or default to English
   useEffect(() => {
     const cookie = document.cookie.split(';').find(c => c.trim().startsWith('googtrans='));
     if (cookie) {
@@ -61,11 +59,9 @@ export default function Header() {
     setSelectedLanguage(langCode);
     setIsLanguageDropdownOpen(false);
     
-    // Use Google Translate to translate the page
     if (translateRef.current) {
       translateRef.current.changeLanguage(langCode);
     } else {
-      // Fallback: set cookie and reload if translate not ready
       document.cookie = `googtrans=/en/${langCode};path=/;max-age=31536000`;
       setTimeout(() => {
         if (translateRef.current?.isLoaded()) {
@@ -108,13 +104,20 @@ export default function Header() {
             </div>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-4">
             <Link
               to="/are-you-a-victim"
               className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-orange-500 text-white px-4 py-2 rounded-lg font-bold text-sm hover:from-red-700 hover:to-orange-600 transition-all shadow-md hover:shadow-lg"
             >
               <AlertTriangle className="w-4 h-4" />
               {language === 'fr' ? 'Êtes-vous une victime?' : 'Are you a victim?'}
+            </Link>
+            <Link
+              to="/donate"
+              className="flex items-center gap-2 bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-lg font-bold text-sm hover:from-primary-dark hover:to-secondary-dark transition-all shadow-md hover:shadow-lg"
+            >
+              <Heart className="w-4 h-4" />
+              {language === 'fr' ? 'Faire un Don' : 'Donate'}
             </Link>
             <NavLink
               to="/services"

@@ -9,13 +9,33 @@ import {
   Heart,
   ArrowRight,
   Clock,
-  ExternalLink
+  ExternalLink,
+  Sparkles
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function News() {
-  const [activeTab, setActiveTab] = useState('all'); // 'all', 'events', 'news', 'achievements'
+  const { language } = useLanguage();
+  const [activeTab, setActiveTab] = useState('all'); // 'all', 'events', 'upcoming', 'news', 'achievements'
+
+  // Upcoming Events
+  const upcomingEvents = [
+    {
+      id: 'upcoming-1',
+      type: 'event',
+      title: language === 'fr' ? 'Gala Annuel Lilas 2025' : '2025 Annual Lilac Gala',
+      date: 'November 29, 2025',
+      category: 'Upcoming Event',
+      description: language === 'fr'
+        ? 'Rejoignez-nous le 29 novembre 2025 pour célébrer 34 ans de service et soutenir les femmes et enfants victimes de violence familiale. Cette année, tous les fonds recueillis lors de l\'événement iront au maintien et à l\'expansion de nos services. Nous vous promettons une soirée pleine de divertissement avec un dîner élégant, une enchère silencieuse et un tirage au programme.'
+        : 'Join us on November 29th, 2025 to celebrate 34 years of service and support women and children victims of family violence. This year, all funds raised at the event will go towards maintaining and expanding our services. We promise you an evening full of entertainment featuring an elegant dinner, a silent auction, and a raffle on the agenda.',
+      image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop',
+      link: '/lilac-gala',
+      isUpcoming: true
+    }
+  ];
 
   // Past Events (from their website)
   const pastEvents = [
@@ -134,17 +154,34 @@ export default function News() {
       description: 'Thank You to Global Television and The Suburban for their support of our cause.',
       image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop',
       link: '#'
+    },
+    {
+      id: 9,
+      type: 'news',
+      title: language === 'fr' ? 'Impact de la COVID-19 sur nos activités' : 'COVID-19 Impact on Our Activities',
+      date: '2020-2024',
+      category: 'Announcement',
+      description: language === 'fr'
+        ? 'Les organismes communautaires comme le nôtre ont souffert pendant cette période car, en raison des restrictions liées à la COVID-19, nous avons également été limités dans nos événements et activités de collecte de fonds. Le conseil d\'administration du Bouclier a pris la perspective que nous ne pouvons pas exposer les gens à une possible contamination et a arrêté toutes ces activités dans l\'intérêt de la santé publique.'
+        : 'Community organizations like ours have suffered during this period as due to COVID-19 restrictions we have also been limited in our events and fundraising activities. The Board of the Shield has taken the perspective that we cannot subject people to possible contamination and have stopped all of these activities in the interests of public health.',
+      image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&h=600&fit=crop',
+      link: '#'
     }
   ];
 
-  // All items combined
-  const allItems = [...pastEvents, ...recentNews].sort((a, b) => {
-    // Sort by date (most recent first)
+  // All items combined (upcoming events first, then sorted by date)
+  const allItems = [...upcomingEvents, ...pastEvents, ...recentNews].sort((a, b) => {
+    // Upcoming events always come first
+    if (a.isUpcoming && !b.isUpcoming) return -1;
+    if (!a.isUpcoming && b.isUpcoming) return 1;
+    // Then sort by date (most recent first)
     return new Date(b.date) - new Date(a.date);
   });
 
   const filteredItems = activeTab === 'all' 
     ? allItems 
+    : activeTab === 'upcoming'
+    ? upcomingEvents
     : activeTab === 'events' 
     ? pastEvents 
     : activeTab === 'news'
@@ -161,10 +198,12 @@ export default function News() {
               <Newspaper className="w-12 h-12 text-primary" />
             </div>
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              News & Events
+              {language === 'fr' ? 'Actualités & Événements' : 'News & Events'}
             </h1>
             <p className="text-xl text-white max-w-3xl mx-auto">
-              Stay updated with our latest achievements, upcoming events, and community news
+              {language === 'fr' 
+                ? 'Restez informé de nos dernières réalisations, événements à venir et actualités communautaires'
+                : 'Stay updated with our latest achievements, upcoming events, and community news'}
             </p>
           </div>
         </div>
@@ -175,10 +214,11 @@ export default function News() {
         <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-4 overflow-x-auto py-4">
             {[
-              { id: 'all', label: 'All', icon: Newspaper },
-              { id: 'events', label: 'Past Events', icon: Calendar },
-              { id: 'news', label: 'News', icon: Newspaper },
-              { id: 'achievements', label: 'Achievements', icon: Award }
+              { id: 'all', label: language === 'fr' ? 'Tout' : 'All', icon: Newspaper },
+              { id: 'upcoming', label: language === 'fr' ? 'À Venir' : 'Upcoming', icon: Sparkles },
+              { id: 'events', label: language === 'fr' ? 'Événements Passés' : 'Past Events', icon: Calendar },
+              { id: 'news', label: language === 'fr' ? 'Actualités' : 'News', icon: Newspaper },
+              { id: 'achievements', label: language === 'fr' ? 'Réalisations' : 'Achievements', icon: Award }
             ].map((tab) => {
               const Icon = tab.icon;
               return (
@@ -211,7 +251,9 @@ export default function News() {
                 <div className="p-3 bg-primary/20 rounded-lg">
                   <Award className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold text-foreground">Our Impact</h3>
+                <h3 className="text-lg font-bold text-foreground">
+                  {language === 'fr' ? 'Notre Impact' : 'Our Impact'}
+                </h3>
               </div>
               <div className="space-y-4">
                 <div className="flex flex-col items-center gap-3">
@@ -220,7 +262,9 @@ export default function News() {
                   </div>
                   <div>
                     <p className="font-bold text-2xl text-foreground">1,229</p>
-                    <p className="text-sm text-foreground/70">Clients helped annually</p>
+                    <p className="text-sm text-foreground/70">
+                      {language === 'fr' ? 'Clients aidés annuellement' : 'Clients helped annually'}
+                    </p>
                   </div>
                 </div>
                 <div className="flex flex-col items-center gap-3">
@@ -229,29 +273,40 @@ export default function News() {
                   </div>
                   <div>
                     <p className="font-bold text-2xl text-foreground">34</p>
-                    <p className="text-sm text-foreground/70">Years of service</p>
+                    <p className="text-sm text-foreground/70">
+                      {language === 'fr' ? 'Années de service' : 'Years of service'}
+                    </p>
                   </div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Recent Events Summary */}
-          <Card>
+          {/* Upcoming Events Summary */}
+          <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200">
             <CardContent className="p-6 text-center">
               <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="p-3 bg-primary/10 rounded-lg">
-                  <Calendar className="w-6 h-6 text-primary" />
+                <div className="p-3 bg-purple-100 rounded-lg">
+                  <Sparkles className="w-6 h-6 text-purple-600" />
                 </div>
-                <h3 className="text-lg font-bold text-foreground">Recent Events</h3>
+                <h3 className="text-lg font-bold text-foreground">
+                  {language === 'fr' ? 'Événements à Venir' : 'Upcoming Events'}
+                </h3>
               </div>
               <div className="space-y-4">
-                {pastEvents.slice(0, 3).map((event) => (
-                  <div key={event.id} className="hover:border-primary-dark transition-colors">
-                    <p className="font-semibold text-foreground text-sm mb-1">{event.title}</p>
-                    <p className="text-xs text-foreground/70">{event.date}</p>
-                  </div>
+                {upcomingEvents.map((event) => (
+                  <Link key={event.id} to={event.link || '#'}>
+                    <div className="hover:bg-purple-100 p-3 rounded-lg transition-colors cursor-pointer">
+                      <p className="font-semibold text-foreground text-sm mb-1">{event.title}</p>
+                      <p className="text-xs text-foreground/70">{event.date}</p>
+                    </div>
+                  </Link>
                 ))}
+                {upcomingEvents.length === 0 && (
+                  <p className="text-sm text-foreground/60">
+                    {language === 'fr' ? 'Aucun événement à venir' : 'No upcoming events'}
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -259,18 +314,22 @@ export default function News() {
           {/* Newsletter Signup */}
           <Card className="bg-gradient-to-br from-primary to-secondary text-white">
             <CardContent className="p-6 text-center">
-              <h3 className="text-lg font-bold mb-2">Stay Updated</h3>
+              <h3 className="text-lg font-bold mb-2">
+                {language === 'fr' ? 'Restez Informé' : 'Stay Updated'}
+              </h3>
               <p className="text-white/80 text-sm mb-4">
-                Subscribe to our newsletter for the latest news and events
+                {language === 'fr'
+                  ? 'Abonnez-vous à notre bulletin pour les dernières actualités et événements'
+                  : 'Subscribe to our newsletter for the latest news and events'}
               </p>
               <div className="flex flex-col gap-2">
                 <input
                   type="email"
-                  placeholder="Your email"
+                  placeholder={language === 'fr' ? 'Votre courriel' : 'Your email'}
                   className="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 text-center"
                 />
                 <Button className="w-full bg-white text-primary hover:bg-white/90">
-                  Subscribe
+                  {language === 'fr' ? 'S\'abonner' : 'Subscribe'}
                 </Button>
               </div>
             </CardContent>
@@ -281,7 +340,13 @@ export default function News() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((item, idx) => {
             const isFeatured = idx === 0 && activeTab === 'all';
-            const Icon = item.type === 'event' ? Calendar : Newspaper;
+            const Icon = item.isUpcoming ? Sparkles : (item.type === 'event' ? Calendar : Newspaper);
+            const isUpcoming = item.isUpcoming;
+            
+            const CardWrapper = item.link && item.link.startsWith('/') ? Link : 'div';
+            const cardProps = item.link && item.link.startsWith('/') 
+              ? { to: item.link } 
+              : {};
             
             return (
               <motion.div
@@ -291,47 +356,66 @@ export default function News() {
                 transition={{ duration: 0.5, delay: idx * 0.05 }}
                 className={isFeatured ? 'md:col-span-2 lg:col-span-2' : ''}
               >
-                <Card className="overflow-hidden h-full flex flex-col hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group cursor-pointer">
-                  {item.image && (
-                    <div 
-                      className="relative h-48 md:h-56 overflow-hidden bg-cover bg-center group-hover:scale-105 transition-transform duration-300"
-                      style={{ backgroundImage: `url(${item.image})` }}
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                      <div className="absolute top-4 left-4">
-                        <div className="flex items-center gap-2 px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full">
-                          <Icon className="w-4 h-4 text-primary" />
-                          <span className="text-xs font-semibold text-primary">
-                            {item.category || 'Event'}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  <CardContent className="p-6 flex-1 flex flex-col">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-3 text-sm text-foreground/60">
-                        <Clock className="w-4 h-4" />
-                        <span>{item.date}</span>
-                      </div>
-                      <h3 className={`font-bold text-foreground mb-3 group-hover:text-primary transition-colors ${isFeatured ? 'text-2xl' : 'text-xl'}`}>
-                        {item.title}
-                      </h3>
-                      <p className={`text-foreground/70 leading-relaxed mb-4 ${isFeatured ? 'text-base' : 'text-sm'} line-clamp-3`}>
-                        {item.description}
-                      </p>
-                    </div>
-                    {item.link && (
-                      <Button 
-                        variant="outline" 
-                        className="w-full group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-colors"
+                <CardWrapper {...cardProps}>
+                  <Card className={`overflow-hidden h-full flex flex-col hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group ${item.link ? 'cursor-pointer' : ''} ${isUpcoming ? 'border-2 border-purple-300 bg-gradient-to-br from-purple-50/50 to-pink-50/50' : ''}`}>
+                    {item.image && (
+                      <div 
+                        className="relative h-48 md:h-56 overflow-hidden bg-cover bg-center group-hover:scale-105 transition-transform duration-300"
+                        style={{ backgroundImage: `url(${item.image})` }}
                       >
-                        Read More 
-                        <ExternalLink className="w-4 h-4 ml-2" />
-                      </Button>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                        <div className="absolute top-4 left-4">
+                          <div className={`flex items-center gap-2 px-3 py-1.5 backdrop-blur-sm rounded-full ${isUpcoming ? 'bg-purple-500/90' : 'bg-white/90'}`}>
+                            <Icon className={`w-4 h-4 ${isUpcoming ? 'text-white' : 'text-primary'}`} />
+                            <span className={`text-xs font-semibold ${isUpcoming ? 'text-white' : 'text-primary'}`}>
+                              {item.category || 'Event'}
+                            </span>
+                          </div>
+                        </div>
+                        {isUpcoming && (
+                          <div className="absolute top-4 right-4">
+                            <div className="px-3 py-1.5 bg-yellow-400/90 backdrop-blur-sm rounded-full">
+                              <span className="text-xs font-bold text-yellow-900">
+                                {language === 'fr' ? 'À VENIR' : 'UPCOMING'}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     )}
-                  </CardContent>
-                </Card>
+                    <CardContent className="p-6 flex-1 flex flex-col">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-3 text-sm text-foreground/60">
+                          <Clock className="w-4 h-4" />
+                          <span>{item.date}</span>
+                        </div>
+                        <h3 className={`font-bold text-foreground mb-3 group-hover:text-primary transition-colors ${isFeatured ? 'text-2xl' : 'text-xl'}`}>
+                          {item.title}
+                        </h3>
+                        <p className={`text-foreground/70 leading-relaxed mb-4 ${isFeatured ? 'text-base' : 'text-sm'} line-clamp-3`}>
+                          {item.description}
+                        </p>
+                      </div>
+                      {item.link && (
+                        <Button 
+                          variant="outline" 
+                          className={`w-full group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-colors ${isUpcoming ? 'border-purple-300 text-purple-700 hover:bg-purple-600 hover:text-white' : ''}`}
+                          onClick={(e) => {
+                            if (!item.link.startsWith('/')) {
+                              e.preventDefault();
+                            }
+                          }}
+                        >
+                          {isUpcoming 
+                            ? (language === 'fr' ? 'En Savoir Plus' : 'Learn More')
+                            : (language === 'fr' ? 'Lire la Suite' : 'Read More')
+                          }
+                          <ExternalLink className="w-4 h-4 ml-2" />
+                        </Button>
+                      )}
+                    </CardContent>
+                  </Card>
+                </CardWrapper>
               </motion.div>
             );
           })}
@@ -342,10 +426,12 @@ export default function News() {
       <div className="py-20 bg-gradient-to-r from-primary-dark via-primary to-secondary">
         <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Get Involved
+            {language === 'fr' ? 'Impliquez-Vous' : 'Get Involved'}
           </h2>
           <p className="text-xl text-white mb-8 max-w-3xl mx-auto">
-            Join us in supporting women and children affected by family violence
+            {language === 'fr'
+              ? 'Rejoignez-nous pour soutenir les femmes et enfants touchés par la violence familiale'
+              : 'Join us in supporting women and children affected by family violence'}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link to="/find-your-path">
@@ -353,7 +439,7 @@ export default function News() {
                 size="lg"
                 className="bg-highlight text-foreground hover:bg-highlight/95 flex items-center gap-2 shadow-primary-dark-glow hover:shadow-primary-dark-glow border-2 border-primary-dark hover:scale-[1.02] transition-all"
               >
-                Find Your Path
+                {language === 'fr' ? 'Trouvez Votre Chemin' : 'Find Your Path'}
                 <ArrowRight className="w-5 h-5" />
               </Button>
             </Link>
@@ -363,7 +449,7 @@ export default function News() {
                 variant="outline"
                 className="bg-white/10 text-white border-white/30 hover:bg-white/20 flex items-center gap-2"
               >
-                Learn About Our Services
+                {language === 'fr' ? 'Découvrez Nos Services' : 'Learn About Our Services'}
                 <ArrowRight className="w-5 h-5" />
               </Button>
             </Link>
