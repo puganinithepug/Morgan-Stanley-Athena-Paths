@@ -733,10 +733,10 @@ function VideoEmbed({ videoId }) {
               <Heart className="w-10 h-10 text-highlight" />
             </motion.div>
             <h2 className="text-4xl font-bold mb-4">
-              Testimonials
+              Our Impact
             </h2>
             <p className="text-white/80 text-lg max-w-2xl mx-auto">
-              Hear from survivors and our team about the impact of your support
+              Hear from our team about the real difference your support makes in the lives of women and children
             </p>
           </motion.div>
 
@@ -759,6 +759,24 @@ function VideoEmbed({ videoId }) {
                 author: "Community Outreach Coordinator",
                 impact: "34 years of service (founded 1991)",
                 number: "34"
+              },
+              {
+                quote: "Our 24/7 crisis line is a lifeline for women in immediate danger. Last year, we answered over 3,000 crisis calls, providing immediate support, safety planning, and connecting callers with emergency resources when needed.",
+                author: "Crisis Line Coordinator",
+                impact: "3,000+ crisis calls answered annually",
+                number: "3,000+"
+              },
+              {
+                quote: "The children's support programs help young ones process trauma and rebuild their sense of safety. We provide age-appropriate therapy, art programs, and educational support to help children heal and thrive after experiencing violence.",
+                author: "Children's Services Manager",
+                impact: "Specialized programs for children",
+                number: "100%"
+              },
+              {
+                quote: "Legal advocacy is crucial for survivors seeking protection orders and navigating the justice system. Our team provides accompaniment, interpretation services, and helps women understand their rights in multiple languages.",
+                author: "Legal Advocacy Coordinator",
+                impact: "Comprehensive legal support services",
+                number: "10+"
               }
             ].map((testimonial, idx) => (
               <motion.div
