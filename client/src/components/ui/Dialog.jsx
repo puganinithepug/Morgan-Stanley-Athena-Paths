@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { X } from 'lucide-react';
 
 const DialogContext = React.createContext();
 
@@ -36,8 +35,6 @@ export function DialogOverlay({ className = '' }) {
 }
 
 export function DialogContent({ className = '', children, ...props }) {
-  const context = React.useContext(DialogContext);
-
   return (
     <>
       <DialogOverlay />

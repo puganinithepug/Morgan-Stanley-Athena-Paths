@@ -12,7 +12,6 @@ export default function ReferralSection() {
   const { language } = useLanguage();
   const [copied, setCopied] = useState(false);
   const [userReferrals, setUserReferrals] = useState([]);
-  const [loadingReferrals, setLoadingReferrals] = useState(true);
 
   useEffect(() => {
     if (!user) return;
@@ -27,13 +26,9 @@ export default function ReferralSection() {
         const data = await res.json();
         if (!cancelled) {
           setUserReferrals(data.referrals || []);
-          setLoadingReferrals(false);
         }
       } catch (err) {
         console.error('Failed to load referrals', err);
-        if (!cancelled) {
-          setLoadingReferrals(false);
-        }
       }
     }
 

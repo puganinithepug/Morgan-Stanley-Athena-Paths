@@ -235,13 +235,22 @@ function loadYouTubeAPI() {
 function VideoEmbed({ videoId }) {
   const playerRef = useRef(null);
   const containerRef = useRef(null);
+  const playerIdRef = useRef(`youtube-player-${Math.random().toString(36).substr(2, 9)}`);
 
   useEffect(() => {
     let observer;
     let player;
 
     loadYouTubeAPI().then((YT) => {
-      player = new YT.Player(playerRef.current, {
+      // Ensure the element has an ID before creating the player
+      if (playerRef.current && !playerRef.current.id) {
+        playerRef.current.id = playerIdRef.current;
+      }
+
+      // Use the element ID string instead of the element directly
+      const elementId = playerRef.current?.id || playerIdRef.current;
+      
+      player = new YT.Player(elementId, {
         videoId,
         playerVars: {
           autoplay: 0,
@@ -270,7 +279,16 @@ function VideoEmbed({ videoId }) {
       });
     });
 
-    return () => observer?.disconnect();
+    return () => {
+      observer?.disconnect();
+      if (player && player.destroy) {
+        try {
+          player.destroy();
+        } catch (e) {
+          // Ignore errors during cleanup
+        }
+      }
+    };
   }, [videoId]);
 
   return (
@@ -280,6 +298,7 @@ function VideoEmbed({ videoId }) {
     >
       <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
         <div
+          id={playerIdRef.current}
           ref={playerRef}
           className="absolute top-0 left-0 w-full h-full rounded-xl shadow-xl"
         />
