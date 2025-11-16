@@ -1,4 +1,13 @@
 __pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
 # Dependencies
 node_modules/
 **/node_modules/
