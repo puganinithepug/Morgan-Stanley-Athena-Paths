@@ -35,6 +35,8 @@ const ProfileDropdown = () => {
   const handleLogout = () => {
     logout();
     setIsOpen(false);
+    // Redirect to home page after logout
+    window.location.href = '/';
   };
 
   return (
