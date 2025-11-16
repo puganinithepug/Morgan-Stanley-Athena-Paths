@@ -399,13 +399,20 @@ def get_team(team_id: str):
     leader_name = None
     if not leader_df.empty:
         leader_row = leader_df.iloc[0].to_dict()
-        leader_name = f"{leader_row.get('fname', '')} {leader_row.get('lname', '')}".strip() or leader_row.get("email")
+        leader_name = (
+            f"{leader_row.get('fname', '')} {leader_row.get('lname', '')}".strip()
+            or leader_row.get("email")
+        )
+
+    # Get member count
+    member_count = len(users_df[users_df["team_id"] == team_id])
 
     team_payload = {
         "team_id": team["team_id"],
         "name": team["name"],
         "leader_uuid": team["leader_uuid"],
         "leader_name": leader_name,
+        "member_count": member_count,
     }
 
     return {"team": team_payload}
@@ -510,59 +517,74 @@ def transfer_team_leadership(data: dict):
 @app.get("/leaderboard/supporters")
 def get_top_supporters(path: Optional[str] = None):
     """Return top supporters (users) ranked by impact points from donations.
-    
+
     Optional query param 'path' to filter by donation path (e.g., WISDOM, COURAGE, etc.).
     """
     donations_df = load_donations()
     users_df = load_users()
-    
+
     # Filter by path if specified
     if path and path != "ALL":
         donations_df = donations_df[donations_df["path"] == path]
-    
+
     # Group by user and sum impact_points
-    user_stats = donations_df.groupby("uuid").agg({
-        "impact_points": "sum",
-        "amount": "sum"
-    }).reset_index()
-    
+    user_stats = (
+        donations_df.groupby("uuid")
+        .agg({"impact_points": "sum", "amount": "sum"})
+        .reset_index()
+    )
+
     # Count donations per user
-    donation_counts = donations_df.groupby("uuid").size().reset_index(name="donation_count")
+    donation_counts = (
+        donations_df.groupby("uuid").size().reset_index(name="donation_count")
+    )
     user_stats = user_stats.merge(donation_counts, on="uuid")
-    
+
     # Determine primary path for each user (most donations in that path)
-    path_counts = donations_df.groupby(["uuid", "path"]).size().reset_index(name="count")
-    primary_paths = path_counts.loc[path_counts.groupby("uuid")["count"].idxmax()][["uuid", "path"]]
+    path_counts = (
+        donations_df.groupby(["uuid", "path"]).size().reset_index(name="count")
+    )
+    primary_paths = path_counts.loc[path_counts.groupby("uuid")["count"].idxmax()][
+        ["uuid", "path"]
+    ]
     primary_paths.rename(columns={"path": "primary_path"}, inplace=True)
     user_stats = user_stats.merge(primary_paths, on="uuid", how="left")
-    
+
     # Join with user info
     user_stats = user_stats.merge(
-        users_df[["uuid", "fname", "lname", "email"]],
-        on="uuid",
-        how="left"
+        users_df[["uuid", "fname", "lname", "email"]], on="uuid", how="left"
     )
-    
+
     # Build display name
     user_stats["display_name"] = user_stats.apply(
-        lambda row: f"{row['fname']} {row['lname']}".strip() if pd.notna(row['fname']) and pd.notna(row['lname']) else row["email"],
-        axis=1
+        lambda row: (
+            f"{row['fname']} {row['lname']}".strip()
+            if pd.notna(row["fname"]) and pd.notna(row["lname"])
+            else row["email"]
+        ),
+        axis=1,
     )
-    
+
     # Sort by impact_points descending
     user_stats = user_stats.sort_values("impact_points", ascending=False)
-    
+
     # Build result
     leaderboard = []
     for _, row in user_stats.iterrows():
-        leaderboard.append({
-            "user_id": row["uuid"],
-            "display_name": row["display_name"],
-            "total_points": int(row["impact_points"]) if pd.notna(row["impact_points"]) else 0,
-            "total_donations": int(row["donation_count"]),
-            "primary_path": row["primary_path"] if pd.notna(row["primary_path"]) else None,
-        })
-    
+        leaderboard.append(
+            {
+                "user_id": row["uuid"],
+                "display_name": row["display_name"],
+                "total_points": (
+                    int(row["impact_points"]) if pd.notna(row["impact_points"]) else 0
+                ),
+                "total_donations": int(row["donation_count"]),
+                "primary_path": (
+                    row["primary_path"] if pd.notna(row["primary_path"]) else None
+                ),
+            }
+        )
+
     return {"supporters": leaderboard}
 
 
@@ -573,48 +595,55 @@ def get_top_teams():
         teams_df = pd.read_csv("teams.csv")
     except FileNotFoundError:
         return {"teams": []}
-    
+
     users_df = load_users()
     donations_df = load_donations()
-    
+
     # Calculate total points per user from donations
     user_points = donations_df.groupby("uuid")["impact_points"].sum().reset_index()
     user_points.rename(columns={"impact_points": "total_points"}, inplace=True)
-    
+
     # Build team leaderboard
     team_leaderboard = []
     for _, team in teams_df.iterrows():
         team_id = team["team_id"]
         team_name = team["name"]
         leader_uuid = team["leader_uuid"]
-        
+
         # Get all members of this team
         members = users_df[users_df["team_id"] == team_id]
         member_count = len(members)
-        
+
         # Sum points from all members
         member_uuids = members["uuid"].tolist()
-        team_points = user_points[user_points["uuid"].isin(member_uuids)]["total_points"].sum()
-        
+        team_points = user_points[user_points["uuid"].isin(member_uuids)][
+            "total_points"
+        ].sum()
+
         # Get leader name
         leader_row = users_df[users_df["uuid"] == leader_uuid]
         leader_name = None
         if not leader_row.empty:
             leader = leader_row.iloc[0]
-            leader_name = f"{leader.get('fname', '')} {leader.get('lname', '')}".strip() or leader.get("email")
-        
-        team_leaderboard.append({
-            "team_id": team_id,
-            "name": team_name,
-            "leader_uuid": leader_uuid,
-            "leader_name": leader_name,
-            "member_count": member_count,
-            "total_points": int(team_points) if pd.notna(team_points) else 0,
-        })
-    
+            leader_name = (
+                f"{leader.get('fname', '')} {leader.get('lname', '')}".strip()
+                or leader.get("email")
+            )
+
+        team_leaderboard.append(
+            {
+                "team_id": team_id,
+                "name": team_name,
+                "leader_uuid": leader_uuid,
+                "leader_name": leader_name,
+                "member_count": member_count,
+                "total_points": int(team_points) if pd.notna(team_points) else 0,
+            }
+        )
+
     # Sort by total_points descending
     team_leaderboard.sort(key=lambda t: t["total_points"], reverse=True)
-    
+
     return {"teams": team_leaderboard}
 
 
@@ -642,7 +671,11 @@ def me(session: Optional[str] = Cookie(default=None)):
 
     if not user_donations.empty:
         total_points = user_donations["impact_points"].fillna(0).sum()
-        total_amount = user_donations["amount"].fillna(0).sum() if "amount" in user_donations.columns else 0
+        total_amount = (
+            user_donations["amount"].fillna(0).sum()
+            if "amount" in user_donations.columns
+            else 0
+        )
         total_donations = len(user_donations)
 
         volunteer_hours = 0
