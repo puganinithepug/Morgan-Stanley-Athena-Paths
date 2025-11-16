@@ -16,11 +16,13 @@ import CommunityGoals from "../components/CommunityGoals";
 import FirstTimeVisitorModal from "../components/FirstTimeVisitorModal";
 import VolunteerCard from "../components/VolunteerCard";
 import PathTransitionSection from "../components/PathTransitionSection";
+import MotionSection from "../components/ui/MotionSection";
 
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";
 import courageImg from "../assets/hero_courage.jpeg";
 import aboutImg from "../assets/about_image.jpeg"
+
 
 
 export default function Landing() {
@@ -38,6 +40,35 @@ export default function Landing() {
 
   const [hasVisited, setHasVisited] = useState(false);
   const [referralCode, setReferralCode] = useState(null);
+
+
+  // Animation variants
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
+  const fromLeft = {
+    hidden: { opacity: 0, x: -80 }, // make it big so you can SEE it clearly
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
+  const fromRight = {
+    hidden: { opacity: 0, x: 80 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -307,8 +338,8 @@ function VideoEmbed({ videoId }) {
 
       <PathTransitionSection />
       <VideoEmbed videoId="WGND5Fvt2NA" />
-
-      <section id="ways-to-help" className="py-20 bg-gray-50">
+      
+      <MotionSection id="ways-to-help" className="py-20 bg-gray-50" variants={fromLeft}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-foreground mb-4">
@@ -518,7 +549,7 @@ function VideoEmbed({ videoId }) {
             })}
           </div>
         </div>
-      </section>
+      </MotionSection>
 
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -639,21 +670,29 @@ function VideoEmbed({ videoId }) {
         </div>
       </section>
 
-      <ImpactMetrics />
+      <MotionSection variants={fromRight}>                 
+        <ImpactMetrics />
+      </MotionSection>
 
-      <PathGoals />
+      <MotionSection variants={fadeUp}>                
+        <PathGoals />
+      </MotionSection>
 
-      <ImpactStories />
+      <MotionSection variants={fromLeft}>   
+        <ImpactStories />
+      </MotionSection>
 
-      <CommunityGoals
-        onDonate={(goal) => {
-          document
-            .getElementById("ways-to-help")
-            ?.scrollIntoView({ behavior: "smooth" });
-        }}
-      />
+      <MotionSection variants={fromRight}>
+        <CommunityGoals
+          onDonate={(goal) => {
+            document
+              .getElementById("ways-to-help")
+              ?.scrollIntoView({ behavior: "smooth" });
+          }}
+        />
+      </MotionSection>
 
-      <section className="py-20 bg-gradient-to-br from-foreground via-primary-dark to-primary text-white">
+      <MotionSection className="py-20 bg-gradient-to-br from-foreground via-primary-dark to-primary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -769,7 +808,7 @@ function VideoEmbed({ videoId }) {
             </div>
           </motion.div>
         </div>
-      </section>
+      </MotionSection>
     </div>
   );
 }
