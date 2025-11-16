@@ -4,6 +4,7 @@ import { Dialog, DialogContent } from "./ui/Dialog";
 import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
+import { X } from "lucide-react";
 
 const Login = ({ open, onClose, onSuccess }) => {
   const [mode, setMode] = useState("login"); // 'login' | 'signup'
@@ -93,7 +94,14 @@ const Login = ({ open, onClose, onSuccess }) => {
   return (
     <Dialog open={open} onOpenChange={(openState) => !openState && onClose && onClose()}>
       <DialogContent className="p-0 border-none bg-transparent shadow-none">
-        <Card className="w-full max-w-md sm:max-w-lg mx-auto bg-white shadow-xl border-2 border-primary-dark rounded-2xl overflow-hidden">
+        <Card className="relative w-full max-w-md sm:max-w-lg mx-auto bg-white shadow-xl border-2 border-primary-dark rounded-2xl overflow-hidden">
+          <button
+            type="button"
+            onClick={() => onClose && onClose()}
+            className="absolute right-4 top-4 rounded-full p-1 text-foreground/70 bg-highlight/80 shadow-highlight-glow hover:bg-highlight  hover:shadow-highlight-glow-strong focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            <X className="h-4 w-4" />
+          </button>
           <CardHeader className="bg-gradient-to-r from-primary-dark to-primary text-white pb-5 pt-5 px-6">
             <CardTitle className="text-xl font-semibold flex items-center justify-between">
               <span>{mode === "login" ? "Welcome back" : "Join the community"}</span>
@@ -103,26 +111,6 @@ const Login = ({ open, onClose, onSuccess }) => {
                 ? "Log in to track your impact, referrals and badges."
                 : "Create an account to save your progress and earn rewards."}
             </p>
-            {/* <div className="mt-4 inline-flex gap-1 bg-black/10 rounded-full p-1 text-xs">
-              <Button
-                type="button"
-                variant={mode === "login" ? "default" : "ghost"}
-                size="sm"
-                className="px-3 py-1 h-8 rounded-full min-w-[80px] justify-center"
-                onClick={() => setMode("login")}
-              >
-                Login
-              </Button>
-              <Button
-                type="button"
-                variant={mode === "signup" ? "default" : "ghost"}
-                size="sm"
-                className="px-3 py-1 h-8 rounded-full min-w-[80px] justify-center"
-                onClick={() => setMode("signup")}
-              >
-                Sign up
-              </Button>
-            </div> */}
           </CardHeader>
           <CardContent className="pt-6 pb-6 px-6 sm:px-7 space-y-5 bg-background">
             <form onSubmit={handleSubmit} className="space-y-4">
