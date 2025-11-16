@@ -335,24 +335,21 @@ export default function Profile() {
                             Wisdom
                           </span>
                         </div>
-                        <span className="text-xs text-foreground/60">
-                          {`Level ${stats.level} – ${levelLabel}`}
-                        </span>
+                        
                         <span className="text-[11px] text-foreground/60 block">
                           {story.en}
                         </span>
                       </div>
-                      <div className="text-right">
+                      <div className="text-right flex flex-row items-center gap-4">
+                        <span className="text-xs text-foreground/60">
+                          {`Level ${stats.level} – ${levelLabel}`}
+                        </span>
                         <div className="font-bold text-foreground">
                           {stats.xp} XP
                         </div>
                       </div>
                     </div>
 
-                    {/* STORY */}
-                    <p className="text-[11px] text-foreground/60 mb-2">
-                      {language === 'fr' ? story.fr : story.en}
-                    </p>
 
                     {/* PROGRESS BAR */}
                     <div className="w-full h-3 rounded-full bg-foreground/10 overflow-hidden">
@@ -397,18 +394,19 @@ export default function Profile() {
                             Courage
                           </span>
                         </div>
-                        <span className="text-xs text-foreground/60">
-                          {`Level ${stats.level} – ${levelLabel}`}
-                        </span>
                         <span className="text-[11px] text-foreground/60 block">
                           {story.en}
                         </span>
                       </div>
+                       <div className="text-right flex flex-row items-center gap-4">
+                        <span className="text-xs text-foreground/60">
+                          {`Level ${stats.level} – ${levelLabel}`}
+                        </span>
+                        <div className="font-bold text-foreground">
+                          {stats.xp} XP
+                        </div>
+                      </div>
                     </div>
-
-                    <p className="text-[11px] text-foreground/60 mb-2">
-                      {language === 'fr' ? story.fr : story.en}
-                    </p>
 
                     <div className="w-full h-3 rounded-full bg-foreground/10 overflow-hidden">
                       <div
@@ -452,18 +450,19 @@ export default function Profile() {
                             Protection
                           </span>
                         </div>
-                        <span className="text-xs text-foreground/60">
-                          {`Level ${stats.level} – ${levelLabel}`}
-                        </span>
                         <span className="text-[11px] text-foreground/60 block">
                           {story.en}
                         </span>
                       </div>
+                       <div className="text-right flex flex-row items-center gap-4">
+                        <span className="text-xs text-foreground/60">
+                          {`Level ${stats.level} – ${levelLabel}`}
+                        </span>
+                        <div className="font-bold text-foreground">
+                          {stats.xp} XP
+                        </div>
+                      </div>
                     </div>
-
-                    <p className="text-[11px] text-foreground/60 mb-2">
-                      {language === 'fr' ? story.fr : story.en}
-                    </p>
 
                     <div className="w-full h-3 rounded-full bg-foreground/10 overflow-hidden">
                       <div
@@ -506,18 +505,19 @@ export default function Profile() {
                             Service
                           </span>
                         </div>
-                        <span className="text-xs text-foreground/60">
-                          {`Level ${stats.level} – ${levelLabel}`}
-                        </span>
                         <span className="text-[11px] text-foreground/60 block">
                           {story.en}
                         </span>
                       </div>
+                       <div className="text-right flex flex-row items-center gap-4">
+                        <span className="text-xs text-foreground/60">
+                          {`Level ${stats.level} – ${levelLabel}`}
+                        </span>
+                        <div className="font-bold text-foreground">
+                          {stats.xp} XP
+                        </div>
+                      </div>
                     </div>
-
-                    <p className="text-[11px] text-foreground/60 mb-2">
-                      {language === 'fr' ? story.fr : story.en}
-                    </p>
 
                     <div className="w-full h-3 rounded-full bg-foreground/10 overflow-hidden">
                       <div
