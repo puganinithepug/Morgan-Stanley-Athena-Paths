@@ -82,7 +82,7 @@ export default function FindYourPath() {
         >
           {/* WISDOM */}
           <div
-            onClick={() => setActiveVideo("WxY3-D_Bjyg")}
+            onClick={() => setActiveVideo("PY6ls0v6hu4")}
             className="cursor-pointer bg-gradient-to-br from-highlight/20 to-highlight/10 border-2 border-highlight/40 rounded-xl p-6 text-center hover:shadow-lg transition"
           >
             <div className="inline-flex p-3 rounded-full bg-highlight/30 mb-3">
@@ -98,7 +98,7 @@ export default function FindYourPath() {
 
           {/* COURAGE */}
           <div
-            onClick={() => setActiveVideo("JN8YED-0dH0")}
+            onClick={() => setActiveVideo("HFqvJ_e_emw")}
             className="cursor-pointer bg-gradient-to-br from-muted/20 to-muted/10 border-2 border-muted/40 rounded-xl p-6 text-center hover:shadow-lg transition"
           >
             <div className="inline-flex p-3 rounded-full bg-muted/30 mb-3">
@@ -114,7 +114,7 @@ export default function FindYourPath() {
 
           {/* PROTECTION */}
           <div
-            onClick={() => setActiveVideo("3bZxdTKNLmg")}
+            onClick={() => setActiveVideo("7eZvuWHRBKQ")}
             className="cursor-pointer bg-gradient-to-br from-secondary/20 to-secondary/10 border-2 border-secondary/40 rounded-xl p-6 text-center hover:shadow-lg transition"
           >
             <div className="inline-flex p-3 rounded-full bg-secondary/30 mb-3">
@@ -130,9 +130,9 @@ export default function FindYourPath() {
             </p>
           </div>
 
-          {/* SERVICE — NEW BOX */}
+          {/* SERVICE — UPDATED URL ONLY */}
           <div
-            onClick={() => setActiveVideo("7wPLjU3xIzU")}
+            onClick={() => setActiveVideo("gawZBbcaA1M")}
             className="cursor-pointer bg-gradient-to-br from-accent/20 to-accent/10 border-2 border-accent/40 rounded-xl p-6 text-center hover:shadow-lg transition"
           >
             <div className="inline-flex p-3 rounded-full bg-accent/30 mb-3">
