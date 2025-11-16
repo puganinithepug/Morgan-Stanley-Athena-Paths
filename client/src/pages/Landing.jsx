@@ -210,57 +210,74 @@ function loadYouTubeAPI() {
   });
 }
 
+// function VideoEmbed({ videoId }) {
+//   const playerRef = useRef(null);
+//   const containerRef = useRef(null);
+
+//   useEffect(() => {
+//   let observer;
+//   let player;
+
+//   loadYouTubeAPI().then((YT) => {
+//     player = new YT.Player(playerRef.current, {
+//       videoId,
+//       playerVars: {
+//         autoplay: 0,
+//         controls: 1,
+//         mute: 1,
+//         playsinline: 1,
+//       },
+//       events: {
+//         onReady: () => {
+//           // Player is ready — now start observing
+//           observer = new IntersectionObserver(
+//             (entries) => {
+//               entries.forEach((entry) => {
+//                 if (entry.isIntersecting) {
+//                   player.playVideo();
+//                 } else {
+//                   player.pauseVideo();
+//                 }
+//               });
+//             },
+//             { threshold: 0.5 }
+//           );
+
+//           observer.observe(containerRef.current);
+//         },
+//       },
+//     });
+//   });
+
+//   return () => observer?.disconnect();
+// }, [videoId]);
+
+//   return (
+//     <div
+//       ref={containerRef}
+//       className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
+//     >
+//       <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+//         <div
+//           ref={playerRef}
+//           className="absolute top-0 left-0 w-full h-full rounded-xl shadow-xl"
+//         />
+//       </div>
+//     </div>
+//   );
+// }
+
 function VideoEmbed({ videoId }) {
-  const playerRef = useRef(null);
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-  let observer;
-  let player;
-
-  loadYouTubeAPI().then((YT) => {
-    player = new YT.Player(playerRef.current, {
-      videoId,
-      playerVars: {
-        autoplay: 0,
-        controls: 1,
-        mute: 1,
-        playsinline: 1,
-      },
-      events: {
-        onReady: () => {
-          // Player is ready — now start observing
-          observer = new IntersectionObserver(
-            (entries) => {
-              entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                  player.playVideo();
-                } else {
-                  player.pauseVideo();
-                }
-              });
-            },
-            { threshold: 0.5 }
-          );
-
-          observer.observe(containerRef.current);
-        },
-      },
-    });
-  });
-
-  return () => observer?.disconnect();
-}, [videoId]);
-
   return (
-    <div
-      ref={containerRef}
-      className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
-    >
+
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-        <div
-          ref={playerRef}
+        <iframe
+          src={`https://www.youtube.com/embed/${videoId}?autoplay=0`}
           className="absolute top-0 left-0 w-full h-full rounded-xl shadow-xl"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
         />
       </div>
     </div>
@@ -352,7 +369,7 @@ function VideoEmbed({ videoId }) {
                             <span className="text-sm font-medium text-foreground/80">
                               Volunteer Session
                             </span>
-                            <span className="text-lg font-bold text-foreground/80">
+                            <span className="text-lg font-bold text-foreground/80 text-right min-w-fit">
                               1 hour
                             </span>
                           </div>
@@ -371,7 +388,7 @@ function VideoEmbed({ videoId }) {
                             <span className="text-sm font-medium text-foreground/80">
                               Volunteer Session
                             </span>
-                            <span className="text-lg font-bold text-foreground/80">
+                            <span className="text-lg font-bold text-foreground/80 text-right min-w-fit">
                               3 hours
                             </span>
                           </div>
@@ -397,7 +414,7 @@ function VideoEmbed({ videoId }) {
                                   setDonationAmount(e.target.value);
                                   setSelectedPath(path);
                                 }}
-                                className="border-foreground/20 focus:border-primary focus:ring-primary/30"
+                                className="border-foreground/20 focus:border-primary focus:ring-primary/30 min-w-[30%]"
                                 min="1"
                               />
                               <span className="absolute right-10 top-1/2 -translate-y-1/2 text-foreground/50">
@@ -415,7 +432,7 @@ function VideoEmbed({ videoId }) {
                                 selectedPath !== path
                               }
                               variant="outline"
-                              className="whitespace-nowrap min-w-[100px]"
+                              className="whitespace-nowrap max-w-[50%] text-wrap"
                             >
                               Volunteer
                             </Button>
@@ -433,7 +450,7 @@ function VideoEmbed({ videoId }) {
                                     ? item.title_fr
                                     : item.title_en}
                                 </span>
-                                <span className="text-lg font-bold text-foreground/80">
+                                <span className="text-lg font-bold text-foreground/80 text-right min-w-fit">
                                   ${item.suggested_amount}
                                 </span>
                               </div>
@@ -467,7 +484,7 @@ function VideoEmbed({ videoId }) {
                                     setDonationAmount(e.target.value);
                                     setSelectedPath(path);
                                   }}
-                                  className="pl-7 border-foreground/20 focus:border-primary focus:ring-primary/30"
+                                  className="pl-7 border-foreground/20 focus:border-primary focus:ring-primary/30 min-w-[30%]"
                                   min="1"
                                 />
                               </div>
@@ -486,7 +503,7 @@ function VideoEmbed({ videoId }) {
                                   selectedPath !== path
                                 }
                                 variant="outline"
-                                className="whitespace-nowrap min-w-[100px]"
+                                className="whitespace-nowrap max-w-[50%] text-wrap"
                               >
                                 Give Now
                               </Button>

@@ -96,7 +96,7 @@ export default function PathTransitionSection() {
           size="lg"
           variant="unstyled"
           onClick={scrollToWaysToHelp}
-          className="bg-highlight/70 hover:bg-highlight/90 text-white px-8 py-5 rounded-full shadow-lg flex items-center gap-2 shadow-highlight-glow hover:shadow-highlight-glow-strong"
+          className="bg-primary/70 hover:bg-primart/90 text-white px-8 py-5 rounded-full shadow-lg flex items-center gap-2 shadow-primary-glow hover:shadow-primary-glow-strong"
         >
           Donate
           {/* <ArrowRight className="w-5 h-5" /> */}
@@ -112,7 +112,7 @@ export default function PathTransitionSection() {
         "
       >
         {/*TODO: 
-        - Support mobile view (currently not implemented)*/}
+        - Support mobile view (currently not implemented): Be warned, people have attempted this before you. People who lost their sanity counter: 2 people */}
         {/* LEFT – Wisdom */}
         <div
             onClick={() => handlePathClick("WISDOM")}
