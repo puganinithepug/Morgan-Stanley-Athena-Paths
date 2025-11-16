@@ -46,7 +46,7 @@ const PATHS = [
   },
 ];
 
-export default function PathTransitionSection() {
+export default function PathTransitionSection({ onAboutClick }) {
   const sectionRef = useRef(null);
   const navigate = useNavigate();
 
@@ -94,15 +94,26 @@ export default function PathTransitionSection() {
           The Shield of Athena is a non-profit organization offering culturally and linguistically adapted professional support, intervention, and prevention services to women victims of family violence and their children, as well as members of ethnocultural communities.
           {/* Source: https://www.canadahelps.org/fr/organismesdebienfaisance/le-bouclier-dathena-the-shield-of-athena/impact/view/ - "Le Bouclier d'Athéna Services familiaux est un organisme communautaire sans but lucratif qui offre des services professionnels de soutien, d'intervention et de prévention culturellement et linguistiquement adaptés aux besoins des femmes victimes de violence familiale et leurs enfants ainsi qu'aux membres des communautés ethnoculturelles." */}
         </p>
-        <Button
-          size="lg"
-          variant="unstyled"
-          onClick={scrollToWaysToHelp}
-          className="bg-highlight/70 hover:bg-highlight/90 text-white px-8 py-5 rounded-full shadow-lg flex items-center gap-2 shadow-highlight-glow hover:shadow-highlight-glow-strong"
-        >
-          Donate
-          {/* <ArrowRight className="w-5 h-5" /> */}
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+          <Button
+            size="lg"
+            variant="unstyled"
+            onClick={scrollToWaysToHelp}
+            className="bg-highlight/70 hover:bg-highlight/90 text-white px-8 py-5 rounded-full shadow-lg flex items-center gap-2 shadow-highlight-glow hover:shadow-highlight-glow-strong"
+          >
+            Donate
+          </Button>
+          {onAboutClick && (
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={onAboutClick}
+              className="bg-white/90 hover:bg-white text-gray-900 px-8 py-5 rounded-full shadow-lg border-2 border-gray-200"
+            >
+              Learn More About Us
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* TRIANGLES (first state) */}

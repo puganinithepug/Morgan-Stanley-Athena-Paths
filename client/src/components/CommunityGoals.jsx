@@ -46,7 +46,7 @@ export default function CommunityGoals({ onDonate }) {
 
   return (
     <section className="py-20 bg-gradient-to-br from-background via-background to-primary/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

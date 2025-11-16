@@ -14,7 +14,9 @@ import {
   Scale,
   Baby,
   GraduationCap,
-  ArrowRight
+  ArrowRight,
+  FileText,
+  Video
 } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -54,7 +56,7 @@ export default function OurServices() {
       icon: Phone,
       title: 'Multilingual Services',
       description: 'Multilingual services offered by professional social workers, assisted by trained cultural intermediaries at our offices located in Laval and Montréal.',
-      stat: 'Montreal: 514-274-8117 | Laval: 450-688-6584',
+      stat: 'Montreal: 514-274-8117 or 1-877-274-8117 | Laval: 450-688-6584',
       statColor: 'text-highlight',
       iconBg: 'bg-highlight/20',
       iconColor: 'text-highlight'
@@ -131,7 +133,7 @@ export default function OurServices() {
   return (
     <div className="min-h-screen bg-background">
       <div className="relative bg-gradient-to-br from-primary-dark via-primary to-secondary py-20 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-white/90 mb-6 shadow-lg">
               <Shield className="w-12 h-12 text-primary" />
@@ -148,7 +150,7 @@ export default function OurServices() {
       </div>
 
       <div className="py-16 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
@@ -182,7 +184,7 @@ export default function OurServices() {
       </div>
 
       <div className="py-12 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {services1.map((service, index) => {
               const Icon = service.icon;
@@ -214,7 +216,7 @@ export default function OurServices() {
       </div>
 
       <div className="py-12 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {services2.map((service, index) => {
               const Icon = service.icon;
@@ -242,6 +244,93 @@ export default function OurServices() {
               );
             })}
           </div>
+        </div>
+      </div>
+
+      {/* Resources Section */}
+      <div className="py-20 bg-background">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              Resources & Information
+            </h2>
+            <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
+              Access publications, videos, legal information, and educational resources
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {[
+              {
+                icon: FileText,
+                title: 'Publications',
+                description: 'Download brochures, guides, and information packages in multiple languages',
+                color: 'text-highlight',
+                bgColor: 'bg-highlight/20'
+              },
+              {
+                icon: Video,
+                title: 'Videos',
+                description: 'Educational videos and information segments in Arabic, Creole, Spanish, Mandarin, and Vietnamese',
+                color: 'text-secondary',
+                bgColor: 'bg-secondary/20'
+              },
+              {
+                icon: Scale,
+                title: 'Legal Information',
+                description: 'Information about legal rights, court processes, and referrals to legal services',
+                color: 'text-primary',
+                bgColor: 'bg-primary/15'
+              },
+              {
+                icon: GraduationCap,
+                title: 'Educational Resources',
+                description: 'Awareness materials, prevention guides, and community education resources',
+                color: 'text-accent',
+                bgColor: 'bg-accent/30'
+              }
+            ].map((resource, index) => {
+              const Icon = resource.icon;
+              return (
+                <Card key={index} className="hover:shadow-lg transition-all">
+                  <CardContent className="p-6 text-center">
+                    <div className={`inline-flex p-4 ${resource.bgColor} rounded-full mb-4`}>
+                      <Icon className={`w-6 h-6 ${resource.color}`} />
+                    </div>
+                    <h3 className="text-lg font-bold text-foreground mb-2">{resource.title}</h3>
+                    <p className="text-sm text-foreground/70">{resource.description}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          {/* Second Step Resource */}
+          <Card className="bg-gradient-to-br from-primary/10 to-secondary/10 border-2 border-primary/20">
+            <CardContent className="p-8">
+              <div className="flex items-start gap-6">
+                <div className="p-4 bg-primary/20 rounded-lg flex-shrink-0">
+                  <Building2 className="w-8 h-8 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-foreground mb-3">
+                    Second Step Resource - Laval
+                  </h3>
+                  <p className="text-foreground/70 mb-4 leading-relaxed">
+                    We are establishing a second step shelter for women and children in Laval. This facility will provide transitional housing and support services for survivors as they rebuild their lives. The City of Laval has generously donated $200,000 towards this project.
+                  </p>
+                  <div className="flex gap-4">
+                    <Button className="bg-primary text-white hover:bg-primary/90">
+                      Learn More
+                    </Button>
+                    <Button variant="outline">
+                      Support This Project
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
 

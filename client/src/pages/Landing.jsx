@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
 import dataService from "../services/dataService";
@@ -14,10 +15,11 @@ import DonationSuccessModal from "../components/DonationSuccessModal";
 import CommunityGoals from "../components/CommunityGoals";
 import FirstTimeVisitorModal from "../components/FirstTimeVisitorModal";
 import PathTransitionSection from "../components/PathTransitionSection";
+import AboutModal from "../components/AboutModal";
 
 
 export default function Landing() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { user } = useAuth();
   const [donationAmount, setDonationAmount] = useState("");
   const [selectedPath, setSelectedPath] = useState(null);
@@ -25,6 +27,7 @@ export default function Landing() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [lastDonation, setLastDonation] = useState(null);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
   const [pendingDonation, setPendingDonation] = useState(null); // { item, customAmount }
 
   const impactItems = dataService.getImpactItems();
@@ -226,11 +229,44 @@ function VideoEmbed({ videoId }) {
         donation={lastDonation}
       />
 
-      <PathTransitionSection />
+      <AboutModal
+        isOpen={showAboutModal}
+        onClose={() => setShowAboutModal(false)}
+      />
+
+      {/* 2025 Lilac Gala Announcement */}
+      <section className="bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 py-8">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <Heart className="w-8 h-8 text-white" />
+              <div>
+                <h3 className="text-xl font-bold text-white">
+                  {language === 'fr' 
+                    ? 'Gala Annuel Lilas 2025 - 29 Novembre' 
+                    : '2025 Annual Lilac Gala - November 29th'}
+                </h3>
+                <p className="text-white/90 text-sm">
+                  {language === 'fr'
+                    ? 'Rejoignez-nous pour célébrer 34 ans de service. Achetez vos billets maintenant!'
+                    : 'Join us to celebrate 34 years of service. Buy your tickets now!'}
+                </p>
+              </div>
+            </div>
+            <Link to="/lilac-gala">
+              <Button className="bg-white hover:bg-white/90 font-bold" style={{ color: '#9333EA' }}>
+                {language === 'fr' ? 'Acheter des Billets' : 'Buy Tickets'}
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <PathTransitionSection onAboutClick={() => setShowAboutModal(true)} />
       <VideoEmbed videoId="WGND5Fvt2NA" />
 
       <section id="ways-to-help" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-foreground mb-4">
               Choose Your Path to Make a Difference
@@ -453,7 +489,7 @@ function VideoEmbed({ videoId }) {
       />
 
       <section className="py-20 bg-gradient-to-br from-foreground via-primary-dark to-primary text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

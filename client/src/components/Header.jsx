@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
-import { Globe, ChevronDown } from "lucide-react";
+import { Globe, ChevronDown, AlertTriangle } from "lucide-react";
 import { Button } from "./ui/Button";
 import GoogleTranslate from "./GoogleTranslate";
 import ProfileDropdown from "./ProfileDropdown";
@@ -40,8 +40,8 @@ const languages = [
   { code: 'fa', name: 'فارسی', flag: '🇮🇷' },
 ];
 
-export default function Header({hide}) {
-  const { t } = useLanguage();
+export default function Header() {
+  const { t, language } = useLanguage();
   const translateRef = useRef(null);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
@@ -86,14 +86,9 @@ export default function Header({hide}) {
         <GoogleTranslate ref={translateRef} />
       </div>
       <header
-        className={`
-          sticky top-0 z-50 shadow-sm
-          bg-background border-b border-secondary/2
-          transition-transform duration-300
-          ${hide ? '-translate-y-full' : 'translate-y-0'}
-        `}
+        className="fixed top-0 left-0 right-0 z-50 shadow-sm bg-background border-b border-secondary/2"
       >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/landing" className="flex items-center gap-3 group">
             <div className="relative flex-shrink-0">
@@ -120,6 +115,13 @@ export default function Header({hide}) {
             >
               {t("nav.home")}
             </Link> */}
+            <Link
+              to="/are-you-a-victim"
+              className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-orange-500 text-white px-4 py-2 rounded-lg font-bold text-sm hover:from-red-700 hover:to-orange-600 transition-all shadow-md hover:shadow-lg"
+            >
+              <AlertTriangle className="w-4 h-4" />
+              {language === 'fr' ? 'Êtes-vous une victime?' : 'Are you a victim?'}
+            </Link>
             <Link
               to="/services"
               className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
@@ -151,6 +153,18 @@ export default function Header({hide}) {
               className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
             >
               {t("nav.supportWall")}
+            </Link>
+            <Link
+              to="/news"
+              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
+            >
+              News
+            </Link>
+            <Link
+              to="/contact"
+              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
+            >
+              {language === 'fr' ? 'Contact' : 'Contact'}
             </Link>
           </nav>
 
