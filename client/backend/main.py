@@ -191,6 +191,36 @@ def logout(response: Response):
     return {"status": "ok", "message": "Logged out!"}
 
 
+@app.post("/volunteer")
+def volunteer(data: dict):
+    """Record volunteer hours as zero-amount SERVICE entries in donations.csv."""
+    uuid = data.get("uuid")
+    hours = data.get("hours")
+
+    if uuid is None or hours is None:
+        raise HTTPException(status_code=400, detail="uuid and hours are required")
+
+    try:
+        hours_val = float(hours)
+    except (TypeError, ValueError):
+        raise HTTPException(status_code=400, detail="hours must be a number")
+
+    donations_df = load_donations()
+    new_volunteer = {
+        "uuid": uuid,
+        "amount": 0,
+        "path": "SERVICE",
+        "impact_points": 0,
+        "hours": hours_val,
+    }
+    donations_df = pd.concat(
+        [donations_df, pd.DataFrame([new_volunteer])], ignore_index=True
+    )
+    donations_df.to_csv("donations.csv", index=False)
+
+    return {"status": "ok", "message": "Volunteer hours recorded"}
+
+
 @app.post("/donate")
 def donate(data: dict, response: Response):
     amount = data.get("amount")
@@ -295,6 +325,8 @@ def get_user_donations(uuid: str):
     """Return all donations for a user from donations.csv."""
     df = load_donations()
     user_df = df[df["uuid"] == uuid]
+    # Sanitize the json output by replacing empty cells with None
+    user_df = user_df.where(pd.notnull(user_df), " ")
     return {"donations": user_df.to_dict(orient="records")}
 
 

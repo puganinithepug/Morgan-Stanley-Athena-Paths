@@ -1,5 +1,7 @@
-uuid,path,amount,impact_points
-DtbM3EU5,WISDOM,25,25
-xTPOLETd,Referral Bonus,0,10
-DtbM3EU5,WISDOM,50,50
-xTPOLETd,COURAGE,75,90
+uuid,path,amount,impact_points,hours
+DtbM3EU5,WISDOM,25,25,
+xTPOLETd,Referral Bonus,0,10,
+DtbM3EU5,WISDOM,50,50,
+xTPOLETd,COURAGE,75,90,
+xTPOLETd,SERVICE,0,0,1.0
+xTPOLETd,SERVICE,0,0,3.0

@@ -101,15 +101,26 @@ export default function Landing() {
     }
   };
 
-  const handleVolunteer = (hours = null) => {
+  const handleVolunteer = async (hours = null) => {
     if (!user) {
       window.dispatchEvent(new CustomEvent("open-login-modal"));
       return;
     }
     
     if (hours) {
-      // Track volunteer hours
-      console.log(`Volunteering for ${hours} hours`);
+      // Record volunteer hours in backend
+      try {
+        await fetch("http://localhost:8000/volunteer", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ uuid: user.id, hours }),
+        });
+      } catch (err) {
+        console.error("Failed to record volunteer hours", err);
+      }
     }
     
     // Navigate to volunteer schedule page

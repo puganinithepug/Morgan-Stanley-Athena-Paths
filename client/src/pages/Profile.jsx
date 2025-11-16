@@ -96,6 +96,9 @@ export default function Profile() {
   const realDonations = donations.filter((d) => (d.amount || 0) > 0);
   const totalAmount = realDonations.reduce((sum, d) => sum + (d.amount || 0), 0);
   const totalImpactPoints = donations.reduce((sum, d) => sum + (d.impact_points || 0), 0);
+  const volunteerHours = donations
+    .filter((d) => d.path === 'SERVICE')
+    .reduce((sum, d) => sum + (d.hours || 0), 0);
   const backendBadgeIds = new Set(
     (backendBadges || []).map((b) => b.badge_id || b.id)
   );
@@ -113,7 +116,7 @@ export default function Profile() {
     WISDOM: realDonations.filter(d => d.path === 'WISDOM').length,
     COURAGE: realDonations.filter(d => d.path === 'COURAGE').length,
     PROTECTION: realDonations.filter(d => d.path === 'PROTECTION').length,
-    SERVICE: realDonations.filter(d => d.path === 'SERVICE').length,
+    SERVICE: volunteerHours,
   };
 
   return (
@@ -299,7 +302,7 @@ export default function Profile() {
                       {language === 'fr' ? 'Protection' : 'Protection'}
                     </span>
                   </div>
-                  <span className="font-bold text-foreground">{pathStats.SERVICE}</span>
+                  <span className="font-bold text-foreground">{pathStats.PROTECTION}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-accent/15 border border-accent/40">
                   <div className="flex items-center gap-3">
