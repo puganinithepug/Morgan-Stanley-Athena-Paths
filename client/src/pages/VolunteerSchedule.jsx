@@ -92,7 +92,7 @@ export default function VolunteerSchedulePage() {
               "Content-Type": "application/json",
             },
             credentials: "include",
-            body: JSON.stringify({ uuid: user.id, hours: volunteerRecord.hours }),
+            body: JSON.stringify({ uuid: user.id, hours: volunteerRecord.hours, date: volunteerRecord.date }),
           });
         } catch (err) {
           console.error("Failed to record volunteer hours in backend from schedule", err);
