@@ -12,6 +12,35 @@ const memoryStorage = {
   TEAMS: [],
 };
 
+const DEMO_DONATIONS_COOKIE = 'demoDonations';
+
+function loadDemoDonationsFromCookie() {
+  if (typeof document === 'undefined') return [];
+  const cookie = document.cookie
+    .split(';')
+    .map((c) => c.trim())
+    .find((c) => c.startsWith(DEMO_DONATIONS_COOKIE + '='));
+  if (!cookie) return [];
+  try {
+    const value = decodeURIComponent(cookie.split('=')[1] || '');
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveDemoDonationsToCookie(donations) {
+  if (typeof document === 'undefined') return;
+  try {
+    const value = encodeURIComponent(JSON.stringify(donations || []));
+    // Short-ish max-age; this is demo data only
+    document.cookie = `${DEMO_DONATIONS_COOKIE}=${value}; path=/; max-age=86400`;
+  } catch {
+    // Ignore cookie write errors
+  }
+}
+
 const initializeData = () => {
   if (memoryStorage.IMPACT_ITEMS.length === 0) {
     memoryStorage.IMPACT_ITEMS = [
@@ -464,6 +493,23 @@ export const dataService = {
     return memoryStorage.USER;
   },
 
+  clearCurrentUser: () => {
+    memoryStorage.USER = null;
+  },
+
+  // For offline admin demo: load persisted donations from cookie into memory
+  hydrateDemoDonationsFromCookie: () => {
+    const demoDonations = loadDemoDonationsFromCookie();
+    if (Array.isArray(demoDonations) && demoDonations.length > 0) {
+      memoryStorage.DONATIONS = demoDonations;
+    }
+  },
+
+  clearDemoDonationsCookie: () => {
+    if (typeof document === 'undefined') return;
+    document.cookie = `${DEMO_DONATIONS_COOKIE}=; path=/; max-age=0`;
+  },
+
   setCurrentUser: (user) => {
     memoryStorage.USER = user;
     const users = memoryStorage.USERS;
@@ -525,6 +571,14 @@ export const dataService = {
       created_date: new Date().toISOString(),
     };
     memoryStorage.DONATIONS.push(donation);
+
+    // Persist offline admin demo donations across reloads using a cookie
+    if (donationData.user_id === 'offline-admin') {
+      const existing = loadDemoDonationsFromCookie() || [];
+      existing.push(donation);
+      saveDemoDonationsToCookie(existing);
+    }
+
     return donation;
   },
 

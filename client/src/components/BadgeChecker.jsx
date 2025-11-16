@@ -1,3 +1,5 @@
+import dataService from '../services/dataService';
+
 export const BADGE_DEFINITIONS = {
   FIRST_DONATION: {
     id: 'first_donation',
@@ -104,7 +106,38 @@ async function fetchJson(url) {
 export async function checkAndAwardBadges(user) {
   if (!user) return [];
 
-  // Fetch current donations, referrals, and existing badges from backend
+  const newlyEarned = [];
+
+  // Offline demo admin: compute badges purely from local in-memory data
+  if (user.id === 'offline-admin') {
+    const localDonations = dataService.getDonations({ user_id: user.id }) || [];
+    const donations = localDonations.map((d) => ({
+      amount: d.amount,
+      path: d.path,
+      impact_points: d.points_awarded || 0,
+      hours: d.hours || 0,
+    }));
+
+    // We don't currently store referrals locally; simulate none
+    const referrals = [];
+
+    const existingBadges = new Set();
+
+    Object.values(BADGE_DEFINITIONS).forEach((badgeDef) => {
+      const id = badgeDef.id;
+      const hasBadge = existingBadges.has(id);
+      const meetsCondition = badgeDef.condition(user, donations, referrals);
+
+      if (meetsCondition && !hasBadge) {
+        newlyEarned.push(badgeDef);
+        existingBadges.add(id);
+      }
+    });
+
+    return newlyEarned;
+  }
+
+  // Online mode: Fetch current donations, referrals, and existing badges from backend
   const [donationsRes, referralsRes, userBadgesRes] = await Promise.all([
     fetchJson(`http://localhost:8000/users/${user.id}/donations`),
     fetchJson(`http://localhost:8000/users/${user.id}/referrals`),
@@ -118,8 +151,6 @@ export async function checkAndAwardBadges(user) {
   const existingBadges = new Set(
     (userBadgesRes.badges || []).map((b) => b.badge_id || b.id)
   );
-
-  const newlyEarned = [];
 
   // Evaluate conditions for each locally-defined badge and sync with backend
   await Promise.all(

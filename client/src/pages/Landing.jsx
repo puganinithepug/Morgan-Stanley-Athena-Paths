@@ -99,23 +99,52 @@ export default function Landing() {
 
     try {
       try {
-        await fetch("http://localhost:8000/donate", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            amount,
-            path: item.path,
-            uuid: user.id,
-            impact: points,
-            referral_code: referralCode,
-          }),
-        });
+        if (item.path !== "SERVICE"){
+          await fetch("http://localhost:8000/donate", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              amount,
+              path: item.path,
+              uuid: user.id,
+              impact: points,
+              referral_code: referralCode,
+            }),
+          });
+        }
       } catch (err) {
         console.error("Backend donation error:", err);
+
+        // If we're in offline demo admin mode, also record the donation locally
+        if (user && user.id === "offline-admin") {
+          try {
+            dataService.createDonation({
+              user_id: user.id,
+              user_name: user.full_name || "Admin (Offline Demo)",
+              path: item.path,
+              amount,
+              points_awarded: points,
+              impact_item_id: item.id,
+              impact_item_title:
+                language === "fr" ? item.title_fr : item.title_en,
+            });
+
+            const newPoints = (user.total_points || 0) + points;
+            dataService.updateUser(user.id, {
+              total_points: newPoints,
+              primary_path: user.primary_path || item.path,
+            });
+          } catch (localErr) {
+            console.error("Failed to record offline admin donation locally", localErr);
+          }
+        }
       }
+
+      // Donation is stored in backend only now (and in-memory for offline admin);
+      // UI stats and badges will be driven from backend where available.
 
       setLastDonation({
         amount,
@@ -137,21 +166,6 @@ export default function Landing() {
     if (!user) {
       window.dispatchEvent(new CustomEvent("open-login-modal"));
       return;
-    }
-    
-    if (hours) {
-      try {
-        await fetch("http://localhost:8000/volunteer", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ uuid: user.id, hours }),
-        });
-      } catch (err) {
-        console.error("Failed to record volunteer hours", err);
-      }
     }
     
     window.location.href = "/volunteer-schedule";
@@ -414,82 +428,101 @@ function VideoEmbed({ videoId }) {
 
                       {path === "SERVICE" ? ( // SPECIAL HANDLING FOR SERVICE PATH
                       <div className="space-y-4">
-                        {/* One Hour Volunteer Session */}
                         <div className="mb-4">
-                          <div className="flex justify-between items-start mb-2">
-                            <span className="text-sm font-medium text-foreground/80">
-                              Volunteer Session
-                            </span>
-                            <span className="text-lg font-bold text-foreground/80 text-right min-w-fit">
-                              1 hour
-                            </span>
-                          </div>
-                          <Button
-                            variant="unstyled"
-                            onClick={() => handleVolunteer(1)}
-                            className={`w-full ${config.color} text-foreground/70 shadow-md hover:brightness-80 ${config.shadowColor} ${config.hoverColor} transition-all hover:scale-[1.02] border-2 ${config.border}  transition-all duration-200`}
-                          >
-                            Volunteer 1 Hour
-                          </Button>
-                        </div>
-
-                        {/* Three Hour Volunteer Session */}
-                        <div className="mb-4">
-                          <div className="flex justify-between items-start mb-2">
-                            <span className="text-sm font-medium text-foreground/80">
-                              Volunteer Session
-                            </span>
-                            <span className="text-lg font-bold text-foreground/80 text-right min-w-fit">
-                              3 hours
-                            </span>
-                          </div>
-                          <Button
-                            variant="unstyled"
-                            onClick={() => handleVolunteer(3)}
-                            className={`w-full ${config.color} text-foreground/70 shadow-md hover:brightness-80 ${config.shadowColor} ${config.hoverColor} transition-all hover:scale-[1.02] border-2 ${config.border}  transition-all duration-200`}
-                          >
-                            Volunteer 3 Hours
-                          </Button>
-                        </div>
-                        <div className="pt-4 border-t border-foreground/10">
-                          <label className="text-sm font-medium text-foreground/80 block mb-2">
-                            Or choose custom hours:
-                          </label>
-                          <div className="flex gap-2">
-                            <div className="relative flex-1">
-                              <Input
-                                type="number"
-                                placeholder="0"
-                                value={selectedPath === path ? donationAmount : ""}
-                                onChange={(e) => {
-                                  setDonationAmount(e.target.value);
-                                  setSelectedPath(path);
-                                }}
-                                className="border-foreground/20 focus:border-primary focus:ring-primary/30 min-w-[30%]"
-                                min="1"
-                              />
-                              <span className="absolute right-10 top-1/2 -translate-y-1/2 text-foreground/50">
-                                hours
-                              </span>
-                            </div>
-                            <Button
-                              onClick={() =>
-                                donationAmount &&
-                                handleVolunteer(parseInt(donationAmount))
-                              }
-                              disabled={
-                                processing ||
-                                !donationAmount ||
-                                selectedPath !== path
-                              }
-                              variant="outline"
-                              className="whitespace-nowrap max-w-[50%] text-wrap"
-                            >
-                              Volunteer
-                            </Button>
-                          </div>
-                        </div>
+                           <div className="flex justify-between items-start mb-2">
+                             <span className="text-sm font-medium text-foreground/80">
+                               Volunteer your time
+                             </span>
+                             {/* <span className="text-lg font-bold text-foreground/80 text-right min-w-fit">
+                               1 hour
+                             </span> */}
+                           </div>
+                           <Button
+                             variant="unstyled"
+                             onClick={() => handleVolunteer(1)}
+                             className={`w-full ${config.color} text-foreground/70 shadow-md hover:brightness-80 ${config.shadowColor} ${config.hoverColor} transition-all hover:scale-[1.02] border-2 ${config.border}  transition-all duration-200`}
+                           >
+                             Volunteer 
+                           </Button>
+                         </div>
                       </div>
+                      // <div className="space-y-4">
+                      //   {/* One Hour Volunteer Session */}
+                      //   <div className="mb-4">
+                      //     <div className="flex justify-between items-start mb-2">
+                      //       <span className="text-sm font-medium text-foreground/80">
+                      //         Volunteer Session
+                      //       </span>
+                      //       <span className="text-lg font-bold text-foreground/80 text-right min-w-fit">
+                      //         1 hour
+                      //       </span>
+                      //     </div>
+                      //     <Button
+                      //       variant="unstyled"
+                      //       onClick={() => handleVolunteer(1)}
+                      //       className={`w-full ${config.color} text-foreground/70 shadow-md hover:brightness-80 ${config.shadowColor} ${config.hoverColor} transition-all hover:scale-[1.02] border-2 ${config.border}  transition-all duration-200`}
+                      //     >
+                      //       Volunteer 1 Hour
+                      //     </Button>
+                      //   </div>
+
+                      //   {/* Three Hour Volunteer Session */}
+                      //   <div className="mb-4">
+                      //     <div className="flex justify-between items-start mb-2">
+                      //       <span className="text-sm font-medium text-foreground/80">
+                      //         Volunteer Session
+                      //       </span>
+                      //       <span className="text-lg font-bold text-foreground/80 text-right min-w-fit">
+                      //         3 hours
+                      //       </span>
+                      //     </div>
+                      //     <Button
+                      //       variant="unstyled"
+                      //       onClick={() => handleVolunteer(3)}
+                      //       className={`w-full ${config.color} text-foreground/70 shadow-md hover:brightness-80 ${config.shadowColor} ${config.hoverColor} transition-all hover:scale-[1.02] border-2 ${config.border}  transition-all duration-200`}
+                      //     >
+                      //       Volunteer 3 Hours
+                      //     </Button>
+                      //   </div>
+                      //   <div className="pt-4 border-t border-foreground/10">
+                      //     <label className="text-sm font-medium text-foreground/80 block mb-2">
+                      //       Or choose custom hours:
+                      //     </label>
+                      //     <div className="flex gap-2">
+                      //       <div className="relative flex-1">
+                      //         <Input
+                      //           type="number"
+                      //           placeholder="0"
+                      //           value={selectedPath === path ? donationAmount : ""}
+                      //           onChange={(e) => {
+                      //             setDonationAmount(e.target.value);
+                      //             setSelectedPath(path);
+                      //           }}
+                      //           className="border-foreground/20 focus:border-primary focus:ring-primary/30 min-w-[30%]"
+                      //           min="1"
+                      //         />
+                      //         <span className="absolute right-10 top-1/2 -translate-y-1/2 text-foreground/50">
+                      //           hours
+                      //         </span>
+                      //       </div>
+                      //       <Button
+                      //         onClick={() =>
+                      //           donationAmount &&
+                      //           handleVolunteer(parseInt(donationAmount))
+                      //         }
+                      //         disabled={
+                      //           processing ||
+                      //           !donationAmount ||
+                      //           selectedPath !== path
+                      //         }
+                      //         variant="outline"
+                      //         className="whitespace-nowrap max-w-[50%] text-wrap"
+                      //       >
+                      //         Volunteer
+                      //       </Button>
+                      //     </div>
+                      //   </div>
+                      // </div>
                     ) : (
                       <div className="space-y-4">
                           {pathItems.slice(0, 2).map((item) => (

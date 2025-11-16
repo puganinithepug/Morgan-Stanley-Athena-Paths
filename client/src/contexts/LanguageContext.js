@@ -18,7 +18,7 @@ const translations = {
     'paths.protection.name': 'Protection',
     'paths.protection.desc': 'Fund emergency shelter nights and safe housing so families can leave danger and sleep safely.',
     'paths.service.name': 'Service',
-    'paths.service.desc': 'Keep every path alive by offering your time—taking shifts, helping at events, or supporting daily operations that protect women and children.',
+    'paths.service.desc': 'Keep every path alive by offering your time—taking shifts, helping at events, or supporting daily operations that protect women and children. Volunteers have no direct contacts with clients as they are in vulnerable state but the volunteers can help with Administrative, Office support, transportation, procuration of donations and at events.',
     'common.login': 'Log In',
     'common.logout': 'Log Out',
     'common.loading': 'Loading...',

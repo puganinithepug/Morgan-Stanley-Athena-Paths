@@ -8,6 +8,7 @@ import ReferralSection from '../components/ReferralSection';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PATH_STORIES, PATH_LEVEL_LABELS } from '../contexts/PathStories';
 import { computePathStats } from '../components/PathProgress';
+import dataService from '../services/dataService';
 
 export default function Profile() {
   const { user } = useAuth();
@@ -25,6 +26,22 @@ export default function Profile() {
 
     async function syncBadges() {
       try {
+        // Offline demo admin: use locally computed badges only
+        if (user.id === 'offline-admin') {
+          const earned = await checkAndAwardBadges(user);
+          if (!cancelled) {
+            if (earned.length > 0) {
+              setNewBadges(earned);
+              setShowBadgeNotification(true);
+              setTimeout(() => setShowBadgeNotification(false), 5000);
+            }
+            // Mirror earned badge definitions into the backendBadges shape
+            setBackendBadges(earned.map((b) => ({ badge_id: b.id })));
+          }
+          return;
+        }
+
+        // First, check and award any new badges based on backend data
         const earned = await checkAndAwardBadges(user);
         if (!cancelled && earned.length > 0) {
           setNewBadges(earned);
@@ -52,6 +69,7 @@ export default function Profile() {
     };
   }, [userId, user]);
 
+  // Load donations for this user from backend (or from local dataService for offline admin)
   useEffect(() => {
     if (!userId) return;
 
@@ -59,6 +77,21 @@ export default function Profile() {
 
     async function loadDonations() {
       try {
+        // Offline demo admin: skip backend and use local in-memory donations
+        if (user.id === 'offline-admin') {
+          const local = dataService.getDonations({ user_id: user.id }) || [];
+          const mapped = local.map((d) => ({
+            amount: d.amount,
+            path: d.path,
+            impact_points: d.points_awarded || 0,
+            hours: d.hours || 0,
+          }));
+          if (!cancelled) {
+            setDonations(mapped);
+          }
+          return;
+        }
+
         const res = await fetch(`http://localhost:8000/users/${user.id}/donations`, {
           credentials: 'include',
         });
@@ -91,6 +124,18 @@ export default function Profile() {
   const totalAmount = realDonations.reduce((sum, d) => sum + (d.amount || 0), 0);
   const totalImpactPoints = donations.reduce((sum, d) => sum + (d.impact_points || 0), 0);
 
+  // Primary source of volunteer hours: SERVICE entries in donations
+  const volunteerHoursFromDonations = donations
+    .filter((d) => d.path === 'SERVICE')
+    .reduce((sum, d) => {
+      const h = typeof d.hours === 'string' ? parseFloat(d.hours) : d.hours;
+      return sum + (h || 0);
+    }, 0);
+
+  console.log("Volunteering hours:", volunteerHoursFromDonations);
+
+  // Fallback for older/demo data where hours were only stored on the user object
+  const volunteerHours = volunteerHoursFromDonations || user.volunteer_hours || 0;
   const backendBadgeIds = new Set(
     (backendBadges || []).map((b) => b.badge_id || b.id)
   );
@@ -103,6 +148,7 @@ export default function Profile() {
     .filter(Boolean);
 
   const pathStats = computePathStats(donations);
+  console.log("Service path stats on Profile page:", pathStats.SERVICE);
 
   return (
     <div className="min-h-screen py-12 bg-gradient-to-br from-background via-background to-primary/10">

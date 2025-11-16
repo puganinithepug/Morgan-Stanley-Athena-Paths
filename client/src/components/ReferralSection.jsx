@@ -6,6 +6,7 @@ import { Users, Copy, Check, Share2, Gift } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { motion } from 'framer-motion';
+import dataService from '../services/dataService';
 
 export default function ReferralSection() {
   const { user } = useAuth();
@@ -19,6 +20,20 @@ export default function ReferralSection() {
 
     async function loadReferrals() {
       try {
+        // Offline demo admin: synthesize some fake referral data for aesthetics
+        if (user.id === 'offline-admin') {
+          const fakeReferrals = [
+            { id: 'ref-1', hasDonated: true },
+            { id: 'ref-2', hasDonated: true },
+            { id: 'ref-3', hasDonated: false },
+          ];
+          if (!cancelled) {
+            setUserReferrals(fakeReferrals);
+            // setLoadingReferrals(false);
+          }
+          return;
+        }
+
         const res = await fetch(`http://localhost:8000/users/${user.id}/referrals`, {
           credentials: 'include',
         });

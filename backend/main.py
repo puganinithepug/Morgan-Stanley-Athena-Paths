@@ -210,7 +210,7 @@ def volunteer(data: dict):
         "uuid": uuid,
         "amount": 0,
         "path": "SERVICE",
-        "impact_points": 0,
+        "impact_points": hours_val * 10,  # 10 impact points per hour
         "hours": hours_val,
     }
     donations_df = pd.concat(

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
@@ -55,6 +55,13 @@ export default function VolunteerSchedulePage() {
   const [email, setEmail] = useState(user?.email || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Autofill email from logged-in user when available
+  useEffect(() => {
+    if (user?.email && !email) {
+      setEmail(user.email);
+    }
+  }, [user, email]);
+
   const handleVolunteerSignup = async () => {
     if (!selectedOpportunity || !selectedSlot || !email) {
       alert("Please fill in all required fields");
@@ -76,17 +83,52 @@ export default function VolunteerSchedulePage() {
         status: 'confirmed'
       };
 
-      // Update user's volunteer hours
+      // If this is a regular backend user, record hours via backend API as well
+      if (user && user.id !== "offline-admin") {
+        try {
+          await fetch("http://localhost:8000/volunteer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({ uuid: user.id, hours: volunteerRecord.hours }),
+          });
+        } catch (err) {
+          console.error("Failed to record volunteer hours in backend from schedule", err);
+        }
+      }
+
+      // Demo / offline admin path: keep existing local behaviour so the UI looks functional
       if (user) {
         const currentHours = user.volunteer_hours || 0;
         const newHours = currentHours + volunteerRecord.hours;
-        
+
         dataService.updateUser(user.id, {
           volunteer_hours: newHours,
           last_volunteer_date: new Date().toISOString()
         });
 
-        // Check for volunteer badges
+        // For the offline admin demo user, also mirror hours into local SERVICE donations
+        // so the profile's volunteer hours and path stats are populated.
+        if (user.id === "offline-admin") {
+          try {
+            dataService.createDonation({
+              user_id: user.id,
+              user_name: user.full_name || "Admin (Offline Demo)",
+              path: "SERVICE",
+              amount: 0,
+              points_awarded: 0,
+              hours: volunteerRecord.hours,
+              impact_item_id: null,
+              impact_item_title: "Volunteer hours",
+            });
+          } catch (localErr) {
+            console.error("Failed to record offline admin volunteer hours locally from schedule", localErr);
+          }
+        }
+
+        // Check for volunteer badges (uses local data for offline admin, backend for others)
         const { checkAndAwardBadges } = await import('../components/BadgeChecker');
         checkAndAwardBadges(user);
       }
@@ -155,7 +197,7 @@ export default function VolunteerSchedulePage() {
                     onClick={() => setSelectedOpportunity(opportunity)}
                   >
                     <CardContent className="p-6">
-                      <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-start justify-between mb-3 mt-3">
                         <h3 className="text-xl font-bold text-foreground">
                           {opportunity.title}
                         </h3>
@@ -195,7 +237,7 @@ export default function VolunteerSchedulePage() {
           <div>
             <Card className="sticky top-8">
               <CardContent className="p-6">
-                <h2 className="text-2xl font-bold text-foreground mb-6">
+                <h2 className="text-2xl font-bold text-foreground mb-6 mt-6">
                   {language === "fr" ? "Réserver votre temps" : "Book Your Time"}
                 </h2>
                 

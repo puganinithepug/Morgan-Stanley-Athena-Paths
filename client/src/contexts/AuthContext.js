@@ -54,22 +54,65 @@ export function AuthProvider({ children }) {
       const backendUser = await fetchCurrentUser();
       if (backendUser) {
         setUser(backendUser);
-      } else {
-        // Fallback to existing local dataService user if any
-        const currentUser = dataService.getCurrentUser();
-        setUser(currentUser);
+        setLoading(false);
+        return;
       }
+
+      // If backend didn't give us a user, check if demo mode is enabled via cookie
+      let demoModeEnabled = false;
+      if (typeof document !== 'undefined') {
+        demoModeEnabled = document.cookie
+          .split(';')
+          .map((c) => c.trim())
+          .some((c) => c.startsWith('demoMode='));
+      }
+
+      if (demoModeEnabled) {
+        // Recreate the offline admin demo user
+        const demoAdmin = {
+          id: 'offline-admin',
+          email: 'admin@offline.local',
+          full_name: 'Admin (Offline Demo)',
+          total_points: 0,
+          badges: [],
+          primary_path: 'WISDOM',
+          is_anonymous: false,
+          preferred_language: 'en',
+          referral_code: 'ADMINOFFLINE',
+          avatar_url: null,
+        };
+        dataService.setCurrentUser(demoAdmin);
+        if (typeof dataService.hydrateDemoDonationsFromCookie === 'function') {
+          dataService.hydrateDemoDonationsFromCookie();
+        }
+        setUser(demoAdmin);
+        setLoading(false);
+        return;
+      }
+
+      // Fallback to existing local dataService user if any
+      const currentUser = dataService.getCurrentUser();
+      setUser(currentUser);
       setLoading(false);
     })();
   }, []);
 
-  // Called after a successful backend login (e.g., from Login popup)
+  // Called after a successful login (e.g., from Login popup)
+  // Tries backend first, then falls back to any local dataService user (for offline/demo mode)
   const login = async () => {
     const backendUser = await fetchCurrentUser();
     if (backendUser) {
       setUser(backendUser);
       return backendUser;
     }
+
+    // Fallback: if backend is unreachable but we have a local user (e.g., offline demo admin), use that
+    const localUser = dataService.getCurrentUser();
+    if (localUser) {
+      setUser(localUser);
+      return localUser;
+    }
+
     return null;
   };
 
@@ -80,7 +123,19 @@ export function AuthProvider({ children }) {
       credentials: 'include',
     }).catch(() => {});
 
+    // Clear both React auth state and any local/demo user (e.g., offline admin)
     setUser(null);
+    if (typeof dataService.clearCurrentUser === 'function') {
+      dataService.clearCurrentUser();
+    }
+
+    // Clear demo donations + demo mode cookie so it does not persist after logout
+    if (typeof dataService.clearDemoDonationsCookie === 'function') {
+      dataService.clearDemoDonationsCookie();
+    }
+    if (typeof document !== 'undefined') {
+      document.cookie = 'demoMode=; path=/; max-age=0';
+    }
   };
 
   const updateUser = (updates) => {

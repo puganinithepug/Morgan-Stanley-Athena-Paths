@@ -5,6 +5,7 @@ import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import { X } from "lucide-react";
+import dataService from "../services/dataService";
 
 const Login = ({ open, onClose, onSuccess }) => {
   const [mode, setMode] = useState("login"); // 'login' | 'signup'
@@ -15,6 +16,7 @@ const Login = ({ open, onClose, onSuccess }) => {
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [offlineModeAvailable, setOfflineModeAvailable] = useState(false);
 
   // Reset form when popup closes
   useEffect(() => {
@@ -27,6 +29,7 @@ const Login = ({ open, onClose, onSuccess }) => {
       setLastName("");
       setError("");
       setSuccess(false);
+      setOfflineModeAvailable(false);
     }
   }, [open]);
 
@@ -47,6 +50,7 @@ const Login = ({ open, onClose, onSuccess }) => {
     e.preventDefault();
     setError("");
     setSuccess(false);
+    setOfflineModeAvailable(false);
 
     try {
       const isSignup = mode === "signup";
@@ -87,7 +91,40 @@ const Login = ({ open, onClose, onSuccess }) => {
         setError(data.message || (isSignup ? "Signup failed" : "Login failed"));
       }
     } catch (err) {
+      // If we can't reach the backend at all, offer an offline/demo admin mode
+      console.error("Login request failed", err);
       setError("Could not connect to server");
+      setOfflineModeAvailable(true);
+    }
+  };
+
+  const handleOfflineAdminLogin = () => {
+    // Seed a local "demo admin" user so the rest of the app can render as if logged in
+    const demoAdmin = {
+      id: "offline-admin",
+      email: "admin@offline.local",
+      full_name: "Admin (Offline Demo)",
+      total_points: 0,
+      badges: [],
+      primary_path: "WISDOM",
+      is_anonymous: false,
+      preferred_language: "en",
+      referral_code: "ADMINOFFLINE",
+      avatar_url: null,
+    };
+
+    dataService.setCurrentUser(demoAdmin);
+
+    // Persist a simple flag so demo mode survives page reloads until logout
+    if (typeof document !== "undefined") {
+      document.cookie = "demoMode=1; path=/; max-age=86400"; // 1 day
+    }
+
+    setSuccess(true);
+
+    if (onSuccess) {
+      // We don't rely on the returned user here; AuthContext.login() will pick up the local user
+      onSuccess(null);
     }
   };
 
@@ -197,6 +234,23 @@ const Login = ({ open, onClose, onSuccess }) => {
             {error && (
               <p className="mt-2 text-xs text-red-600 text-center">{error}</p>
             )}
+
+            {offlineModeAvailable && (
+              <div className="mt-3 text-xs text-foreground/70 text-center space-y-2">
+                <p>
+                  The backend appears to be offline. You can still explore the site using a demo admin account.
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full h-9 text-xs"
+                  onClick={handleOfflineAdminLogin}
+                >
+                  Continue as demo admin (offline)
+                </Button>
+              </div>
+            )}
+
             {success && (
               <p className="mt-2 text-xs text-green-600 text-center">
                 {mode === "login" ? "Login successful!" : "Signup successful!"}
