@@ -74,7 +74,7 @@ export async function checkAndAwardBadges(user) {
   if (!user) return [];
 
   // Fetch current donations, referrals, and existing badges from backend
-  const [donationsRes, referralsRes, badgesRes] = await Promise.all([
+  const [donationsRes, referralsRes, userBadgesRes] = await Promise.all([
     fetchJson(`http://localhost:8000/users/${user.id}/donations`),
     fetchJson(`http://localhost:8000/users/${user.id}/referrals`),
     fetchJson(`http://localhost:8000/users/${user.id}/badges`),
@@ -82,17 +82,20 @@ export async function checkAndAwardBadges(user) {
 
   const donations = donationsRes.donations || [];
   const referrals = referralsRes.referrals || [];
+
+  // IDs of badges the user already has (from backend)
   const existingBadges = new Set(
-    (badgesRes.badges || []).map((b) => b.badge_id || b.id)
+    (userBadgesRes.badges || []).map((b) => b.badge_id || b.id)
   );
 
   const newlyEarned = [];
 
-  // Evaluate conditions for each badge definition
+  // Evaluate conditions for each locally-defined badge and sync with backend
   await Promise.all(
-    Object.values(BADGE_DEFINITIONS).map(async (badge) => {
-      const hasBadge = existingBadges.has(badge.id);
-      const meetsCondition = badge.condition(user, donations, referrals);
+    Object.values(BADGE_DEFINITIONS).map(async (badgeDef) => {
+      const id = badgeDef.id;
+      const hasBadge = existingBadges.has(id);
+      const meetsCondition = badgeDef.condition(user, donations, referrals);
 
       if (meetsCondition && !hasBadge) {
         // Assign badge in backend
@@ -103,13 +106,13 @@ export async function checkAndAwardBadges(user) {
               'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify({ badge_id: badge.id }),
+            body: JSON.stringify({ badge_id: id }),
           });
         } catch (err) {
-          console.error('Failed to assign badge', badge.id, err);
+          console.error('Failed to assign badge', id, err);
         }
 
-        newlyEarned.push(badge);
+        newlyEarned.push(badgeDef);
       }
     })
   );

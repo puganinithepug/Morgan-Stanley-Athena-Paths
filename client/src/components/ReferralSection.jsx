@@ -1,23 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { Users, Copy, Check, Share2, Gift } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import dataService from '../services/dataService';
 import { motion } from 'framer-motion';
 
 export default function ReferralSection() {
   const { user } = useAuth();
   const { language } = useLanguage();
   const [copied, setCopied] = useState(false);
+  const [userReferrals, setUserReferrals] = useState([]);
+  const [loadingReferrals, setLoadingReferrals] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+
+    async function loadReferrals() {
+      try {
+        const res = await fetch(`http://localhost:8000/users/${user.id}/referrals`, {
+          credentials: 'include',
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) {
+          setUserReferrals(data.referrals || []);
+          setLoadingReferrals(false);
+        }
+      } catch (err) {
+        console.error('Failed to load referrals', err);
+        if (!cancelled) {
+          setLoadingReferrals(false);
+        }
+      }
+    }
+
+    loadReferrals();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
 
   if (!user) return null;
 
-  const referrals = dataService.getReferrals();
-  const userReferrals = referrals.filter(r => r.referrer_id === user.id);
-  const referralCode = user.referral_code || `REF-${user.id.slice(0, 8).toUpperCase()}`;
+  const referralCode = user.referral_code || `REF-${user.id}`;
   const referralLink = `${window.location.origin}/landing?ref=${referralCode}`;
 
   const handleCopy = () => {
@@ -70,7 +99,9 @@ export default function ReferralSection() {
         <div className="grid md:grid-cols-3 gap-4">
           <div className="bg-background rounded-lg p-4 text-center border border-primary/10">
             <Users className="w-8 h-8 text-primary mx-auto mb-2" />
-            <div className="text-2xl font-bold text-foreground">{userReferrals.length}</div>
+            <div className="text-2xl font-bold text-foreground">{
+              userReferrals.filter(r => r.hasDonated === true || r.hasDonated === 'True').length
+            }</div>
             <div className="text-sm text-foreground/70">
               {language === 'fr' ? 'Amis Référés' : 'Friends Referred'}
             </div>
@@ -88,9 +119,12 @@ export default function ReferralSection() {
 
           <div className="bg-background rounded-lg p-4 text-center border border-primary/10">
             <Share2 className="w-8 h-8 text-primary mx-auto mb-2" />
-            <div className="text-2xl font-bold text-foreground">
-              {userReferrals.filter(r => r.has_donated).length}
-            </div>
+            <div className="text-2xl font-bold text-foreground">{
+              userReferrals.filter(r => {
+                const v = String(r.hasDonated).toLowerCase();
+                return v === 'true' || v === '1';
+              }).length
+            }</div>
             <div className="text-sm text-foreground/70">
               {language === 'fr' ? 'Ont Donné' : 'Have Donated'}
             </div>

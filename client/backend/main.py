@@ -240,11 +240,13 @@ def donate(data: dict, response: Response):
         # Try to resolve referrer_id from code like "REF-<UUID>"
         referrer_uuid = None
         if isinstance(referral_code, str) and referral_code.startswith("REF-"):
+            # Extract everything after the "REF-" prefix; do NOT use strip here
             candidate_uuid = referral_code[len("REF-") :]
             users_df = load_users()
             if not users_df[users_df["uuid"] == candidate_uuid].empty:
                 referrer_uuid = candidate_uuid
 
+        print("Referrer UUID resolved to:", referrer_uuid)
         if is_first_donation:
             # See if a referral row already exists for this referred user + code
             existing = referrals_df[

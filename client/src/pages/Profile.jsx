@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import dataService from '../services/dataService';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { User, Award, Trophy, Heart, Phone, Home, Sparkles } from 'lucide-react';
 import { BADGE_DEFINITIONS, checkAndAwardBadges } from '../components/BadgeChecker';
@@ -14,6 +13,8 @@ export default function Profile() {
   const [newBadges, setNewBadges] = useState([]);
   const [showBadgeNotification, setShowBadgeNotification] = useState(false);
   const [backendBadges, setBackendBadges] = useState([]); // badges from backend
+  const [donations, setDonations] = useState([]); // donations from backend
+  const [loadingDonations, setLoadingDonations] = useState(true);
 
   useEffect(() => {
     if (!user) return;
@@ -51,6 +52,38 @@ export default function Profile() {
     };
   }, [user]);
 
+  // Load donations for this user from backend
+  useEffect(() => {
+    if (!user) return;
+
+    let cancelled = false;
+
+    async function loadDonations() {
+      try {
+        const res = await fetch(`http://localhost:8000/users/${user.id}/donations`, {
+          credentials: 'include',
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) {
+          setDonations(data.donations || []);
+          setLoadingDonations(false);
+        }
+      } catch (err) {
+        console.error('Failed to load donations', err);
+        if (!cancelled) {
+          setLoadingDonations(false);
+        }
+      }
+    }
+
+    loadDonations();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -59,8 +92,10 @@ export default function Profile() {
     );
   }
 
-  const donations = dataService.getDonations().filter(d => d.user_id === user.id);
-  const totalAmount = donations.reduce((sum, d) => sum + d.amount, 0);
+  // Separate real donations from bonus entries (referral bonuses have amount 0 / no path)
+  const realDonations = donations.filter((d) => (d.amount || 0) > 0);
+  const totalAmount = realDonations.reduce((sum, d) => sum + (d.amount || 0), 0);
+  const totalImpactPoints = donations.reduce((sum, d) => sum + (d.impact_points || 0), 0);
   const backendBadgeIds = new Set(
     (backendBadges || []).map((b) => b.badge_id || b.id)
   );
@@ -69,9 +104,9 @@ export default function Profile() {
   );
 
   const pathStats = {
-    WISDOM: donations.filter(d => d.path === 'WISDOM').length,
-    COURAGE: donations.filter(d => d.path === 'COURAGE').length,
-    PROTECTION: donations.filter(d => d.path === 'PROTECTION').length
+    WISDOM: realDonations.filter(d => d.path === 'WISDOM').length,
+    COURAGE: realDonations.filter(d => d.path === 'COURAGE').length,
+    PROTECTION: realDonations.filter(d => d.path === 'PROTECTION').length
   };
 
   return (
@@ -138,7 +173,7 @@ export default function Profile() {
               <CardContent className="p-6 text-center relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
                 <Award className="mt-6 w-8 h-8 mx-auto mb-2 opacity-90 relative z-10" />
-                <div className="text-3xl font-bold mb-1 relative z-10">{user.total_points || 0}</div>
+                <div className="text-3xl font-bold mb-1 relative z-10">{totalImpactPoints}</div>
                 <div className="text-sm opacity-90 relative z-10">
                   {language === 'fr' ? 'Points d\'Impact' : 'Impact Points'}
                 </div>
@@ -155,7 +190,7 @@ export default function Profile() {
               <CardContent className="p-6 text-center relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
                 <Heart className="mt-6 w-8 h-8 mx-auto mb-2 opacity-90 relative z-10" />
-                <div className="text-3xl font-bold mb-1 relative z-10">{donations.length}</div>
+                <div className="text-3xl font-bold mb-1 relative z-10">{realDonations.length}</div>
                 <div className="text-sm opacity-90 relative z-10">
                   {language === 'fr' ? 'Dons Totaux' : 'Total Donations'}
                 </div>
