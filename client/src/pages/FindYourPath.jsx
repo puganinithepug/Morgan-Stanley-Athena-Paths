@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Heart, Shield, Phone, HandHeart, X } from 'lucide-react';
+import {
+  Sparkles,
+  Heart,
+  Shield,
+  Phone,
+  HandHeart,
+  X,
+  PlayCircle
+} from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import FindYourPathQuiz from '../components/FindYourPathQuiz';
 
@@ -18,7 +26,7 @@ function VideoModal({ videoId, onClose }) {
           <X className="w-5 h-5" />
         </button>
 
-        <div className="w-full" style={{ paddingBottom: "56.25%", position: "relative" }}>
+        <div className="w-full" style={{ paddingBottom: '56.25%', position: 'relative' }}>
           <iframe
             src={`https://www.youtube.com/embed/${videoId}`}
             className="absolute top-0 left-0 w-full h-full rounded-xl"
@@ -41,7 +49,6 @@ export default function FindYourPath() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 py-12">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-
         {/* -------------------- HEADER -------------------- */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -52,7 +59,7 @@ export default function FindYourPath() {
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+            transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
             className="inline-flex p-4 rounded-full bg-gradient-to-br from-primary/10 via-background to-primary/20 mb-6 relative"
           >
             <Sparkles className="w-12 h-12 text-primary" />
@@ -68,8 +75,8 @@ export default function FindYourPath() {
           </h1>
           <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
             {language === 'fr'
-              ? 'Répondez à quelques questions rapides pour découvrir quel domaine de soutien résonne le plus avec vos valeurs et où votre contribution peut avoir le plus d\'impact.'
-              : 'Answer a few quick questions to discover which area of support resonates most with your values and where your contribution can make the greatest impact.'}
+              ? 'Cliquez sur un parcours pour regarder une courte vidéo et découvrir où votre contribution peut avoir le plus d’impact.'
+              : 'Click a path to watch a short video and discover where your contribution can make the greatest impact.'}
           </p>
         </motion.div>
 
@@ -82,9 +89,17 @@ export default function FindYourPath() {
         >
           {/* WISDOM */}
           <div
-            onClick={() => setActiveVideo("PY6ls0v6hu4")}
-            className="cursor-pointer bg-gradient-to-br from-highlight/20 to-highlight/10 border-2 border-highlight/40 rounded-xl p-6 text-center hover:shadow-lg transition"
+            onClick={() => setActiveVideo('PY6ls0v6hu4')}
+            className="group relative cursor-pointer bg-gradient-to-br from-highlight/20 to-highlight/10 border-2 border-highlight/40 rounded-xl p-6 text-center hover:shadow-lg hover:-translate-y-1 transition-transform"
           >
+            {/* hover play overlay */}
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5">
+              <div className="flex items-center gap-2 bg-white/90 px-3 py-1 rounded-full text-xs font-medium text-foreground shadow">
+                <PlayCircle className="w-4 h-4" />
+                <span>{language === 'fr' ? 'Lire la vidéo' : 'Play video'}</span>
+              </div>
+            </div>
+
             <div className="inline-flex p-3 rounded-full bg-highlight/30 mb-3">
               <Phone className="w-8 h-8 text-highlight" />
             </div>
@@ -94,13 +109,26 @@ export default function FindYourPath() {
             <p className="text-sm text-foreground/70">
               {language === 'fr' ? 'Premier contact & information' : 'First contact & information'}
             </p>
+
+            {/* bottom row “watch video” */}
+            <div className="mt-4 flex items-center justify-center gap-2 text-xs font-medium text-foreground/70">
+              <PlayCircle className="w-4 h-4" />
+              <span>{language === 'fr' ? 'Regarder la vidéo' : 'Watch intro video'}</span>
+            </div>
           </div>
 
           {/* COURAGE */}
           <div
-            onClick={() => setActiveVideo("HFqvJ_e_emw")}
-            className="cursor-pointer bg-gradient-to-br from-muted/20 to-muted/10 border-2 border-muted/40 rounded-xl p-6 text-center hover:shadow-lg transition"
+            onClick={() => setActiveVideo('HFqvJ_e_emw')}
+            className="group relative cursor-pointer bg-gradient-to-br from-muted/20 to-muted/10 border-2 border-muted/40 rounded-xl p-6 text-center hover:shadow-lg hover:-translate-y-1 transition-transform"
           >
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5">
+              <div className="flex items-center gap-2 bg-white/90 px-3 py-1 rounded-full text-xs font-medium text-foreground shadow">
+                <PlayCircle className="w-4 h-4" />
+                <span>{language === 'fr' ? 'Lire la vidéo' : 'Play video'}</span>
+              </div>
+            </div>
+
             <div className="inline-flex p-3 rounded-full bg-muted/30 mb-3">
               <Heart className="w-8 h-8 text-muted" />
             </div>
@@ -110,13 +138,25 @@ export default function FindYourPath() {
             <p className="text-sm text-foreground/70">
               {language === 'fr' ? 'Guérison & counseling' : 'Healing & counseling'}
             </p>
+
+            <div className="mt-4 flex items-center justify-center gap-2 text-xs font-medium text-foreground/70">
+              <PlayCircle className="w-4 h-4" />
+              <span>{language === 'fr' ? 'Regarder la vidéo' : 'Watch intro video'}</span>
+            </div>
           </div>
 
           {/* PROTECTION */}
           <div
-            onClick={() => setActiveVideo("7eZvuWHRBKQ")}
-            className="cursor-pointer bg-gradient-to-br from-secondary/20 to-secondary/10 border-2 border-secondary/40 rounded-xl p-6 text-center hover:shadow-lg transition"
+            onClick={() => setActiveVideo('7eZvuWHRBKQ')}
+            className="group relative cursor-pointer bg-gradient-to-br from-secondary/20 to-secondary/10 border-2 border-secondary/40 rounded-xl p-6 text-center hover:shadow-lg hover:-translate-y-1 transition-transform"
           >
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5">
+              <div className="flex items-center gap-2 bg-white/90 px-3 py-1 rounded-full text-xs font-medium text-foreground shadow">
+                <PlayCircle className="w-4 h-4" />
+                <span>{language === 'fr' ? 'Lire la vidéo' : 'Play video'}</span>
+              </div>
+            </div>
+
             <div className="inline-flex p-3 rounded-full bg-secondary/30 mb-3">
               <Shield className="w-8 h-8 text-secondary" />
             </div>
@@ -124,17 +164,27 @@ export default function FindYourPath() {
               {language === 'fr' ? 'Protection' : 'Protection'}
             </h3>
             <p className="text-sm text-foreground/70">
-              {language === 'fr'
-                ? 'Refuge sûr & logement'
-                : 'Safe shelter & housing'}
+              {language === 'fr' ? 'Refuge sûr & logement' : 'Safe shelter & housing'}
             </p>
+
+            <div className="mt-4 flex items-center justify-center gap-2 text-xs font-medium text-foreground/70">
+              <PlayCircle className="w-4 h-4" />
+              <span>{language === 'fr' ? 'Regarder la vidéo' : 'Watch intro video'}</span>
+            </div>
           </div>
 
-          {/* SERVICE — UPDATED URL ONLY */}
+          {/* SERVICE */}
           <div
-            onClick={() => setActiveVideo("gawZBbcaA1M")}
-            className="cursor-pointer bg-gradient-to-br from-accent/20 to-accent/10 border-2 border-accent/40 rounded-xl p-6 text-center hover:shadow-lg transition"
+            onClick={() => setActiveVideo('gawZBbcaA1M')}
+            className="group relative cursor-pointer bg-gradient-to-br from-accent/20 to-accent/10 border-2 border-accent/40 rounded-xl p-6 text-center hover:shadow-lg hover:-translate-y-1 transition-transform"
           >
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5">
+              <div className="flex items-center gap-2 bg-white/90 px-3 py-1 rounded-full text-xs font-medium text-foreground shadow">
+                <PlayCircle className="w-4 h-4" />
+                <span>{language === 'fr' ? 'Lire la vidéo' : 'Play video'}</span>
+              </div>
+            </div>
+
             <div className="inline-flex p-3 rounded-full bg-accent/30 mb-3">
               <HandHeart className="w-8 h-8 text-accent" />
             </div>
@@ -146,6 +196,11 @@ export default function FindYourPath() {
                 ? 'Bénévolat & soutien pratique'
                 : 'Volunteering & hands-on support'}
             </p>
+
+            <div className="mt-4 flex items-center justify-center gap-2 text-xs font-medium text-foreground/70">
+              <PlayCircle className="w-4 h-4" />
+              <span>{language === 'fr' ? 'Regarder la vidéo' : 'Watch intro video'}</span>
+            </div>
           </div>
         </motion.div>
 
@@ -173,17 +228,15 @@ export default function FindYourPath() {
             </h3>
             <p className="text-foreground/70 leading-relaxed">
               {language === 'fr'
-                ? 'Chaque parcours représente une étape différente du parcours d\'une survivante...'
-                : 'Each path represents a different stage of a survivor\'s journey...'}
+                ? "Chaque parcours représente une étape différente du parcours d'une survivante..."
+                : "Each path represents a different stage of a survivor's journey..."}
             </p>
           </div>
         </motion.div>
 
         {/* -------------------- VIDEO MODAL -------------------- */}
         <VideoModal videoId={activeVideo} onClose={() => setActiveVideo(null)} />
-
       </div>
     </div>
   );
 }
-
