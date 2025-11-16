@@ -202,9 +202,13 @@ export default function Profile() {
                 <motion.div
                   animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.2, 1] }}
                   transition={{ duration: 0.5, repeat: 2 }}
-                  className="text-4xl"
+                  className="w-12 h-12 flex items-center justify-center"
                 >
-                  {newBadges[0].icon}
+                  <img
+                    src={newBadges[0].icon}
+                    alt={newBadges[0].name[language]}
+                    className="w-10 h-10 object-contain"
+                  />
                 </motion.div>
                 <div className="flex-1">
                   <h3 className="font-bold text-foreground mb-1">
@@ -567,7 +571,7 @@ export default function Profile() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-3 gap-4 place-items-center">
+            <div className="grid grid-cols-3 -gap-1 place-items-center">
               {Object.values(BADGE_DEFINITIONS).map((badge) => {
                 const isUnlocked = backendBadgeIds.has(badge.id);
 
@@ -578,16 +582,14 @@ export default function Profile() {
                     className="group flex flex-col items-center gap-1"
                   >
                     {/* Icon */}
-                    <div
-                      className={`
-                        w-14 h-14 rounded-full flex items-center justify-center border-2
-                        transition-colors
-                        ${isUnlocked
-                          ? 'bg-primary/10 border-primary text-primary'
-                          : 'bg-background border-foreground/20 text-foreground/30'}
-                      `}
-                    >
-                      <span className="text-2xl">{badge.icon}</span>
+                    <div className="flex items-center justify-center">
+                      <img
+                        src={badge.icon}
+                        alt={badge.name[language]}
+                        className={`w-30 h-30 object-contain ${
+                          isUnlocked ? '' : 'opacity-30 grayscale'
+                        }`}
+                      />
                     </div>
 
                     {/* Name – on hover */}
