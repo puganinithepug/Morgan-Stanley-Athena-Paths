@@ -21,6 +21,7 @@ function adaptBackendUserToFrontend(backendUser) {
     preferred_language: backendUser.preferred_language || 'en',
     referral_code: backendUser.referral_code,
     avatar_url: backendUser.avatar_url || null,
+    team_id: backendUser.team_id ?? null,
   };
 
   // Persist into the local dataService so the rest of the app can use it

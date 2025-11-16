@@ -4,6 +4,7 @@ import dataService from '../services/dataService';
 import { Card, CardContent } from '../components/ui/Card';
 import { Trophy, Crown, Shield, Phone, Heart, Home, HandHeart, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
+import TeamSection from '../components/TeamSection';
 
 const PATH_ICONS = {
   WISDOM: Phone,
@@ -306,30 +307,14 @@ export default function Leaderboard() {
           </motion.div>
         </div>
 
-        {/* Call to Action */}
+        {/* Team join/create section at bottom */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="text-center mt-12"
+          className="mt-12"
         >
-          <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/30 inline-block">
-            <CardContent className="p-6">
-              <p className="text-foreground/70 mb-4">
-                {language === 'fr' 
-                  ? 'Rejoignez une équipe ou créez la vôtre pour multiplier votre impact!'
-                  : 'Join a team or create your own to multiply your impact!'}
-              </p>
-              <div className="flex gap-4 justify-center">
-                <button 
-                  onClick={() => window.location.href = '/profile'}
-                  className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors"
-                >
-                    {language === 'fr' ? 'Voir mon profil' : 'View My Profile'}
-                </button>
-              </div>
-            </CardContent>
-          </Card>
+          <TeamSection />
         </motion.div>
       </div>
     </div>

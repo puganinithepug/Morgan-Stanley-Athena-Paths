@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card'
 import { User, Award, Trophy, Heart, Phone, Home, Sparkles } from 'lucide-react';
 import { BADGE_DEFINITIONS, checkAndAwardBadges } from '../components/BadgeChecker';
 import ReferralSection from '../components/ReferralSection';
+import TeamSection from '../components/TeamSection';
 import { motion, AnimatePresence, color } from 'framer-motion';
 import { PATH_STORIES, PATH_LEVEL_LABELS } from '../contexts/PathStories';
 import { computePathStats } from '../components/PathProgress';
@@ -290,6 +291,10 @@ export default function Profile() {
               </CardContent>
             </Card>
           </motion.div>
+        </div>
+
+        <div className="mb-8">
+          <TeamSection />
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 mb-8">

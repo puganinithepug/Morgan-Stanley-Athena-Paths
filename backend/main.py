@@ -373,6 +373,134 @@ def assign_badge(uuid: str, data: dict):
     return {"status": "ok", "message": "Badge assigned"}
 
 
+@app.get("/teams/{team_id}")
+def get_team(team_id: str):
+    """Return basic information about a team, including leader name."""
+    try:
+        teams_df = pd.read_csv("teams.csv")
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    team_df = teams_df[teams_df["team_id"] == team_id]
+    if team_df.empty:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    team = team_df.iloc[0].to_dict()
+
+    # Look up leader name from users.csv
+    users_df = load_users()
+    leader_df = users_df[users_df["uuid"] == team["leader_uuid"]]
+    leader_name = None
+    if not leader_df.empty:
+        leader_row = leader_df.iloc[0].to_dict()
+        leader_name = f"{leader_row.get('fname', '')} {leader_row.get('lname', '')}".strip() or leader_row.get("email")
+
+    team_payload = {
+        "team_id": team["team_id"],
+        "name": team["name"],
+        "leader_uuid": team["leader_uuid"],
+        "leader_name": leader_name,
+    }
+
+    return {"team": team_payload}
+
+
+@app.post("/create_team")
+def create_team(data: dict):
+    name = data.get("name")
+    leader_uuid = data.get("leader_uuid")
+
+    if not name or not leader_uuid:
+        raise HTTPException(status_code=400, detail="name and leader_uuid are required")
+
+    # Load or initialize teams.csv
+    try:
+        teams_df = pd.read_csv("teams.csv")
+    except FileNotFoundError:
+        teams_df = pd.DataFrame(columns=["team_id", "name", "leader_uuid"])
+
+    new_team = {
+        "team_id": gen_uuid(),
+        "name": name,
+        "leader_uuid": leader_uuid,
+    }
+    teams_df = pd.concat([teams_df, pd.DataFrame([new_team])], ignore_index=True)
+    teams_df.to_csv("teams.csv", index=False)
+
+    # Ensure the leader is a member of their new team
+    users_df = load_users()
+    users_df.loc[users_df["uuid"] == leader_uuid, "team_id"] = new_team["team_id"]
+    users_df.to_csv("users.csv", index=False)
+
+    return {"status": "ok", "message": "Team created", "team": new_team}
+
+
+@app.post("/join_team")
+def join_team(data: dict):
+    team_id = data.get("team_id")
+    member_uuid = data.get("member_uuid")
+
+    if not team_id or not member_uuid:
+        raise HTTPException(
+            status_code=400, detail="team_id and member_uuid are required"
+        )
+
+    # Verify team exists
+    try:
+        teams_df = pd.read_csv("teams.csv")
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    if team_id not in teams_df["team_id"].values:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    # Update the member's team_id in users.csv
+    users_df = load_users()
+    users_df.loc[users_df["uuid"] == member_uuid, "team_id"] = team_id
+    users_df.to_csv("users.csv", index=False)
+
+    return {"status": "ok", "message": "Joined team"}
+
+
+@app.post("/leave_team")
+def leave_team(data: dict):
+    member_uuid = data.get("member_uuid")
+
+    if not member_uuid:
+        raise HTTPException(status_code=400, detail="member_uuid is required")
+
+    users_df = load_users()
+
+    users_df.loc[users_df["uuid"] == member_uuid, "team_id"] = None
+    users_df.to_csv("users.csv", index=False)
+
+    return {"status": "ok", "message": "Left team"}
+
+
+@app.post("/transfer_team_leadership")
+def transfer_team_leadership(data: dict):
+    team_id = data.get("team_id")
+    new_leader_uuid = data.get("new_leader_uuid")
+
+    if not team_id or not new_leader_uuid:
+        raise HTTPException(
+            status_code=400, detail="team_id and new_leader_uuid are required"
+        )
+
+    try:
+        teams_df = pd.read_csv("teams.csv")
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    if team_id not in teams_df["team_id"].values:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    teams_df.loc[teams_df["team_id"] == team_id, "leader_uuid"] = new_leader_uuid
+    teams_df.to_csv("teams.csv", index=False)
+
+    return {"status": "ok", "message": "Team leadership transferred"}
+
+
 @app.get("/me")
 def me(session: Optional[str] = Cookie(default=None)):
     """Return the current logged in user based on the session cookie.
