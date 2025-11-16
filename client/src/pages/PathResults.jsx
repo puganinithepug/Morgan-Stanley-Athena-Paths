@@ -82,7 +82,7 @@ export default function PathResults() {
             amount,
             path,
             uuid: user.id,
-            impact: language === 'fr' ? item.title_fr : item.title_en,
+            impact: points,
           }),
         });
       } catch (err) {

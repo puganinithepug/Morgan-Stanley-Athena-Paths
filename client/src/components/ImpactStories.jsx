@@ -102,7 +102,7 @@ export default function ImpactStories() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           className="text-center mb-12"
         >
           <h2 className="text-4xl font-bold mb-4">Healing Moments</h2>

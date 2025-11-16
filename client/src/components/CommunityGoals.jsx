@@ -3,7 +3,7 @@ import { Card, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
 import { Progress } from './ui/Progress';
 import { motion } from 'framer-motion';
-import { Target, Clock, Users, Phone, Heart, Home } from 'lucide-react';
+import { Target, Clock, Users, Phone, Heart, Home, HandHeart } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import dataService from '../services/dataService';
 import { format } from 'date-fns';
@@ -16,6 +16,7 @@ export default function CommunityGoals({ onDonate }) {
     WISDOM: Phone,
     COURAGE: Heart,
     PROTECTION: Home,
+    SERVICE: HandHeart,
     GENERAL: Target
   };
 
@@ -35,6 +36,11 @@ export default function CommunityGoals({ onDonate }) {
       bg: 'from-secondary to-primary-light',
       text: 'text-secondary',
     },
+    SERVICE:{
+      bg: 'from-teal-500 to-teal-400',
+      text: 'text-teal-500'
+    },
+
     GENERAL: {
       // classic brand gradient
       bg: 'from-primary-dark to-primary-light',
@@ -50,7 +56,7 @@ export default function CommunityGoals({ onDonate }) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           className="text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 bg-primary/15 px-4 py-2 rounded-full mb-4">
@@ -79,7 +85,7 @@ export default function CommunityGoals({ onDonate }) {
                 key={goal.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: false }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
               >
                 {/* <Card className="h-full hover:shadow-xl transition-all duration-300 overflow-hidden"> */}

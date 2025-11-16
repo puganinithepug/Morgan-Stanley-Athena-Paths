@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -6,7 +6,7 @@ import dataService from "../services/dataService";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Card, CardContent } from "../components/ui/Card";
-import { Heart, Shield, Phone, Home, Quote, Users, HandHeart } from "lucide-react";
+import { Heart, Shield, Phone, Home, Quote, Users, HandHeart, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import ImpactMetrics from "../components/ImpactMetrics";
 import ImpactStories from "../components/ImpactStories";
@@ -16,6 +16,12 @@ import CommunityGoals from "../components/CommunityGoals";
 import FirstTimeVisitorModal from "../components/FirstTimeVisitorModal";
 import PathTransitionSection from "../components/PathTransitionSection";
 import AboutModal from "../components/AboutModal";
+import MotionSection from "../components/ui/MotionSection";
+
+import wisdomImg from "../assets/hero_wisdom.jpg";
+import protectionImg from "../assets/hero_protection.jpg";
+import courageImg from "../assets/hero_courage.jpeg";
+import aboutImg from "../assets/about_image.jpeg"
 
 
 export default function Landing() {
@@ -34,6 +40,35 @@ export default function Landing() {
 
   const [hasVisited, setHasVisited] = useState(false);
   const [referralCode, setReferralCode] = useState(null);
+
+
+  // Animation variants
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
+  const fromLeft = {
+    hidden: { opacity: 0, x: -80 }, // make it big so you can SEE it clearly
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
+  const fromRight = {
+    hidden: { opacity: 0, x: 80 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -154,7 +189,7 @@ export default function Landing() {
       shadowColor: 'shadow-highlight-glow',
       hoverColor: 'hover:shadow-highlight-glow-strong',
       image:
-        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=600&fit=crop",
+        `${wisdomImg}`
     },
     COURAGE: {
       icon: Heart,
@@ -165,7 +200,7 @@ export default function Landing() {
       shadowColor: 'shadow-muted-glow',
       hoverColor: 'hover:shadow-muted-glow-strong',
       image:
-        "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop",
+        `${courageImg}`
     },
     PROTECTION: {
       icon: Shield,
@@ -176,7 +211,7 @@ export default function Landing() {
       shadowColor: 'shadow-secondary-glow',
       hoverColor: 'hover:shadow-secondary-glow-strong',
       image:
-        "https://images.unsplash.com/photo-1560264280-88b68371db39?w=800&h=600&fit=crop",
+        `${protectionImg}`
     },
     SERVICE: {
       icon: HandHeart,
@@ -191,6 +226,78 @@ export default function Landing() {
   };
 
 /* -------------------- VIDEO EMBED COMPONENT -------------------- */
+function loadYouTubeAPI() {
+  return new Promise((resolve) => {
+    if (window.YT) {
+      resolve(window.YT);
+      return;
+    }
+
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+
+    window.onYouTubeIframeAPIReady = () => resolve(window.YT);
+  });
+}
+
+// function VideoEmbed({ videoId }) {
+//   const playerRef = useRef(null);
+//   const containerRef = useRef(null);
+
+//   useEffect(() => {
+//   let observer;
+//   let player;
+
+//   loadYouTubeAPI().then((YT) => {
+//     player = new YT.Player(playerRef.current, {
+//       videoId,
+//       playerVars: {
+//         autoplay: 0,
+//         controls: 1,
+//         mute: 1,
+//         playsinline: 1,
+//       },
+//       events: {
+//         onReady: () => {
+//           // Player is ready — now start observing
+//           observer = new IntersectionObserver(
+//             (entries) => {
+//               entries.forEach((entry) => {
+//                 if (entry.isIntersecting) {
+//                   player.playVideo();
+//                 } else {
+//                   player.pauseVideo();
+//                 }
+//               });
+//             },
+//             { threshold: 0.5 }
+//           );
+
+//           observer.observe(containerRef.current);
+//         },
+//       },
+//     });
+//   });
+
+//   return () => observer?.disconnect();
+// }, [videoId]);
+
+//   return (
+//     <div
+//       ref={containerRef}
+//       className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
+//     >
+//       <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+//         <div
+//           ref={playerRef}
+//           className="absolute top-0 left-0 w-full h-full rounded-xl shadow-xl"
+//         />
+//       </div>
+//     </div>
+//   );
+// }
+
 function VideoEmbed({ videoId }) {
   return (
 
@@ -208,6 +315,7 @@ function VideoEmbed({ videoId }) {
     </div>
   );
 }
+
 /* --------------------------------------------------------------- */
 
 // export default function Home() {
@@ -265,7 +373,7 @@ function VideoEmbed({ videoId }) {
       <PathTransitionSection onAboutClick={() => setShowAboutModal(true)} />
       <VideoEmbed videoId="WGND5Fvt2NA" />
 
-      <section id="ways-to-help" className="py-20 bg-gray-50">
+      <MotionSection id="ways-to-help" className="py-20 bg-gray-50" variants={fromLeft}>
         <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-foreground mb-4">
@@ -289,7 +397,7 @@ function VideoEmbed({ videoId }) {
                   key={path}
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
+                  viewport={{ once: false, margin: "-100px" }}
                   transition={{ duration: 0.6, delay: idx * 0.15 }}
                 >
                   <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full flex flex-col">
@@ -325,7 +433,7 @@ function VideoEmbed({ videoId }) {
                             <span className="text-sm font-medium text-foreground/80">
                               Volunteer Session
                             </span>
-                            <span className="text-lg font-bold text-foreground/80">
+                            <span className="text-lg font-bold text-foreground/80 text-right min-w-fit">
                               1 hour
                             </span>
                           </div>
@@ -344,7 +452,7 @@ function VideoEmbed({ videoId }) {
                             <span className="text-sm font-medium text-foreground/80">
                               Volunteer Session
                             </span>
-                            <span className="text-lg font-bold text-foreground/80">
+                            <span className="text-lg font-bold text-foreground/80 text-right min-w-fit">
                               3 hours
                             </span>
                           </div>
@@ -370,7 +478,7 @@ function VideoEmbed({ videoId }) {
                                   setDonationAmount(e.target.value);
                                   setSelectedPath(path);
                                 }}
-                                className="border-foreground/20 focus:border-primary focus:ring-primary/30"
+                                className="border-foreground/20 focus:border-primary focus:ring-primary/30 min-w-[30%]"
                                 min="1"
                               />
                               <span className="absolute right-10 top-1/2 -translate-y-1/2 text-foreground/50">
@@ -388,7 +496,7 @@ function VideoEmbed({ videoId }) {
                                 selectedPath !== path
                               }
                               variant="outline"
-                              className="whitespace-nowrap min-w-[100px]"
+                              className="whitespace-nowrap max-w-[50%] text-wrap"
                             >
                               Volunteer
                             </Button>
@@ -404,7 +512,7 @@ function VideoEmbed({ videoId }) {
                                 <span className="text-sm font-medium text-foreground/80">
                                   {item.title_en}
                                 </span>
-                                <span className="text-lg font-bold text-foreground/80">
+                                <span className="text-lg font-bold text-foreground/80 text-right min-w-fit">
                                   ${item.suggested_amount}
                                 </span>
                               </div>
@@ -438,7 +546,7 @@ function VideoEmbed({ videoId }) {
                                     setDonationAmount(e.target.value);
                                     setSelectedPath(path);
                                   }}
-                                  className="pl-7 border-foreground/20 focus:border-primary focus:ring-primary/30"
+                                  className="pl-7 border-foreground/20 focus:border-primary focus:ring-primary/30 min-w-[30%]"
                                   min="1"
                                 />
                               </div>
@@ -457,7 +565,7 @@ function VideoEmbed({ videoId }) {
                                   selectedPath !== path
                                 }
                                 variant="outline"
-                                className="whitespace-nowrap min-w-[100px]"
+                                className="whitespace-nowrap max-w-[50%] text-wrap"
                               >
                                 Give Now
                               </Button>
@@ -472,34 +580,161 @@ function VideoEmbed({ videoId }) {
             })}
           </div>
         </div>
+      </MotionSection>
+
+      <section className="py-20 bg-background">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: false }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="inline-flex p-3 rounded-full bg-primary/10 mb-4">
+                <Shield className="w-8 h-8 text-primary" />
+              </div>
+              <h2 className="text-4xl font-bold text-foreground mb-6">
+                {language === "fr"
+                  ? "À propos de Shield of Athena"
+                  : "About Shield of Athena"}
+              </h2>
+              <p className="text-lg text-foreground/70 mb-6 leading-relaxed">
+                {language === "fr"
+                  ? "Depuis plus de 30 ans, Shield of Athena offre un refuge sûr et des services complets aux femmes et aux enfants fuyant la violence familiale à Montréal."
+                  : "For over 30 years, Shield of Athena has provided safe shelter and comprehensive services to women and children fleeing family violence in Montreal."}
+              </p>
+
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-4 border border-primary/30">
+                  <div className="text-3xl font-bold text-primary mb-1">
+                    2,000+
+                  </div>
+                  <div className="text-sm text-foreground/70">
+                    {language === "fr"
+                      ? "Femmes et enfants aidés/an"
+                      : "Women & children helped/year"}
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-muted/10 to-muted/5 rounded-lg p-4 border border-muted/40">
+                  <div className="text-3xl font-bold text-muted mb-1">24/7</div>
+                  <div className="text-sm text-foreground/70">
+                    {language === "fr" ? "Ligne de crise" : "Crisis line"}
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-highlight/20 to-highlight/10 rounded-lg p-4 border border-highlight/40">
+                  <div className="text-3xl font-bold text-highlight mb-1">
+                    30+
+                  </div>
+                  <div className="text-sm text-foreground/70">
+                    {language === "fr"
+                      ? "Années de service"
+                      : "Years of service"}
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-accent/20 to-accent/10 rounded-lg p-4 border border-accent/50">
+                  <div className="text-3xl font-bold text-secondary mb-1">
+                    100%
+                  </div>
+                  <div className="text-sm text-foreground/70">
+                    {language === "fr" ? "Services gratuits" : "Free services"}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                <Link to="/services">
+                  <Button
+                    size="lg"
+                    className="shadow-md hover:shadow-[0_0_20px_rgba(111,106,168,0.6)] hover:scale-[1.02] transition-all duration-200"
+                  >
+                    {language === "fr"
+                      ? "Découvrir Nos Services"
+                      : "Discover Our Services"}
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </Link>
+                <Link to="/find-your-path">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-primary/40 text-primary hover:border-primary hover:text-primary-dark"
+                  >
+                    {language === "fr" ? "Commencer à Aider" : "Start Helping"}
+                    <Heart className="ml-2 w-5 h-5" />
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: false }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
+                <img
+                  src={aboutImg}
+                  alt={
+                    language === "fr" ? "Shield of Athena" : "Shield of Athena"
+                  }
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/60 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <p className="text-lg font-semibold mb-2">
+                    {language === "fr"
+                      ? "Un refuge sûr pour chaque femme et enfant"
+                      : "A safe haven for every woman and child"}
+                  </p>
+                  <p className="text-sm opacity-90">
+                    {language === "fr"
+                      ? "Ensemble, nous créons un avenir sans violence"
+                      : "Together, we create a future free from violence"}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
       </section>
 
-      <ImpactMetrics />
+      <MotionSection variants={fromRight}>                 
+        <ImpactMetrics />
+      </MotionSection>
 
-      <PathGoals />
+      <MotionSection variants={fadeUp}>                
+        <PathGoals />
+      </MotionSection>
 
-      <ImpactStories />
+      <MotionSection variants={fromLeft}>   
+        <ImpactStories />
+      </MotionSection>
 
-      <CommunityGoals
-        onDonate={(goal) => {
-          document
-            .getElementById("ways-to-help")
-            ?.scrollIntoView({ behavior: "smooth" });
-        }}
-      />
+      <MotionSection variants={fromRight}>
+        <CommunityGoals
+          onDonate={(goal) => {
+            document
+              .getElementById("ways-to-help")
+              ?.scrollIntoView({ behavior: "smooth" });
+          }}
+        />
+      </MotionSection>
 
-      <section className="py-20 bg-gradient-to-br from-foreground via-primary-dark to-primary text-white">
+      <MotionSection className="py-20 bg-gradient-to-br from-foreground via-primary-dark to-primary text-white" variants={fadeUp}>
         <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             className="text-center mb-16"
           >
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ duration: 0.6, type: "spring" }}
               className="inline-flex p-4 rounded-full bg-white/10 border border-highlight/40 mb-8"
             >
@@ -538,7 +773,7 @@ function VideoEmbed({ videoId }) {
                 key={idx}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: false }}
                 transition={{ duration: 0.6, delay: idx * 0.15 }}
               >
                 <Card className="bg-white/10 backdrop-blur-lg border-white/20 h-full">
@@ -566,7 +801,7 @@ function VideoEmbed({ videoId }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             transition={{ duration: 0.8, delay: 0.5 }}
             className="text-center"
           >
@@ -583,7 +818,7 @@ function VideoEmbed({ videoId }) {
                     key={idx}
                     initial={{ scale: 0, opacity: 0 }}
                     whileInView={{ scale: 1, opacity: 1 }}
-                    viewport={{ once: true }}
+                    viewport={{ once: false }}
                     transition={{ duration: 0.5, delay: 0.6 + idx * 0.1, type: "spring" }}
                     className="text-center"
                   >
@@ -602,7 +837,7 @@ function VideoEmbed({ videoId }) {
             </div>
           </motion.div>
         </div>
-      </section>
+      </MotionSection>
     </div>
   );
 }

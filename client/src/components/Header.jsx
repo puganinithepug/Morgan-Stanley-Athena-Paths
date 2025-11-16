@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { Globe, ChevronDown, AlertTriangle } from "lucide-react";
 import { Button } from "./ui/Button";
@@ -109,12 +109,6 @@ export default function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
-            {/* <Link
-              to="/landing"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
-            >
-              {t("nav.home")}
-            </Link> */}
             <Link
               to="/are-you-a-victim"
               className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-orange-500 text-white px-4 py-2 rounded-lg font-bold text-sm hover:from-red-700 hover:to-orange-600 transition-all shadow-md hover:shadow-lg"
@@ -122,38 +116,41 @@ export default function Header() {
               <AlertTriangle className="w-4 h-4" />
               {language === 'fr' ? 'Êtes-vous une victime?' : 'Are you a victim?'}
             </Link>
-            <Link
+            <NavLink
               to="/services"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
+              className={({ isActive }) =>
+                `nav-link ${isActive ? "nav-link-active" : ""}`
+              }
             >
               {t("nav.services")}
-            </Link>
-            <Link
+            </NavLink>
+
+            <NavLink
               to="/find-your-path"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
+              className={({ isActive }) =>
+                `nav-link ${isActive ? "nav-link-active" : ""}`
+              }
             >
               {t("nav.findPath")}
-            </Link>
-            <Link
+            </NavLink>
+
+            <NavLink
               to="/leaderboard"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
+              className={({ isActive }) =>
+                `nav-link ${isActive ? "nav-link-active" : ""}`
+              }
             >
               {t("nav.leaderboard")}
-            </Link>
-            {/* {user && (
-              <Link
-                to="/profile"
-                className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
-              >
-                {t("nav.profile")}
-              </Link>
-            )} */}
-            <Link
+            </NavLink>
+
+            <NavLink
               to="/support-wall"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
+              className={({ isActive }) =>
+                `nav-link ${isActive ? "nav-link-active" : ""}`
+              }
             >
               {t("nav.supportWall")}
-            </Link>
+            </NavLink>
             <Link
               to="/news"
               className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"

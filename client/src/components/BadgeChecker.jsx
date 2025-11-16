@@ -61,6 +61,37 @@ export const BADGE_DEFINITIONS = {
     condition: (user, donations, referrals) => {
       return referrals.length >= 5;
     }
+  },
+  SERVICE_SUPPORTER: {
+    id: 'service_supporter',
+    name: { en: 'Service Champion', fr: 'Champion du Service' },
+    description: { en: 'Donated to Service path 5 times', fr: 'Donné au parcours Service 5 fois' },
+    icon: '⏰',
+    condition: (user, donations) => donations.filter(d => d.user_id === user.id && d.path === 'SERVICE').length >= 5
+  },
+  SERVICE_VOLUNTEER: {
+    id: 'service_volunteer',
+    name: { en: 'Service Volunteer', fr: 'Bénévole de Service' },
+    description: { en: 'Completed 10 volunteer hours', fr: 'Complété 10 heures de bénévolat' },
+    icon: '🙌',
+    condition: (user) => (user.volunteer_hours || 0) >= 10
+  },
+  TEAM_PLAYER: {
+    id: 'team_player',
+    name: { en: 'Team Player', fr: 'Joueur d\'Équipe' },
+    description: { en: 'Joined a community team', fr: 'Rejoint une équipe communautaire' },
+    icon: '🤝',
+    condition: (user) => !!user.team_id
+  },
+  TEAM_LEADER: {
+    id: 'team_leader',
+    name: { en: 'Team Leader', fr: 'Leader d\'Équipe' },
+    description: { en: 'Created and led a team with 5+ members', fr: 'Créé et dirigé une équipe de 5+ membres' },
+    icon: '⭐',
+    condition: (user, donations, teams) => {
+      const userTeam = teams?.find(t => t.leader_id === user.id);
+      return userTeam && userTeam.member_count >= 5;
+    }
   }
 };
 

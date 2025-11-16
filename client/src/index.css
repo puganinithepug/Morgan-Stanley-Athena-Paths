@@ -61,3 +61,29 @@ iframe.goog-te-banner-frame {
 body {
   top: 0px !important;
 }
+
+@layer components {
+  .nav-link {
+    @apply relative pb-1 font-medium text-sm text-foreground/80 hover:text-primary transition-colors;
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 0;
+    border-radius: 9999px;
+    background-color: currentColor; /* matches the text color */
+    transition: width 200ms ease-out;
+  }
+
+  .nav-link-active {
+    @apply font-semibold text-primary;
+  }
+
+  .nav-link-active::after {
+    width: 100%;
+  }
+}

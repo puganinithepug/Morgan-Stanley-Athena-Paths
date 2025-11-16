@@ -82,7 +82,7 @@ export default function PathTransitionSection({ onAboutClick }) {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[110vh] flex flex-col items-center bg-white overflow-hidden pt-24 pb-16"
+      className="relative min-h-[70vh] flex flex-col items-center bg-white overflow-hidden pt-24 pb-16"
     >
       {/* TEXT + CTA */}
       <div className="relative z-20 flex flex-col items-center text-center px-4">
@@ -125,7 +125,7 @@ export default function PathTransitionSection({ onAboutClick }) {
         "
       >
         {/*TODO: 
-        - Support mobile view (currently not implemented)*/}
+        - Support mobile view (currently not implemented): Be warned, people have attempted this before you. People who lost their sanity counter: 2 people */}
         {/* LEFT – Wisdom */}
         <div
             onClick={() => handlePathClick("WISDOM")}
@@ -234,7 +234,7 @@ export default function PathTransitionSection({ onAboutClick }) {
             <div
                 key={path.id}
                 className="group relative cursor-pointer"
-                onClick={() => handlePathClick(path.id)}     // ⬅️ moved here
+                onClick={() => handlePathClick(path.id)}   
             >
                 {/* The stripe itself */}
                 <motion.div
