@@ -655,8 +655,7 @@ export default function Profile() {
                       </div>
                       {d.path && (
                         <div className="text-[11px] text-foreground/60 mt-0.5">
-                          Path: 
-                          {d.path}
+                          Path - {d.path}
                         </div>
                       )}
                     </div>
