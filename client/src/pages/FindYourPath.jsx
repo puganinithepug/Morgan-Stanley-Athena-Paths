@@ -132,7 +132,7 @@ export default function FindYourPath() {
           {/* SERVICE — NEW BOX */}
           <div
             onClick={() => setActiveVideo("7wPLjU3xIzU")}
-            className="cursor-pointer bg-gradient-to-br from-accent/20 to-amber-100/10 border-2 border-accent/40 rounded-xl p-6 text-center hover:shadow-lg transition"
+            className="cursor-pointer bg-gradient-to-br from-accent/20 to-accent/10 border-2 border-accent/40 rounded-xl p-6 text-center hover:shadow-lg transition"
           >
             <div className="inline-flex p-3 rounded-full bg-accent/30 mb-3">
               <HandHeart className="w-8 h-8 text-accent" />

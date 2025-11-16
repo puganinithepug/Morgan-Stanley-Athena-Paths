@@ -137,7 +137,7 @@ export default function ImpactMetrics() {
                       whileInView={{ scale: 1 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: idx * 0.1 + 0.2, type: "spring" }}
-                      className="inline-flex p-3 rounded-full bg-gradient-to-br from-primary-light/70 to-primary/70 mb-4"
+                      className="inline-flex p-3 rounded-full bg-gradient-to-br from-primary-light/70 to-primary/70 mb-4 mt-4"
                     >
                       <Icon className="w-6 h-6 text-white" />
                     </motion.div>

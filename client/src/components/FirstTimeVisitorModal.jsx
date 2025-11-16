@@ -4,19 +4,65 @@ import { Button } from "./ui/Button";
 import { Sparkles, X, ArrowRight, Clock } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
 
+const COOKIE_NAME = "athena_has_seen_first_time_modal";
+const COOKIE_MAX_DURATION = 1 * 24 * 3600;
+
+function setSeenCookie() {
+  try {
+    if (typeof document === "undefined") return;
+    const maxAgeSeconds = COOKIE_MAX_DURATION;
+    document.cookie = `${COOKIE_NAME}=true; max-age=${maxAgeSeconds}; path=/`;
+  } catch {
+    // Fail silently if cookies are unavailable.
+  }
+}
+
+function hasSeenCookie() {
+  try {
+    if (typeof document === "undefined") return false;
+    return document.cookie
+      .split(";")
+      .map((c) => c.trim())
+      .some((c) => c.startsWith(`${COOKIE_NAME}=`));
+  } catch {
+    return false;
+  }
+}
+
 export default function FirstTimeVisitorModal({
   isOpen = false,
   onClose = () => {},
 }) {
   const { language } = useLanguage();
+  const [shouldShow, setShouldShow] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    try {
+      const hasSeen = hasSeenCookie();
+
+      if (hasSeen) {
+        // Immediately close if the user has already seen this modal.
+        onClose();
+      } else {
+        setShouldShow(true);
+      }
+    } catch {
+      // If localStorage isn't available, just show the modal normally.
+      setShouldShow(true);
+    }
+  }, [isOpen, onClose]);
 
   const handleClose = () => {
+    setSeenCookie();
+    setShouldShow(false);
     onClose();
   };
 
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isOpen && shouldShow && (
         <>
           <motion.div
             initial={{ opacity: 0 }}

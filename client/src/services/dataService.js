@@ -132,6 +132,7 @@ const initializeData = () => {
         is_anonymous: false,
         preferred_language: 'en',
         referral_code: 'SARAH2024',
+        avatar_url: 'https://www.freepik.com/free-vector/user-circles-set_145856997.htm#fromView=keyword&page=1&position=0&uuid=b455faa9-16f6-4e10-b31c-4f2a4bf168b5&query=Generic+profile',
         created_date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
       },
       {
@@ -144,6 +145,7 @@ const initializeData = () => {
         is_anonymous: false,
         preferred_language: 'fr',
         referral_code: 'MARIE2024',
+        avatar_url: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
         created_date: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString()
       },
       {
@@ -156,6 +158,7 @@ const initializeData = () => {
         is_anonymous: false,
         preferred_language: 'en',
         referral_code: 'JAMES2024',
+        avatar_url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
         created_date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString()
       },
       {

@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { Globe, ChevronDown } from "lucide-react";
 import { Button } from "./ui/Button";
 import GoogleTranslate from "./GoogleTranslate";
+import ProfileDropdown from "./ProfileDropdown";
 
 // Language options with Google Translate language codes
 const languages = [
@@ -40,9 +41,8 @@ const languages = [
   { code: 'fa', name: 'فارسی', flag: '🇮🇷' },
 ];
 
-export default function Header() {
+export default function Header({hide}) {
   const { t } = useLanguage();
-  const { user, login, logout } = useAuth();
   const translateRef = useRef(null);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
@@ -57,10 +57,6 @@ export default function Header() {
       }
     }
   }, []);
-
-  const handleLogin = () => {
-    login({ email: "demo@example.com", full_name: "Demo User" });
-  };
 
   const handleLanguageChange = (langCode) => {
     setSelectedLanguage(langCode);
@@ -90,11 +86,16 @@ export default function Header() {
       <div style={{ display: 'none' }}>
         <GoogleTranslate ref={translateRef} />
       </div>
-      
-      <header className="sticky top-0 z-50 shadow-sm bg-background border-b border-secondary/2">
-        {/* bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+      <header
+        className={`
+          sticky top-0 z-50 shadow-sm
+          bg-background border-b border-secondary/2
+          transition-transform duration-300
+          ${hide ? '-translate-y-full' : 'translate-y-0'}
+        `}
+      >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
           <Link to="/landing" className="flex items-center gap-3 group">
             <div className="relative flex-shrink-0">
               <img
@@ -114,12 +115,12 @@ export default function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
-            <Link
+            {/* <Link
               to="/landing"
               className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
             >
               {t("nav.home")}
-            </Link>
+            </Link> */}
             <Link
               to="/services"
               className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
@@ -138,14 +139,14 @@ export default function Header() {
             >
               {t("nav.leaderboard")}
             </Link>
-            {user && (
+            {/* {user && (
               <Link
                 to="/profile"
                 className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
               >
                 {t("nav.profile")}
               </Link>
-            )}
+            )} */}
             <Link
               to="/support-wall"
               className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
@@ -202,24 +203,8 @@ export default function Header() {
               )}
             </div>
 
-            {user ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={logout}
-                className="border-secondary/60 text-foreground/80 hover:border-primary hover:text-primary"
-              >
-                {t("common.logout")}
-              </Button>
-            ) : (
-              <Button
-                size="sm"
-                onClick={handleLogin}
-                className="bg-primary text-white hover:bg-primary/90 font-semibold"
-              >
-                {t("common.login")}
-              </Button>
-            )}
+            {/* Profile Dropdown */}
+            <ProfileDropdown />
           </div>
         </div>
       </div>

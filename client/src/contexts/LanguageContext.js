@@ -17,10 +17,12 @@ const translations = {
     'paths.courage.desc': 'Help survivors rebuild through counseling and long-term support for women and children healing from violence.',
     'paths.protection.name': 'Protection',
     'paths.protection.desc': 'Fund emergency shelter nights and safe housing so families can leave danger and sleep safely.',
+    'paths.service.name': 'Service',
+    'paths.service.desc': 'Keep every path alive by offering your time—taking shifts, helping at events, or supporting daily operations that protect women and children.',
     'common.login': 'Log In',
     'common.logout': 'Log Out',
     'common.loading': 'Loading...',
-    'common.close': 'Close',
+    'common.close': 'Close'
   },
   fr: {
     'nav.home': 'Accueil',
@@ -38,10 +40,12 @@ const translations = {
     'paths.courage.desc': 'Aider les survivantes à se reconstruire grâce au counseling et au soutien à long terme pour les femmes et les enfants guérissant de la violence.',
     'paths.protection.name': 'Protection',
     'paths.protection.desc': 'Financer des nuits d\'hébergement d\'urgence et un logement sûr pour que les familles puissent quitter le danger et dormir en toute sécurité.',
+    'paths.service.name': 'Service',
+    'paths.service.desc': 'Soutenez chaque parcours en offrant votre temps — en prenant des quarts, en aidant lors d’événements ou en appuyant les opérations quotidiennes qui protègent les femmes et les enfants.',
     'common.login': 'Se connecter',
     'common.logout': 'Se déconnecter',
     'common.loading': 'Chargement...',
-    'common.close': 'Fermer',
+    'common.close': 'Fermer'
   }
 };
 
