@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
 import dataService from "../services/dataService";
@@ -190,22 +190,78 @@ export default function Landing() {
   };
 
 /* -------------------- VIDEO EMBED COMPONENT -------------------- */
-function VideoEmbed({ videoId }) {
-  return (
+function loadYouTubeAPI() {
+  return new Promise((resolve) => {
+    if (window.YT) {
+      resolve(window.YT);
+      return;
+    }
 
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+
+    window.onYouTubeIframeAPIReady = () => resolve(window.YT);
+  });
+}
+
+function VideoEmbed({ videoId }) {
+  const playerRef = useRef(null);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+  let observer;
+  let player;
+
+  loadYouTubeAPI().then((YT) => {
+    player = new YT.Player(playerRef.current, {
+      videoId,
+      playerVars: {
+        autoplay: 0,
+        controls: 1,
+        mute: 1,
+        playsinline: 1,
+      },
+      events: {
+        onReady: () => {
+          // Player is ready — now start observing
+          observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  player.playVideo();
+                } else {
+                  player.pauseVideo();
+                }
+              });
+            },
+            { threshold: 0.5 }
+          );
+
+          observer.observe(containerRef.current);
+        },
+      },
+    });
+  });
+
+  return () => observer?.disconnect();
+}, [videoId]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
+    >
       <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-        <iframe
-          src={`https://www.youtube.com/embed/${videoId}?autoplay=0`}
+        <div
+          ref={playerRef}
           className="absolute top-0 left-0 w-full h-full rounded-xl shadow-xl"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
         />
       </div>
     </div>
   );
 }
+
 /* --------------------------------------------------------------- */
 
 // export default function Home() {
@@ -438,6 +494,125 @@ function VideoEmbed({ videoId }) {
                 </motion.div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="inline-flex p-3 rounded-full bg-primary/10 mb-4">
+                <Shield className="w-8 h-8 text-primary" />
+              </div>
+              <h2 className="text-4xl font-bold text-foreground mb-6">
+                {language === "fr"
+                  ? "À propos de Shield of Athena"
+                  : "About Shield of Athena"}
+              </h2>
+              <p className="text-lg text-foreground/70 mb-6 leading-relaxed">
+                {language === "fr"
+                  ? "Depuis plus de 30 ans, Shield of Athena offre un refuge sûr et des services complets aux femmes et aux enfants fuyant la violence familiale à Montréal."
+                  : "For over 30 years, Shield of Athena has provided safe shelter and comprehensive services to women and children fleeing family violence in Montreal."}
+              </p>
+
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-4 border border-primary/30">
+                  <div className="text-3xl font-bold text-primary mb-1">
+                    2,000+
+                  </div>
+                  <div className="text-sm text-foreground/70">
+                    {language === "fr"
+                      ? "Femmes et enfants aidés/an"
+                      : "Women & children helped/year"}
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-muted/10 to-muted/5 rounded-lg p-4 border border-muted/40">
+                  <div className="text-3xl font-bold text-muted mb-1">24/7</div>
+                  <div className="text-sm text-foreground/70">
+                    {language === "fr" ? "Ligne de crise" : "Crisis line"}
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-highlight/20 to-highlight/10 rounded-lg p-4 border border-highlight/40">
+                  <div className="text-3xl font-bold text-highlight mb-1">
+                    30+
+                  </div>
+                  <div className="text-sm text-foreground/70">
+                    {language === "fr"
+                      ? "Années de service"
+                      : "Years of service"}
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-accent/20 to-accent/10 rounded-lg p-4 border border-accent/50">
+                  <div className="text-3xl font-bold text-secondary mb-1">
+                    100%
+                  </div>
+                  <div className="text-sm text-foreground/70">
+                    {language === "fr" ? "Services gratuits" : "Free services"}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                <Link to="/services">
+                  <Button
+                    size="lg"
+                    className="shadow-md hover:shadow-[0_0_20px_rgba(111,106,168,0.6)] hover:scale-[1.02] transition-all duration-200"
+                  >
+                    {language === "fr"
+                      ? "Découvrir Nos Services"
+                      : "Discover Our Services"}
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </Link>
+                <Link to="/find-your-path">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-primary/40 text-primary hover:border-primary hover:text-primary-dark"
+                  >
+                    {language === "fr" ? "Commencer à Aider" : "Start Helping"}
+                    <Heart className="ml-2 w-5 h-5" />
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
+                <img
+                  src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&h=600&fit=crop"
+                  alt={
+                    language === "fr" ? "Shield of Athena" : "Shield of Athena"
+                  }
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/60 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <p className="text-lg font-semibold mb-2">
+                    {language === "fr"
+                      ? "Un refuge sûr pour chaque femme et enfant"
+                      : "A safe haven for every woman and child"}
+                  </p>
+                  <p className="text-sm opacity-90">
+                    {language === "fr"
+                      ? "Ensemble, nous créons un avenir sans violence"
+                      : "Together, we create a future free from violence"}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
