@@ -17,6 +17,10 @@ import FirstTimeVisitorModal from "../components/FirstTimeVisitorModal";
 import VolunteerCard from "../components/VolunteerCard";
 import PathTransitionSection from "../components/PathTransitionSection";
 
+import wisdomImg from "../assets/hero_wisdom.jpg";
+import protectionImg from "../assets/hero_protection.jpg";
+import courageImg from "../assets/hero_courage.jpeg";
+
 
 export default function Landing() {
   const { t, language } = useLanguage();
@@ -153,7 +157,7 @@ export default function Landing() {
       shadowColor: 'shadow-highlight-glow',
       hoverColor: 'hover:shadow-highlight-glow-strong',
       image:
-        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=600&fit=crop",
+        `${wisdomImg}`
     },
     COURAGE: {
       icon: Heart,
@@ -164,7 +168,7 @@ export default function Landing() {
       shadowColor: 'shadow-muted-glow',
       hoverColor: 'hover:shadow-muted-glow-strong',
       image:
-        "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop",
+        `${courageImg}`
     },
     PROTECTION: {
       icon: Shield,
@@ -175,7 +179,7 @@ export default function Landing() {
       shadowColor: 'shadow-secondary-glow',
       hoverColor: 'hover:shadow-secondary-glow-strong',
       image:
-        "https://images.unsplash.com/photo-1560264280-88b68371db39?w=800&h=600&fit=crop",
+        `${protectionImg}`
     },
     SERVICE: {
       icon: HandHeart,
