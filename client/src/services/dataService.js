@@ -9,6 +9,7 @@ const memoryStorage = {
   REACTIONS: [],
   REFERRALS: [],
   USERS: [],
+  TEAMS: [],
 };
 
 const initializeData = () => {
@@ -307,6 +308,55 @@ const initializeData = () => {
       }
     ];
   }
+  
+  if (memoryStorage.TEAMS.length === 0) {
+    memoryStorage.TEAMS = [
+      {
+        id: 'team-1',
+        name: 'Hope Warriors',
+        description: 'Dedicated to supporting crisis line operations',
+        leader_id: 'user-1',
+        member_count: 8,
+        total_points: 1250,
+        path: 'WISDOM',
+        members: ['user-1', 'user-4', 'user-9', 'user-10', 'user-12', 'user-13', 'user-14', 'user-15'],
+        created_date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'team-2',
+        name: 'Courage Collective',
+        description: 'Supporting counseling and mental health services',
+        leader_id: 'user-2',
+        member_count: 12,
+        total_points: 1890,
+        path: 'COURAGE',
+        members: ['user-2', 'user-5', 'user-7', 'user-11'],
+        created_date: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'team-3',
+        name: 'Protection Guardians',
+        description: 'Funding safe shelter and emergency housing',
+        leader_id: 'user-3',
+        member_count: 6,
+        total_points: 2100,
+        path: 'PROTECTION',
+        members: ['user-3', 'user-6', 'user-8'],
+        created_date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'team-4',
+        name: 'Service Stars',
+        description: 'Volunteers making a difference every day',
+        leader_id: 'user-4',
+        member_count: 15,
+        total_points: 950,
+        path: 'SERVICE',
+        members: ['user-4'],
+        created_date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString()
+      }
+    ];
+  }
 };
 
 initializeData();
@@ -555,6 +605,46 @@ export const dataService = {
     };
     memoryStorage.REFERRALS.push(referral);
     return referral;
+  },
+
+//TEAMS METHODS
+  getTeams: () => {
+    return memoryStorage.TEAMS || [];
+  },
+
+  createTeam: (teamData) => {
+    const teams = memoryStorage.TEAMS = memoryStorage.TEAMS || [];
+    const team = {
+      id: generateId(),
+      ...teamData,
+      created_date: new Date().toISOString(),
+    };
+    teams.push(team);
+    return team;
+  },
+
+  updateTeam: (teamId, updates) => {
+    const teams = memoryStorage.TEAMS || [];
+    const teamIndex = teams.findIndex(t => t.id === teamId);
+    if (teamIndex >= 0) {
+      teams[teamIndex] = { ...teams[teamIndex], ...updates };
+      return teams[teamIndex];
+    }
+    return null;
+  },
+
+  joinTeam: (teamId, userId) => {
+    const teams = memoryStorage.TEAMS || [];
+    const team = teams.find(t => t.id === teamId);
+    if (team) {
+      if (!team.members) team.members = [];
+      if (!team.members.includes(userId)) {
+        team.members.push(userId);
+        team.member_count = team.members.length;
+      }
+      return team;
+    }
+    return null;
   },
 };
 

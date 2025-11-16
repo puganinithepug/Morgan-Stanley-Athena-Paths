@@ -3,7 +3,7 @@ import { Card, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
 import { Progress } from './ui/Progress';
 import { motion } from 'framer-motion';
-import { Target, Clock, Users, Phone, Heart, Home } from 'lucide-react';
+import { Target, Clock, Users, Phone, Heart, Home, HandHeart } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import dataService from '../services/dataService';
 import { format } from 'date-fns';
@@ -16,6 +16,7 @@ export default function CommunityGoals({ onDonate }) {
     WISDOM: Phone,
     COURAGE: Heart,
     PROTECTION: Home,
+    SERVICE: HandHeart,
     GENERAL: Target
   };
 
@@ -35,6 +36,11 @@ export default function CommunityGoals({ onDonate }) {
       bg: 'from-secondary to-primary-light',
       text: 'text-secondary',
     },
+    SERVICE:{
+      bg: 'from-teal-500 to-teal-400',
+      text: 'text-teal-500'
+    },
+
     GENERAL: {
       // classic brand gradient
       bg: 'from-primary-dark to-primary-light',
