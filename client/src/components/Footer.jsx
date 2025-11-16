@@ -36,14 +36,6 @@ export default function Footer() {
               <ul className="space-y-2 text-sm">
                 <li>
                   <Link
-                    to="/landing"
-                    className="text-white/80 hover:text-white transition-colors"
-                  >
-                    {language === "fr" ? "Accueil" : "Home"}
-                  </Link>
-                </li>
-                <li>
-                  <Link
                     to="/services"
                     className="text-white/80 hover:text-white transition-colors"
                   >
