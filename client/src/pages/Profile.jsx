@@ -663,7 +663,7 @@ export default function Profile() {
                 : 'No contributions for this path.'}
             </p>
           ) : (
-            <div className="space-y-3">
+            <div className="max-h-64 overflow-y-auto pr-1 space-y-3">
               {filteredDonationsForHistory.map((d, idx) => {
                 const date = d._created ? new Date(d._created) : null;
                 const isService = d.path === 'SERVICE';
