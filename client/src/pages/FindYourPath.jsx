@@ -1,15 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Heart, Shield, Phone, HandHeart } from 'lucide-react';
+import { Sparkles, Heart, Shield, Phone, HandHeart, X } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import FindYourPathQuiz from '../components/FindYourPathQuiz';
 
+/* -------------------- YOUTUBE MODAL -------------------- */
+function VideoModal({ videoId, onClose }) {
+  if (!videoId) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="relative bg-white rounded-xl shadow-xl w-[90%] max-w-3xl">
+        <button
+          onClick={onClose}
+          className="absolute -top-4 -right-4 bg-white p-2 rounded-full shadow hover:bg-gray-100"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        <div className="w-full" style={{ paddingBottom: "56.25%", position: "relative" }}>
+          <iframe
+            src={`https://www.youtube.com/embed/${videoId}`}
+            className="absolute top-0 left-0 w-full h-full rounded-xl"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+/* --------------------------------------------------------- */
+
 export default function FindYourPath() {
   const { language } = useLanguage();
+  const [activeVideo, setActiveVideo] = useState(null);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 py-12">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* -------------------- HEADER -------------------- */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -19,11 +51,7 @@ export default function FindYourPath() {
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
-            transition={{ 
-              type: "spring",
-              stiffness: 200,
-              delay: 0.2
-            }}
+            transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
             className="inline-flex p-4 rounded-full bg-gradient-to-br from-primary/10 via-background to-primary/20 mb-6 relative"
           >
             <Sparkles className="w-12 h-12 text-primary" />
@@ -44,13 +72,18 @@ export default function FindYourPath() {
           </p>
         </motion.div>
 
+        {/* -------------------- PATH BOXES -------------------- */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
           className="grid md:grid-cols-4 gap-6 mb-12"
         >
-          <div className="bg-gradient-to-br from-highlight/20 to-highlight/10 border-2 border-highlight/40 rounded-xl p-6 text-center">
+          {/* WISDOM */}
+          <div
+            onClick={() => setActiveVideo("WxY3-D_Bjyg")}
+            className="cursor-pointer bg-gradient-to-br from-highlight/20 to-highlight/10 border-2 border-highlight/40 rounded-xl p-6 text-center hover:shadow-lg transition"
+          >
             <div className="inline-flex p-3 rounded-full bg-highlight/30 mb-3">
               <Phone className="w-8 h-8 text-highlight" />
             </div>
@@ -58,13 +91,15 @@ export default function FindYourPath() {
               {language === 'fr' ? 'Sagesse' : 'Wisdom'}
             </h3>
             <p className="text-sm text-foreground/70">
-              {language === 'fr'
-                ? 'Premier contact & information'
-                : 'First contact & information'}
+              {language === 'fr' ? 'Premier contact & information' : 'First contact & information'}
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-muted/20 to-muted/10 border-2 border-muted/40 rounded-xl p-6 text-center">
+          {/* COURAGE */}
+          <div
+            onClick={() => setActiveVideo("JN8YED-0dH0")}
+            className="cursor-pointer bg-gradient-to-br from-muted/20 to-muted/10 border-2 border-muted/40 rounded-xl p-6 text-center hover:shadow-lg transition"
+          >
             <div className="inline-flex p-3 rounded-full bg-muted/30 mb-3">
               <Heart className="w-8 h-8 text-muted" />
             </div>
@@ -72,13 +107,15 @@ export default function FindYourPath() {
               {language === 'fr' ? 'Courage' : 'Courage'}
             </h3>
             <p className="text-sm text-foreground/70">
-              {language === 'fr'
-                ? 'Guérison & counseling'
-                : 'Healing & counseling'}
+              {language === 'fr' ? 'Guérison & counseling' : 'Healing & counseling'}
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-secondary/20 to-secondary/10 border-2 border-secondary/40 rounded-xl p-6 text-center">
+          {/* PROTECTION */}
+          <div
+            onClick={() => setActiveVideo("3bZxdTKNLmg")}
+            className="cursor-pointer bg-gradient-to-br from-secondary/20 to-secondary/10 border-2 border-secondary/40 rounded-xl p-6 text-center hover:shadow-lg transition"
+          >
             <div className="inline-flex p-3 rounded-full bg-secondary/30 mb-3">
               <Shield className="w-8 h-8 text-secondary" />
             </div>
@@ -92,7 +129,11 @@ export default function FindYourPath() {
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-accent/20 to-amber-100/10 border-2 border-accent/40 rounded-xl p-6 text-center">
+          {/* SERVICE — NEW BOX */}
+          <div
+            onClick={() => setActiveVideo("7wPLjU3xIzU")}
+            className="cursor-pointer bg-gradient-to-br from-accent/20 to-accent/10 border-2 border-accent/40 rounded-xl p-6 text-center hover:shadow-lg transition"
+          >
             <div className="inline-flex p-3 rounded-full bg-accent/30 mb-3">
               <HandHeart className="w-8 h-8 text-accent" />
             </div>
@@ -105,9 +146,9 @@ export default function FindYourPath() {
                 : 'Volunteering & hands-on support'}
             </p>
           </div>
-
         </motion.div>
 
+        {/* -------------------- QUIZ -------------------- */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -116,6 +157,7 @@ export default function FindYourPath() {
           <FindYourPathQuiz />
         </motion.div>
 
+        {/* -------------------- EXPLANATION -------------------- */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -124,17 +166,21 @@ export default function FindYourPath() {
         >
           <div className="bg-background rounded-xl shadow-sm border border-foreground/10 p-8 max-w-2xl mx-auto">
             <h3 className="text-lg font-semibold text-foreground mb-3">
-              {language === 'fr' 
+              {language === 'fr'
                 ? 'Pourquoi choisir un parcours?'
                 : 'Why choose a path?'}
             </h3>
             <p className="text-foreground/70 leading-relaxed">
               {language === 'fr'
-                ? 'Chaque parcours représente une étape différente du parcours d\'une survivante. En choisissant un parcours qui résonne avec vous, vous rendez votre don plus personnel et significatif. Mais rappelez-vous - vous pouvez toujours soutenir tous les domaines!'
-                : 'Each path represents a different stage of a survivor\'s journey. By choosing a path that resonates with you, you make your donation more personal and meaningful. But remember—you can always support all areas!'}
+                ? 'Chaque parcours représente une étape différente du parcours d\'une survivante...'
+                : 'Each path represents a different stage of a survivor\'s journey...'}
             </p>
           </div>
         </motion.div>
+
+        {/* -------------------- VIDEO MODAL -------------------- */}
+        <VideoModal videoId={activeVideo} onClose={() => setActiveVideo(null)} />
+
       </div>
     </div>
   );
