@@ -17,6 +17,7 @@ import FirstTimeVisitorModal from "../components/FirstTimeVisitorModal";
 import PathTransitionSection from "../components/PathTransitionSection";
 import AboutModal from "../components/AboutModal";
 import MotionSection from "../components/ui/MotionSection";
+import { BadgeMarqueeSection } from "../components/BadgeMarquee";
 
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";
@@ -634,6 +635,9 @@ function VideoEmbed({ videoId }) {
             })}
           </div>
         </div>
+        <MotionSection id="achievements" variants={fromLeft}>
+          <BadgeMarqueeSection />
+        </MotionSection>
       </MotionSection>
 
       <section className="py-20 bg-background">

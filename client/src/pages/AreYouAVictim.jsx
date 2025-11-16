@@ -9,16 +9,20 @@ import {
   AlertTriangle, 
   Users, 
   ArrowRight,
-  Scale
+  Scale,
+  X
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function AreYouAVictim() {
+  const { language } = useLanguage();
   const [activeSection, setActiveSection] = useState(null);
 
   // Quick Exit function
   const quickExit = () => {
-    window.location.href = 'https://google.com/';
+    window.open('https://www.google.com', '_blank', 'noopener,noreferrer');
+    window.location.replace('https://www.google.com');
   };
 
   // ESC keyboard shortcut
@@ -153,10 +157,17 @@ export default function AreYouAVictim() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Sticky Quick Exit Button */}
+      <button
+        onClick={quickExit}
+        className="fixed top-20 right-4 z-[60] bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 font-semibold text-sm md:text-base"
+        aria-label={language === 'fr' ? 'Sortie rapide' : 'Quick Exit'}
+      >
+        <X className="w-4 h-4 md:w-5 md:h-5" />
+        <span className="hidden sm:inline">{language === 'fr' ? 'Sortie Rapide' : 'Quick Exit'}</span>
+      </button>
       {/* Hero Section */}
-      <div className="relative py-16 md:py-20 overflow-hidden" style={{
-        background: 'linear-gradient(to bottom, #6A6CF6, #8B7FD9)'
-      }}>
+      <div className="relative bg-gradient-to-br from-primary-dark via-primary to-secondary py-16 md:py-20 overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -173,17 +184,13 @@ export default function AreYouAVictim() {
               transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
               className="inline-flex p-4 rounded-full bg-white/30 backdrop-blur-md mb-6 shadow-xl"
             >
-              <Shield className="w-12 h-12 md:w-14 md:h-14 text-white stroke-2" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }} />
+              <Shield className="w-12 h-12 md:w-14 md:h-14 text-white stroke-2" />
             </motion.div>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-4xl md:text-5xl font-bold mb-4 leading-tight"
-              style={{ 
-                color: '#FFFFFF',
-                textShadow: '0 2px 8px rgba(0,0,0,0.3)'
-              }}
+              className="text-4xl md:text-5xl font-bold mb-4 leading-tight text-white"
             >
               Do you feel unsafe at home?
             </motion.h1>
@@ -191,11 +198,7 @@ export default function AreYouAVictim() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-lg md:text-xl max-w-3xl mx-auto mb-3 font-medium"
-              style={{ 
-                color: '#FFFFFF',
-                textShadow: '0 1px 4px rgba(0,0,0,0.2)'
-              }}
+              className="text-lg md:text-xl max-w-3xl mx-auto mb-3 font-medium text-white/90"
             >
               If you are experiencing conjugal or family violence—or if you\'re unsure—these steps and resources can guide you.
             </motion.p>
@@ -205,11 +208,7 @@ export default function AreYouAVictim() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-xs md:text-sm max-w-2xl mx-auto mb-4 italic"
-              style={{ 
-                color: '#FFFFFF',
-                textShadow: '0 1px 3px rgba(0,0,0,0.2)'
-              }}
+              className="text-xs md:text-sm max-w-2xl mx-auto mb-4 italic text-white/80"
             >
               Your visit to this page will not be saved in your browsing history, but please clear your history if you are worried about someone seeing it.
             </motion.p>
@@ -317,14 +316,11 @@ export default function AreYouAVictim() {
                   >
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
-                        <div className="p-4 rounded-xl flex-shrink-0 flex items-center gap-2" style={{
-                          backgroundColor: section.bgColor
-                        }}>
-                          <span className="text-2xl">{section.emoji}</span>
+                        <div className=" rounded-xl flex-shrink-0 flex items-center gap-2 mt-6">
                           <Icon className="w-5 h-5" style={{ color: section.color }} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-foreground mb-3 text-lg leading-tight">
+                          <h3 className="font-bold text-foreground mb-3 text-lg leading-tight mt-6">
                             {section.title}
                           </h3>
                           <motion.div
@@ -366,8 +362,8 @@ export default function AreYouAVictim() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <div className="inline-flex p-4 rounded-full mb-6" style={{ backgroundColor: 'rgba(106,108,246,0.1)' }}>
-              <Phone className="w-10 h-10" style={{ color: '#6A6CF6' }} />
+            <div className="inline-flex p-4 rounded-full mb-6 bg-highlight/20">
+              <Phone className="w-10 h-10 text-highlight" />
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Important Numbers
@@ -396,9 +392,9 @@ export default function AreYouAVictim() {
                   }}>
                   <CardContent className="pt-3">
                     <div className="flex items-start gap-4">
-                      <Phone className="w-6 h-6 flex-shrink-0 mt-1" style={{ color: number.color }} />
+                      <Phone className="w-6 h-6 flex-shrink-0 mt-6" style={{ color: number.color }} />
                       <div className="flex-1">
-                        <h3 className={`font-bold mb-2 ${number.isProminent ? 'text-xl' : ''}`} style={{ color: number.color }}>
+                        <h3 className={`font-bold mb-2 ${number.isProminent ? 'text-xl' : ''} mt-6`} style={{ color: number.color }}>
                           {number.name}
                         </h3>
                         <div className="space-y-1">

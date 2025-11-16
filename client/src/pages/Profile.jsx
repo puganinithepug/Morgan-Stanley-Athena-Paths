@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { User, Award, Trophy, Heart, Phone, Home, Sparkles, HandHeart } from 'lucide-react';
 import { BADGE_DEFINITIONS, checkAndAwardBadges } from '../components/BadgeChecker';
@@ -13,6 +14,7 @@ import { Button } from '../components/ui/Button';
 
 export default function Profile() {
   const { user } = useAuth();
+  const { language } = useLanguage();
   const userId = user?.id;
   const [newBadges, setNewBadges] = useState([]);
   const [showBadgeNotification, setShowBadgeNotification] = useState(false);
@@ -194,9 +196,13 @@ export default function Profile() {
                 <motion.div
                   animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.2, 1] }}
                   transition={{ duration: 0.5, repeat: 2 }}
-                  className="text-4xl"
+                  className="w-12 h-12 flex items-center justify-center"
                 >
-                  {newBadges[0].icon}
+                  <img
+                    src={newBadges[0].icon}
+                    alt={newBadges[0].name[language]}
+                    className="w-10 h-10 object-contain"
+                  />
                 </motion.div>
                 <div className="flex-1">
                   <h3 className="font-bold text-foreground mb-1">
@@ -303,10 +309,9 @@ export default function Profile() {
               Your Path Statistics
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            {/* 2×2 grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
+          <CardContent>
+            <div className="grid grid-cols-1 gap-4">
               {/* WISDOM */}
               {(() => {
                 const stats = pathStats.WISDOM;
@@ -344,7 +349,12 @@ export default function Profile() {
                       </div>
                     </div>
 
-                    {/*higher-contrast bar */}
+                    {/* STORY */}
+                    <p className="text-[11px] text-foreground/60 mb-2">
+                      {language === 'fr' ? story.fr : story.en}
+                    </p>
+
+                    {/* PROGRESS BAR */}
                     <div className="w-full h-3 rounded-full bg-foreground/10 overflow-hidden">
                       <div
                         className="h-3 rounded-full bg-highlight"
@@ -354,6 +364,7 @@ export default function Profile() {
                       />
                     </div>
 
+                    {/* NEXT LEVEL HINT */}
                     {stats.nextLevelXp != null && (
                       <p className="mt-1 text-[11px] text-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity text-right">
                         {`${stats.nextLevelXp - stats.xp} XP to your next level.`}
@@ -393,12 +404,11 @@ export default function Profile() {
                           {story.en}
                         </span>
                       </div>
-                      <div className="text-right">
-                        <div className="font-bold text-foreground">
-                          {stats.xp} XP
-                        </div>
-                      </div>
                     </div>
+
+                    <p className="text-[11px] text-foreground/60 mb-2">
+                      {language === 'fr' ? story.fr : story.en}
+                    </p>
 
                     <div className="w-full h-3 rounded-full bg-foreground/10 overflow-hidden">
                       <div
@@ -449,12 +459,11 @@ export default function Profile() {
                           {story.en}
                         </span>
                       </div>
-                      <div className="text-right">
-                        <div className="font-bold text-foreground">
-                          {stats.xp} XP
-                        </div>
-                      </div>
                     </div>
+
+                    <p className="text-[11px] text-foreground/60 mb-2">
+                      {language === 'fr' ? story.fr : story.en}
+                    </p>
 
                     <div className="w-full h-3 rounded-full bg-foreground/10 overflow-hidden">
                       <div
@@ -504,12 +513,11 @@ export default function Profile() {
                           {story.en}
                         </span>
                       </div>
-                      <div className="text-right">
-                        <div className="font-bold text-foreground">
-                          {stats.xp} XP
-                        </div>
-                      </div>
                     </div>
+
+                    <p className="text-[11px] text-foreground/60 mb-2">
+                      {language === 'fr' ? story.fr : story.en}
+                    </p>
 
                     <div className="w-full h-3 rounded-full bg-foreground/10 overflow-hidden">
                       <div
@@ -528,11 +536,10 @@ export default function Profile() {
                   </div>
                 );
               })()}
-
             </div>
           </CardContent>
-
         </Card>
+
 
         {/* BADGES – RIGHT, 1/3 width */}
         <Card className="md:col-span-1">
@@ -543,7 +550,7 @@ export default function Profile() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-3 gap-4 place-items-center">
+            <div className="grid grid-cols-3 -gap-1 place-items-center">
               {Object.values(BADGE_DEFINITIONS).map((badge) => {
                 const isUnlocked = backendBadgeIds.has(badge.id);
 
@@ -554,25 +561,35 @@ export default function Profile() {
                     className="group flex flex-col items-center gap-1"
                   >
                     {/* Icon */}
-                    <div
-                      className={`
-                        w-14 h-14 rounded-full flex items-center justify-center border-2
-                        transition-colors
-                        ${isUnlocked
-                          ? 'bg-primary/10 border-primary text-primary'
-                          : 'bg-background border-foreground/20 text-foreground/30'}
-                      `}
-                    >
-                      <span className="text-2xl">{badge.icon}</span>
+                    <div className="flex items-center justify-center">
+                      <img
+                        src={badge.icon}
+                        alt={badge.name[language]}
+                        className={`w-30 h-30 object-contain ${
+                          isUnlocked ? '' : 'opacity-30 grayscale'
+                        }`}
+                      />
                     </div>
 
-                    {/* Name – on hover */}
+                    {/* Tooltip */}
+                    <div
+                      className="
+                        absolute bottom-[110%] left-1/2 -translate-x-1/2
+                        px-3 py-1 rounded-md text-xs
+                        bg-black text-white shadow-lg whitespace-nowrap
+                        opacity-0 pointer-events-none
+                        group-hover:opacity-100 group-hover:pointer-events-auto
+                        transition-opacity
+                      "
+                    >
+                      {badge.description[language]}
+                    </div>
+                    {/* Badge label */}
                     <p
-                      className={`
-                        text-[11px] font-medium text-center mt-1 
-                        opacity-0 group-hover:opacity-100 transition-opacity
-                        ${isUnlocked ? 'text-foreground' : 'text-foreground/60'}
-                      `}
+                      className="
+                        text-xs text-center leading-tight
+                        h-8 flex items-center justify-center
+                      "
                     >
                       {badge.name.en}
                     </p>
