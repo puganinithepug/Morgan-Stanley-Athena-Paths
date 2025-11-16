@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "./ui/Button";
-import { ArrowRight, Phone, Heart, Shield, HandHeart } from "lucide-react";
+import { Phone, Heart, Shield, HandHeart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";
@@ -46,7 +46,7 @@ const PATHS = [
   },
 ];
 
-export default function PathTransitionSection() {
+export default function PathTransitionSection({ onAboutClick }) {
   const sectionRef = useRef(null);
   const navigate = useNavigate();
 
@@ -86,21 +86,34 @@ export default function PathTransitionSection() {
     >
       {/* TEXT + CTA */}
       <div className="relative z-20 flex flex-col items-center text-center px-4">
+        {/* Source: https://www.canadahelps.org/fr/organismesdebienfaisance/le-bouclier-dathena-the-shield-of-athena/impact/view/ */}
         <h1 className="text-4xl max-w-2xl md:text-5xl font-bold text-gray-900 mb-3">
-          Help women and children find safety, healing, and hope.
+          Supporting Women and Children Affected by Family Violence
         </h1>
         <p className="text-gray-600 max-w-2xl mx-auto mb-6">
-          Athena Paths transforms donating into a guided journey—Wisdom, Courage, and Protection—that mirrors the real stages of a survivor's healing.
+          The Shield of Athena is a non-profit organization offering culturally and linguistically adapted professional support, intervention, and prevention services to women victims of family violence and their children, as well as members of ethnocultural communities.
+          {/* Source: https://www.canadahelps.org/fr/organismesdebienfaisance/le-bouclier-dathena-the-shield-of-athena/impact/view/ - "Le Bouclier d'Athéna Services familiaux est un organisme communautaire sans but lucratif qui offre des services professionnels de soutien, d'intervention et de prévention culturellement et linguistiquement adaptés aux besoins des femmes victimes de violence familiale et leurs enfants ainsi qu'aux membres des communautés ethnoculturelles." */}
         </p>
-        <Button
-          size="lg"
-          variant="unstyled"
-          onClick={scrollToWaysToHelp}
-          className="bg-primary/70 hover:bg-primart/90 text-white px-8 py-5 rounded-full shadow-lg flex items-center gap-2 shadow-primary-glow hover:shadow-primary-glow-strong"
-        >
-          Donate
-          {/* <ArrowRight className="w-5 h-5" /> */}
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+          <Button
+            size="lg"
+            variant="unstyled"
+            onClick={scrollToWaysToHelp}
+            className="bg-highlight/70 hover:bg-highlight/90 text-white px-8 py-5 rounded-full shadow-lg flex items-center gap-2 shadow-highlight-glow hover:shadow-highlight-glow-strong"
+          >
+            Donate
+          </Button>
+          {onAboutClick && (
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={onAboutClick}
+              className="bg-white/90 hover:bg-white text-gray-900 px-8 py-5 rounded-full shadow-lg border-2 border-gray-200"
+            >
+              Learn More About Us
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* TRIANGLES (first state) */}

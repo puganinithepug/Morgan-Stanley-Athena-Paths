@@ -36,34 +36,30 @@ html {
   background: #555;
 }
 
-/* Hide ALL Google Translate UI elements globally */
-.goog-te-banner-frame,
-.goog-te-banner-frame.skiptranslate,
-#google_translate_element,
-.goog-te-gadget,
-.goog-te-gadget-simple,
-.goog-te-menu-frame,
-.goog-te-menu-value,
-.goog-te-combo,
-.goog-te-menu,
-.goog-te-menu2,
-.goog-te-gadget-icon,
-.skiptranslate,
-iframe.goog-te-banner-frame,
-iframe.goog-te-menu-frame,
-select.goog-te-combo {
+/* Hide Google Translate top bar (per https://stackoverflow.com/q/11248673) */
+.goog-te-banner-frame.skiptranslate {
   display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  height: 0 !important;
-  width: 0 !important;
-  position: absolute !important;
-  left: -9999px !important;
 }
 
-/* Fix body positioning when Google Translate is active */
+body > .skiptranslate {
+  display: none !important;
+}
+
+iframe.goog-te-banner-frame {
+  display: none !important;
+}
+
+/* Hide the modern circular Google Translate floating badge & loader */
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-ZVi9od-aZ2wEe-OiiCO,
+.VIpgJd-ZVi9od-aZ2wEe {
+  display: none !important;
+}
+
+/* Prevent page from being pushed down when translate loads */
 body {
-  top: 0 !important;
+  top: 0px !important;
 }
 
 @layer components {
@@ -91,5 +87,3 @@ body {
     width: 100%;
   }
 }
-
-

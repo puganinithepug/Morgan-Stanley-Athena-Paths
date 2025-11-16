@@ -22,7 +22,6 @@ const PATH_COLORS = {
 export default function Leaderboard() {
   const { language } = useLanguage();
   const [selectedPath, setSelectedPath] = useState('ALL');
-  const [viewMode, setViewMode] = useState('individual'); // 'individual' or 'teams'
   const donations = dataService.getDonations();
   const users = dataService.getAllUsers();
   const teams = dataService.getTeams();
@@ -73,7 +72,6 @@ export default function Leaderboard() {
     })
     .sort((a, b) => b.totalPoints - a.totalPoints);
 
-  // Team leaderboard logic
   const teamLeaderboard = teams
     .map(team => {
       const teamMembers = users.filter(user => team.members?.includes(user.id));

@@ -14,7 +14,9 @@ import {
   Scale,
   Baby,
   GraduationCap,
-  ArrowRight
+  ArrowRight,
+  FileText,
+  Video
 } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -25,26 +27,26 @@ export default function OurServices() {
   const stats = [
     {
       icon: Users,
-      value: '1,000+',
-      description: language === 'fr' ? 'Femmes et enfants aidés chaque année' : 'Women and children helped each year',
+      value: '1,229',
+      description: 'Clients helped in a single year',
       color: 'text-primary'
     },
     {
       icon: Clock,
       value: '24/7',
-      description: language === 'fr' ? 'Disponibilité de la ligne de crise' : 'Crisis line availability',
+      description: 'Emergency shelter available',
       color: 'text-primary'
     },
     {
       icon: Home,
-      value: '30+',
-      description: language === 'fr' ? 'Années de service' : 'Years of service',
+      value: '34',
+      description: 'Years of service (founded 1991)',
       color: 'text-primary'
     },
     {
       icon: Heart,
-      value: '100%',
-      description: language === 'fr' ? 'Services gratuits et confidentiels' : 'Free and confidential services',
+      value: '10+',
+      description: 'Languages available',
       color: 'text-primary'
     }
   ];
@@ -52,44 +54,37 @@ export default function OurServices() {
   const services1 = [
     {
       icon: Phone,
-      title: language === 'fr' ? 'Ligne de Crise 24/7' : '24/7 Crisis Line',
-      description: language === 'fr'
-        ? 'Soutien téléphonique immédiat pour les femmes en crise. Disponible jour et nuit, notre ligne de crise offre écoute, information et planification de sécurité.'
-        : 'Immediate, confidential phone support for women in crisis. Available day and night, our crisis line provides listening, information, and safety planning.',
-      stat: language === 'fr' ? '3,500+ appels annuellement' : '3,500+ calls annually',
+      title: 'Multilingual Services',
+      description: 'Multilingual services offered by professional social workers, assisted by trained cultural intermediaries at our offices located in Laval and Montréal.',
+      stat: 'Montreal: 514-274-8117 or 1-877-274-8117 | Laval: 450-688-6584',
       statColor: 'text-highlight',
       iconBg: 'bg-highlight/20',
       iconColor: 'text-highlight'
+      // Source: https://www.canadahelps.org/fr/organismesdebienfaisance/le-bouclier-dathena-the-shield-of-athena/impact/view/ - "Des services multilingues sont offerts par des travailleuses sociales professionnelles, assistées d'intermédiaires culturelles formées à cet effet à nos bureaux situés à Laval et Montréal"
     },
     {
       icon: Building2,
-      title: language === 'fr' ? "Hébergement d'Urgence" : 'Emergency Shelter',
-      description: language === 'fr'
-        ? 'Logement sûr et confidentiel pour les femmes et leurs enfants fuyant la violence. Comprend les repas, la sécurité et un espace pour respirer.'
-        : 'Safe, confidential housing for women and their children fleeing violence. Includes meals, security, and a space to breathe.',
-      stat: language === 'fr' ? '100+ familles hébergées annuellement' : '100+ families sheltered annually',
+      title: "Athena's House",
+      description: 'Our shelter offers emergency housing services 24/7 in a safe and rehabilitative environment for women and children victims of family violence.',
+      stat: '100 women & children at Athena\'s House',
       statColor: 'text-secondary',
       iconBg: 'bg-secondary/20',
       iconColor: 'text-secondary'
     },
     {
       icon: MessageSquare,
-      title: language === 'fr' ? 'Counseling Individuel' : 'Individual Counseling',
-      description: language === 'fr'
-        ? 'Soutien thérapeutique professionnel pour les femmes et les enfants. Nos conseillers aident à traiter le traumatisme, développer des stratégies d\'adaptation et reconstruire la confiance.'
-        : 'Professional therapeutic support for women and children. Our counselors help process trauma, develop coping strategies, and rebuild confidence.',
-      stat: language === 'fr' ? '2,000+ heures de counseling annuellement' : '2,000+ counseling hours annually',
+      title: 'Community Outreach',
+      description: 'Our multilingual community outreach program informs the population of Greater Montreal and Laval in their native language about family violence issues.',
+      stat: 'Tens of thousands reached annually',
       statColor: 'text-muted',
       iconBg: 'bg-muted/20',
       iconColor: 'text-muted'
     },
     {
       icon: Users2,
-      title: language === 'fr' ? 'Groupes de Soutien' : 'Support Groups',
-      description: language === 'fr'
-        ? 'Réunions de groupe hebdomadaires où les survivantes partagent leurs expériences, apprennent les unes des autres et construisent une communauté.'
-        : 'Weekly group meetings where survivors share experiences, learn from each other, and build community.',
-      stat: language === 'fr' ? '3 groupes actifs' : '3 active groups',
+      title: 'Multilingual Help Lines',
+      description: 'Multilingual sexual violence referral and help lines available in Montreal and Laval to provide support in clients\' native languages.',
+      stat: 'Montreal: 514-270-2900 | Laval: 450-688-2117',
       statColor: 'text-primary',
       iconBg: 'bg-primary/15',
       iconColor: 'text-primary'
@@ -99,44 +94,36 @@ export default function OurServices() {
   const services2 = [
     {
       icon: Scale,
-      title: language === 'fr' ? 'Plaidoyer et Information Juridique' : 'Advocacy & Legal Information',
-      description: language === 'fr'
-        ? 'Information sur les droits juridiques, références aux services juridiques et soutien dans les processus judiciaires. Nous aidons les femmes à naviguer dans le système.'
-        : 'Information about legal rights, referrals to legal services, and support through court processes. We help women navigate the system.',
-      stat: language === 'fr' ? '2000+ femmes informées annuellement' : '2000+ women informed annually',
+      title: 'Advocacy & Legal Information',
+      description: 'Information about legal rights, referrals to legal services, and support through court processes. Our professional social workers help women navigate the system.',
+      stat: 'Included in our multilingual services',
       statColor: 'text-accent',
       iconBg: 'bg-accent/30',
       iconColor: 'text-accent'
     },
     {
       icon: Baby,
-      title: language === 'fr' ? 'Services pour Enfants' : 'Children\'s Services',
-      description: language === 'fr'
-        ? 'Programmes spécialisés pour les enfants exposés à la violence familiale, notamment counseling, activités récréatives et soutien éducatif.'
-        : 'Specialized programs for children exposed to family violence, including counseling, recreational activities, and educational support.',
-      stat: language === 'fr' ? '300+ enfants soutenus annuellement' : '300+ children supported annually',
+      title: 'Children\'s Services',
+      description: 'Specialized programs for children exposed to family violence. Children receive age and culturally appropriate support at Athena\'s House and in our offices.',
+      stat: '100 women & children at Athena\'s House',
       statColor: 'text-highlight',
       iconBg: 'bg-highlight/20',
       iconColor: 'text-highlight'
     },
     {
       icon: GraduationCap,
-      title: language === 'fr' ? 'Programmes Éducatifs' : 'Educational Programs',
-      description: language === 'fr'
-        ? 'Ateliers sur la violence familiale, les relations saines, la parentalité et le développement personnel pour les survivantes.'
-        : 'Workshops on family violence, healthy relationships, parenting, and personal development for survivors.',
-      stat: language === 'fr' ? '40+ ateliers annuellement' : '40+ workshops annually',
+      title: 'Awareness & Prevention',
+      description: 'Our multilingual community outreach program informs the population of Greater Montreal and Laval in their native language about family violence issues.',
+      stat: 'Tens of thousands reached annually',
       statColor: 'text-primary',
       iconBg: 'bg-primary/15',
       iconColor: 'text-primary'
     },
     {
       icon: Home,
-      title: language === 'fr' ? 'Logement de Transition' : 'Transitional Housing',
-      description: language === 'fr'
-        ? 'Soutien au logement à long terme pour aider les femmes à trouver et maintenir un logement stable après avoir quitté le refuge.'
-        : 'Long-term housing support to help women find and maintain stable housing after leaving shelter.',
-      stat: language === 'fr' ? '100+ familles aidées annuellement' : '100+ families assisted annually',
+      title: 'Athena\'s House - 24/7 Shelter',
+      description: 'Our shelter offers emergency housing services 24/7 in a safe and rehabilitative environment for women and children victims of family violence.',
+      stat: 'Emergency shelter available 24/7',
       statColor: 'text-secondary',
       iconBg: 'bg-secondary/20',
       iconColor: 'text-secondary'
@@ -146,25 +133,24 @@ export default function OurServices() {
   return (
     <div className="min-h-screen bg-background">
       <div className="relative bg-gradient-to-br from-primary-dark via-primary to-secondary py-20 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-white/90 mb-6 shadow-lg">
               <Shield className="w-12 h-12 text-primary" />
             </div>
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              {language === 'fr' ? 'Nos Services' : 'Our Services'}
+              Our Services
             </h1>
             <p className="text-xl text-white max-w-3xl mx-auto">
-              {language === 'fr'
-                ? 'Shield of Athena offre un soutien complet aux femmes et aux enfants fuyant la violence familiale. Tous nos services sont gratuits, confidentiels et disponibles en plusieurs langues.'
-                : 'Shield of Athena provides comprehensive support to women and children fleeing family violence. All our services are free, confidential, and available in multiple languages.'}
+              The Shield of Athena Family Services is a non-profit community organization offering culturally and linguistically adapted professional support, intervention, and prevention services to women victims of family violence and their children, as well as members of ethnocultural communities.
+              {/* Source: https://www.canadahelps.org/fr/organismesdebienfaisance/le-bouclier-dathena-the-shield-of-athena/impact/view/ */}
             </p>
           </div>
         </div>
       </div>
 
       <div className="py-16 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
@@ -189,18 +175,16 @@ export default function OurServices() {
       <div className="py-12 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            {language === 'fr' ? 'Soutien Complet à Chaque Étape' : 'Comprehensive Support at Every Stage'}
+            Our Network of Services
           </h2>
           <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
-            {language === 'fr'
-              ? 'De la crise à la guérison, nous marchons aux côtés des survivantes tout au long de leur parcours.'
-              : 'From crisis to healing, we walk alongside survivors throughout their journey.'}
+            Our network of services includes three integrated components: multilingual services, emergency shelter, and community outreach.
           </p>
         </div>
       </div>
 
       <div className="py-12 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {services1.map((service, index) => {
               const Icon = service.icon;
@@ -232,7 +216,7 @@ export default function OurServices() {
       </div>
 
       <div className="py-12 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {services2.map((service, index) => {
               const Icon = service.icon;
@@ -263,15 +247,100 @@ export default function OurServices() {
         </div>
       </div>
 
+      {/* Resources Section */}
+      <div className="py-20 bg-background">
+        <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              Resources & Information
+            </h2>
+            <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
+              Access publications, videos, legal information, and educational resources
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {[
+              {
+                icon: FileText,
+                title: 'Publications',
+                description: 'Download brochures, guides, and information packages in multiple languages',
+                color: 'text-highlight',
+                bgColor: 'bg-highlight/20'
+              },
+              {
+                icon: Video,
+                title: 'Videos',
+                description: 'Educational videos and information segments in Arabic, Creole, Spanish, Mandarin, and Vietnamese',
+                color: 'text-secondary',
+                bgColor: 'bg-secondary/20'
+              },
+              {
+                icon: Scale,
+                title: 'Legal Information',
+                description: 'Information about legal rights, court processes, and referrals to legal services',
+                color: 'text-primary',
+                bgColor: 'bg-primary/15'
+              },
+              {
+                icon: GraduationCap,
+                title: 'Educational Resources',
+                description: 'Awareness materials, prevention guides, and community education resources',
+                color: 'text-accent',
+                bgColor: 'bg-accent/30'
+              }
+            ].map((resource, index) => {
+              const Icon = resource.icon;
+              return (
+                <Card key={index} className="hover:shadow-lg transition-all">
+                  <CardContent className="p-6 text-center">
+                    <div className={`inline-flex p-4 ${resource.bgColor} rounded-full mb-4`}>
+                      <Icon className={`w-6 h-6 ${resource.color}`} />
+                    </div>
+                    <h3 className="text-lg font-bold text-foreground mb-2">{resource.title}</h3>
+                    <p className="text-sm text-foreground/70">{resource.description}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          {/* Second Step Resource */}
+          <Card className="bg-gradient-to-br from-primary/10 to-secondary/10 border-2 border-primary/20">
+            <CardContent className="p-8">
+              <div className="flex items-start gap-6">
+                <div className="p-4 bg-primary/20 rounded-lg flex-shrink-0">
+                  <Building2 className="w-8 h-8 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-foreground mb-3">
+                    Second Step Resource - Laval
+                  </h3>
+                  <p className="text-foreground/70 mb-4 leading-relaxed">
+                    We are establishing a second step shelter for women and children in Laval. This facility will provide transitional housing and support services for survivors as they rebuild their lives. The City of Laval has generously donated $200,000 towards this project.
+                  </p>
+                  <div className="flex gap-4">
+                    <Button className="bg-primary text-white hover:bg-primary/90">
+                      Learn More
+                    </Button>
+                    <Button variant="outline">
+                      Support This Project
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
       <div className="py-20 bg-gradient-to-r from-primary-dark via-primary to-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            {language === 'fr' ? 'Votre don maintient ces services en fonctionnement' : 'Your donation keeps these services running'}
+            Your donation keeps these services running
           </h2>
           <p className="text-xl text-white mb-8 max-w-3xl mx-auto">
-            {language === 'fr'
-              ? 'Chaque contribution aide directement les femmes et les enfants à trouver sécurité, guérison et espoir.'
-              : 'Every contribution directly helps women and children find safety, healing, and hope.'}
+            Every contribution directly helps women and children find safety, healing, and hope.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link to="/find-your-path">
