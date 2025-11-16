@@ -344,8 +344,8 @@ function VideoEmbed({ videoId }) {
       />
 
       <PathTransitionSection onAboutClick={() => setShowAboutModal(true)} />
-
-      <VideoEmbed videoId="WGND5Fvt2NA" />
+      {/* UPDATED VIDEO */}
+      <VideoEmbed videoId="jCCh1He0p24" />
 
       <MotionSection id="ways-to-help" className="py-20 bg-gray-50" variants={fromLeft}>
         <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
