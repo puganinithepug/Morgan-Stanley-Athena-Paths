@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import dataService from '../services/dataService';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { User, Award, Trophy, Heart, Phone, Home, Sparkles } from 'lucide-react';
 import { BADGE_DEFINITIONS, checkAndAwardBadges } from '../components/BadgeChecker';
@@ -13,16 +12,76 @@ export default function Profile() {
   const { language } = useLanguage();
   const [newBadges, setNewBadges] = useState([]);
   const [showBadgeNotification, setShowBadgeNotification] = useState(false);
+  const [backendBadges, setBackendBadges] = useState([]); // badges from backend
+  const [donations, setDonations] = useState([]); // donations from backend
+  const [loadingDonations, setLoadingDonations] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      const earned = checkAndAwardBadges(user);
-      if (earned.length > 0) {
-        setNewBadges(earned);
-        setShowBadgeNotification(true);
-        setTimeout(() => setShowBadgeNotification(false), 5000);
+    if (!user) return;
+
+    let cancelled = false;
+
+    async function syncBadges() {
+      try {
+        // First, check and award any new badges based on backend data
+        const earned = await checkAndAwardBadges(user);
+        if (!cancelled && earned.length > 0) {
+          setNewBadges(earned);
+          setShowBadgeNotification(true);
+          setTimeout(() => setShowBadgeNotification(false), 5000);
+        }
+
+        // Then load the full badge list from backend
+        const res = await fetch(`http://localhost:8000/users/${user.id}/badges`, {
+          credentials: 'include',
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) {
+          setBackendBadges(data.badges || []);
+        }
+      } catch (err) {
+        console.error('Failed to sync badges', err);
       }
     }
+
+    syncBadges();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
+
+  // Load donations for this user from backend
+  useEffect(() => {
+    if (!user) return;
+
+    let cancelled = false;
+
+    async function loadDonations() {
+      try {
+        const res = await fetch(`http://localhost:8000/users/${user.id}/donations`, {
+          credentials: 'include',
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) {
+          setDonations(data.donations || []);
+          setLoadingDonations(false);
+        }
+      } catch (err) {
+        console.error('Failed to load donations', err);
+        if (!cancelled) {
+          setLoadingDonations(false);
+        }
+      }
+    }
+
+    loadDonations();
+
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
 
   if (!user) {
@@ -33,15 +92,31 @@ export default function Profile() {
     );
   }
 
-  const donations = dataService.getDonations().filter(d => d.user_id === user.id);
-  const totalAmount = donations.reduce((sum, d) => sum + d.amount, 0);
-  const userBadges = user.badges || [];
-  const earnedBadges = Object.values(BADGE_DEFINITIONS).filter(b => userBadges.includes(b.id));
+  // Separate real donations from bonus entries (referral bonuses have amount 0 / no path)
+  const realDonations = donations.filter((d) => (d.amount || 0) > 0);
+  const totalAmount = realDonations.reduce((sum, d) => sum + (d.amount || 0), 0);
+  const totalImpactPoints = donations.reduce((sum, d) => sum + (d.impact_points || 0), 0);
+  const volunteerHours = donations
+    .filter((d) => d.path === 'SERVICE')
+    .reduce((sum, d) => sum + (d.hours || 0), 0);
+  const backendBadgeIds = new Set(
+    (backendBadges || []).map((b) => b.badge_id || b.id)
+  );
+
+  // Map backend badge ids to local BADGE_DEFINITIONS entries so we inherit
+  // icons and localized names/descriptions.
+  const earnedBadges = (backendBadges || [])
+    .map((b) => {
+      const id = b.badge_id || b.id;
+      return Object.values(BADGE_DEFINITIONS).find((def) => def.id === id) || null;
+    })
+    .filter(Boolean);
 
   const pathStats = {
-    WISDOM: donations.filter(d => d.path === 'WISDOM').length,
-    COURAGE: donations.filter(d => d.path === 'COURAGE').length,
-    PROTECTION: donations.filter(d => d.path === 'PROTECTION').length
+    WISDOM: realDonations.filter(d => d.path === 'WISDOM').length,
+    COURAGE: realDonations.filter(d => d.path === 'COURAGE').length,
+    PROTECTION: realDonations.filter(d => d.path === 'PROTECTION').length,
+    SERVICE: volunteerHours,
   };
 
   return (
@@ -108,7 +183,7 @@ export default function Profile() {
               <CardContent className="p-6 text-center relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
                 <Award className="mt-6 w-8 h-8 mx-auto mb-2 opacity-90 relative z-10" />
-                <div className="text-3xl font-bold mb-1 relative z-10">{user.total_points || 0}</div>
+                <div className="text-3xl font-bold mb-1 relative z-10">{totalImpactPoints}</div>
                 <div className="text-sm opacity-90 relative z-10">
                   {language === 'fr' ? 'Points d\'Impact' : 'Impact Points'}
                 </div>
@@ -125,7 +200,7 @@ export default function Profile() {
               <CardContent className="p-6 text-center relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
                 <Heart className="mt-6 w-8 h-8 mx-auto mb-2 opacity-90 relative z-10" />
-                <div className="text-3xl font-bold mb-1 relative z-10">{donations.length}</div>
+                <div className="text-3xl font-bold mb-1 relative z-10">{realDonations.length}</div>
                 <div className="text-sm opacity-90 relative z-10">
                   {language === 'fr' ? 'Dons Totaux' : 'Total Donations'}
                 </div>
@@ -228,6 +303,15 @@ export default function Profile() {
                     </span>
                   </div>
                   <span className="font-bold text-foreground">{pathStats.PROTECTION}</span>
+                </div>
+                <div className="flex items-center justify-between p-3 rounded-lg bg-accent/15 border border-accent/40">
+                  <div className="flex items-center gap-3">
+                    <Home className="w-5 h-5 text-accent" />
+                    <span className="font-medium text-foreground">
+                      {language === 'fr' ? 'Service' : 'Service'}
+                    </span>
+                  </div>
+                  <span className="font-bold text-foreground">{pathStats.SERVICE}</span>
                 </div>
               </div>
             </CardContent>

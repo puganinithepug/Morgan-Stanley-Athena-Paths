@@ -1,23 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, User, LogOut, LogIn } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import Avatar from './ui/Avatar';
 import { Button } from './ui/Button';
+import Login from './Login';
 
 const ProfileDropdown = () => {
   const { user, login, logout } = useAuth();
   const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
-  const handleLogin = () => {
-    login({ 
-      email: "alex.thompson@example.com", 
-      full_name: "Alex Thompson",
-      avatar_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face"
-    });
-    setIsOpen(false);
+  // Allow other parts of the app to request opening the login popup
+  useEffect(() => {
+    const handler = () => {
+      setIsOpen(false); // close dropdown if open
+      setIsLoginOpen(true);
+    };
+
+    window.addEventListener('open-login-modal', handler);
+    return () => window.removeEventListener('open-login-modal', handler);
+  }, []);
+
+  // Called when the popup login succeeds
+  const handleLoginSuccess = async () => {
+    await login(); // hydrate user from backend /me
+    setIsLoginOpen(false);
+    // Notify the app that login just succeeded so pending actions (like donations) can resume
+    window.dispatchEvent(new CustomEvent('login-success'));
   };
 
   const handleLogout = () => {
@@ -130,7 +142,10 @@ const ProfileDropdown = () => {
               <div className="absolute right-0 mt-2 z-50 w-48 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
                 <div className="p-2">
                   <button
-                    onClick={handleLogin}
+                    onClick={() => {
+                      setIsLoginOpen(true);
+                      setIsOpen(false);
+                    }}
                     className="flex items-center gap-3 w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
                   >
                     <LogIn className="w-4 h-4 text-gray-500" />
@@ -142,6 +157,13 @@ const ProfileDropdown = () => {
           )}
         </>
       )}
+
+      {/* Login popup backed by Python FastAPI */}
+      <Login
+        open={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
+        onSuccess={handleLoginSuccess}
+      />
     </div>
   );
 };
