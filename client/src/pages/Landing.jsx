@@ -336,7 +336,8 @@ function VideoEmbed({ videoId }) {
         donation={lastDonation}
       />
 
-      <PathTransitionSection />
+        <PathTransitionSection />
+
       <VideoEmbed videoId="WGND5Fvt2NA" />
       
       <MotionSection id="ways-to-help" className="py-20 bg-gray-50" variants={fromLeft}>
