@@ -36,7 +36,20 @@ const ProfileDropdown = () => {
     logout();
     setIsOpen(false);
     // Redirect to home page after logout
-    window.location.href = '/';
+    // Check cookie then redirect:
+    const checkSessionAndRedirect = () => {
+      const interval = setInterval(() => {
+        // Check if session cookie is gone
+        const cookies = document.cookie.split(';').map(c => c.trim());
+        const hasSession = cookies.some(c => c.startsWith('session='));
+        if (!hasSession) {
+          clearInterval(interval);
+          window.location.href = '/';
+        }
+      }, 300);
+    };
+
+    checkSessionAndRedirect();
   };
 
   return (
