@@ -129,29 +129,24 @@ export default function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-4">
+            {/* Primary CTAs */}
             <Link
               to="/are-you-a-victim"
               className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-orange-500 text-white px-4 py-2 rounded-lg font-bold text-sm hover:from-red-700 hover:to-orange-600 transition-all shadow-md hover:shadow-lg"
             >
               <AlertTriangle className="w-4 h-4" />
-              {language === 'fr' ? 'Êtes-vous une victime?' : 'Are you a victim?'}
+              {language === "fr" ? "Êtes-vous une victime?" : "Are you a victim?"}
             </Link>
+
             <Link
               to="/donate"
               className="flex items-center gap-2 bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-lg font-bold text-sm hover:from-primary-dark hover:to-secondary-dark transition-all shadow-md hover:shadow-lg"
             >
               <Heart className="w-4 h-4" />
-              {language === 'fr' ? 'Faire un Don' : 'Donate'}
+              {language === "fr" ? "Faire un Don" : "Donate"}
             </Link>
-            <NavLink
-              to="/services"
-              className={({ isActive }) =>
-                `nav-link ${isActive ? "nav-link-active" : ""}`
-              }
-            >
-              {t("nav.services")}
-            </NavLink>
 
+            {/* Find Your Path */}
             <NavLink
               to="/find-your-path"
               className={({ isActive }) =>
@@ -161,39 +156,68 @@ export default function Header() {
               {t("nav.findPath")}
             </NavLink>
 
+            {/* Our Services */}
             <NavLink
-              to="/leaderboard"
+              to="/services"
               className={({ isActive }) =>
                 `nav-link ${isActive ? "nav-link-active" : ""}`
               }
             >
-              {t("nav.leaderboard")}
+              {t("nav.services")}
             </NavLink>
 
-            <NavLink
-              to="/support-wall"
-              className={({ isActive }) =>
-                `nav-link ${isActive ? "nav-link-active" : ""}`
-              }
-            >
-              {t("nav.supportWall")}
-            </NavLink>
-            <NavLink
-              to="/news"
-              className={({ isActive }) =>
-                `nav-link ${isActive ? "nav-link-active" : ""}`
-              }
-            >
-              News
-            </NavLink>
+            {/* Community dropdown */}
+            <div className="relative group">
+              <button className="nav-link inline-flex items-center gap-1 cursor-pointer -translate-y-[2.3px]">
+                <span>Community</span>
+                <ChevronDown className="w-4 h-4" />
+              </button>
 
+              <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-150
+                              absolute left-0 mt-2 w-48 rounded-lg bg-white shadow-lg border border-gray-200 z-40"> 
+                <NavLink
+                  to="/leaderboard"
+                  className={({ isActive }) =>
+                    `block px-3 py-2 text-sm ${
+                      isActive ? "text-primary font-semibold" : "text-foreground/80"
+                    } hover:bg-gray-50`
+                  }
+                >
+                  Leaderboard
+                </NavLink>
+
+                <NavLink
+                  to="/support-wall"
+                  className={({ isActive }) =>
+                    `block px-3 py-2 text-sm ${
+                      isActive ? "text-primary font-semibold" : "text-foreground/80"
+                    } hover:bg-gray-50`
+                  }
+                >
+                  {t("nav.supportWall")}
+                </NavLink>
+
+                <NavLink
+                  to="/news"
+                  className={({ isActive }) =>
+                    `block px-3 py-2 text-sm ${
+                      isActive ? "text-primary font-semibold" : "text-foreground/80"
+                    } hover:bg-gray-50`
+                  }
+                >
+                  News
+                </NavLink>
+              </div>
+            </div>
+
+            {/* Contact */}
             <NavLink
               to="/contact"
               className={({ isActive }) =>
                 `nav-link ${isActive ? "nav-link-active" : ""}`
               }
             >
-              {language === 'fr' ? 'Contact' : 'Contact'}
+              {language === "fr" ? "Contact" : "Contact"}
             </NavLink>
           </nav>
 
