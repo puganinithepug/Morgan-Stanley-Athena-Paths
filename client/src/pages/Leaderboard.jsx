@@ -2,19 +2,21 @@ import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import dataService from '../services/dataService';
 import { Card, CardContent } from '../components/ui/Card';
-import { Trophy, Crown, Shield, Phone, Heart, Home } from 'lucide-react';
+import { Trophy, Crown, Shield, Phone, Heart, Home, HandHeart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const PATH_ICONS = {
   WISDOM: Phone,
   COURAGE: Heart,
-  PROTECTION: Home
+  PROTECTION: Home,
+  SERVICE: HandHeart,
 };
 
 const PATH_COLORS = {
   WISDOM: { text: 'text-highlight', bg: 'bg-highlight/15' },
   COURAGE: { text: 'text-muted', bg: 'bg-muted/15' },
   PROTECTION: { text: 'text-secondary', bg: 'bg-secondary/15' },
+  SERVICE: {text: 'text-teal-500', bg: 'bg-teal-100'}
 };
 
 export default function Leaderboard() {
