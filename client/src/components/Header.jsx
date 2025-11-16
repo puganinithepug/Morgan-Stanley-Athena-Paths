@@ -178,18 +178,23 @@ export default function Header() {
             >
               {t("nav.supportWall")}
             </NavLink>
-            <Link
+            <NavLink
               to="/news"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
+              className={({ isActive }) =>
+                `nav-link ${isActive ? "nav-link-active" : ""}`
+              }
             >
               News
-            </Link>
-            <Link
+            </NavLink>
+
+            <NavLink
               to="/contact"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium text-sm"
+              className={({ isActive }) =>
+                `nav-link ${isActive ? "nav-link-active" : ""}`
+              }
             >
               {language === 'fr' ? 'Contact' : 'Contact'}
-            </Link>
+            </NavLink>
           </nav>
 
           <div className="flex items-center gap-3">
