@@ -104,15 +104,15 @@ export default function ImpactMetrics() {
     <section className="py-20 bg-gradient-to-br from-highlight/80 via-primary/70 to-primary-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-4xl font-bold text-white mb-4">
             {language === 'fr' ? 'L\'Impact de Notre Communauté' : 'Our Community\'s Impact'}
           </h2>
-          <p className="text-lg text-foreground/70 max-w-2xl mx-auto mb-2">
+          <p className="text-lg text-white max-w-2xl mx-auto mb-2">
             {language === 'fr' 
               ? 'Ensemble, nous créons un changement durable pour les femmes et les enfants'
               : 'Together, we\'re creating lasting change for women and children'}
           </p>
-          <p className="text-sm text-foreground/70 max-w-2xl mx-auto">
+          <p className="text-sm text-white max-w-2xl mx-auto">
             {language === 'fr' 
               ? 'Impact en temps réel basé sur les dons de la communauté'
               : 'Real-time impact based on community donations'}
