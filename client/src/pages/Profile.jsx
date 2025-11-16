@@ -99,14 +99,21 @@ export default function Profile() {
   const backendBadgeIds = new Set(
     (backendBadges || []).map((b) => b.badge_id || b.id)
   );
-  const earnedBadges = Object.values(BADGE_DEFINITIONS).filter((b) =>
-    backendBadgeIds.has(b.id)
-  );
+
+  // Map backend badge ids to local BADGE_DEFINITIONS entries so we inherit
+  // icons and localized names/descriptions.
+  const earnedBadges = (backendBadges || [])
+    .map((b) => {
+      const id = b.badge_id || b.id;
+      return Object.values(BADGE_DEFINITIONS).find((def) => def.id === id) || null;
+    })
+    .filter(Boolean);
 
   const pathStats = {
     WISDOM: realDonations.filter(d => d.path === 'WISDOM').length,
     COURAGE: realDonations.filter(d => d.path === 'COURAGE').length,
-    PROTECTION: realDonations.filter(d => d.path === 'PROTECTION').length
+    PROTECTION: realDonations.filter(d => d.path === 'PROTECTION').length,
+    SERVICE: realDonations.filter(d => d.path === 'SERVICE').length,
   };
 
   return (

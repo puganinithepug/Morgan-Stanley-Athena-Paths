@@ -47,18 +47,6 @@ def load_referrals():
         )
 
 
-def load_badges():
-    """Load badge definitions from CSV.
-
-    Columns: id, name, description, icon, condition
-    (condition is informational and not evaluated here)
-    """
-    try:
-        return pd.read_csv("badges.csv")
-    except FileNotFoundError:
-        return pd.DataFrame(columns=["id", "name", "description", "icon", "condition"])
-
-
 def load_has_badges():
     """Load user-badge assignments from CSV.
 
@@ -290,25 +278,16 @@ def donate(data: dict, response: Response):
     return {"status": "ok", "message": "Donation recorded!"}
 
 
-@app.get("/badges")
-def get_badges():
-    """Return all badge definitions from badges.csv."""
-    df = load_badges()
-    return {"badges": df.to_dict(orient="records")}
-
-
 @app.get("/users/{uuid}/badges")
 def get_user_badges(uuid: str):
     """Return all badges a user has earned, joined with badge metadata."""
-    badges_df = load_badges()
     has_df = load_has_badges()
 
     user_badges = has_df[has_df["uuid"] == uuid]
     if user_badges.empty:
         return {"badges": []}
 
-    merged = user_badges.merge(badges_df, left_on="badge_id", right_on="id", how="left")
-    return {"badges": merged.to_dict(orient="records")}
+    return {"badges": user_badges.to_dict(orient="records")}
 
 
 @app.get("/users/{uuid}/donations")
