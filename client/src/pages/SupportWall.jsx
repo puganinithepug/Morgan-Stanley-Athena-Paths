@@ -8,17 +8,18 @@ import { Textarea } from '../components/ui/Textarea';
 import { Heart, MessageCircle, Send } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
-// Soft “sticky note” gradients for Padlet-style cards
+// Soft "sticky note" gradients for Padlet-style cards
 const CARD_GRADIENTS = [
   'from-rose-50 to-pink-100',
   'from-amber-50 to-yellow-100',
   'from-blue-50 to-sky-100',
   'from-emerald-50 to-green-100',
   'from-violet-50 to-purple-100',
+  'from-teal-50 to-cyan-100',
 ];
 
 // Slight rotation variations so cards feel hand-placed
-const CARD_ROTATIONS = ['-rotate-1', 'rotate-1', 'rotate-2', '-rotate-2', ''];
+const CARD_ROTATIONS = ['-rotate-1', 'rotate-1', 'rotate-2', '-rotate-2', '', 'rotate-1'];
 
 export default function SupportWall() {
   const { language } = useLanguage();

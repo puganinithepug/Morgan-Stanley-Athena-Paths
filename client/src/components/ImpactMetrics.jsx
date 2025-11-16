@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Card, CardContent } from './ui/Card';
 import { Users, Home, Heart, Baby, Phone } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
-import { useLanguage } from '../contexts/LanguageContext';
 
 function AnimatedCounter({ value, duration = 2000 }) {
   const [count, setCount] = useState(0);
@@ -34,7 +33,6 @@ function AnimatedCounter({ value, duration = 2000 }) {
 }
 
 export default function ImpactMetrics() {
-  const { language } = useLanguage();
 
   // Source: http://shieldofathena.com/ and https://www.canadahelps.org/fr/organismesdebienfaisance/le-bouclier-dathena-the-shield-of-athena/impact/view/
   // Verified safe version:
@@ -93,17 +91,13 @@ export default function ImpactMetrics() {
       <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-white mb-4">
-            {language === 'fr' ? 'L\'Impact de Notre Communauté' : 'Our Community\'s Impact'}
+            Our Community's Impact
           </h2>
           <p className="text-lg text-white max-w-2xl mx-auto mb-2">
-            {language === 'fr' 
-              ? 'Ensemble, nous créons un changement durable pour les femmes et les enfants'
-              : 'Together, we\'re creating lasting change for women and children'}
+            Together, we're creating lasting change for women and children
           </p>
           <p className="text-sm text-white max-w-2xl mx-auto">
-            {language === 'fr' 
-              ? 'Impact en temps réel basé sur les dons de la communauté'
-              : 'Real-time impact based on community donations'}
+            Real-time impact based on community donations
           </p>
           <p className="text-xs text-white/80 max-w-2xl mx-auto mt-2">
             Registered charity number: 138823471RR0001

@@ -485,6 +485,13 @@ const DEFAULT_MESSAGES = [
     message: 'Your resilience is inspiring. Keep fighting for the life you deserve.',
     language: 'en',
     created_date: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString()
+  },
+  {
+    id: 'default-msg-6',
+    display_name: 'Strength Seeker',
+    message: 'Every step you take toward safety is a victory. You are worthy of peace and happiness.',
+    language: 'en',
+    created_date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
   }
 ];
 

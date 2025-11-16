@@ -1,5 +1,4 @@
 import React from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 import { 
   Shield, 
@@ -22,7 +21,6 @@ import { Card, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 
 export default function OurServices() {
-  const { language } = useLanguage();
 
   const stats = [
     {
@@ -348,7 +346,7 @@ export default function OurServices() {
                 size="lg"
                 className="bg-highlight text-foreground hover:bg-highlight/95 flex items-center gap-2 shadow-primary-dark-glow hover:shadow-primary-dark-glow border-2 border-primary-dark hover:scale-[1.02] transition-all"
               >
-                {language === 'fr' ? 'Trouvez Votre Parcours' : 'Find Your Path'}
+                Find Your Path
                 <ArrowRight className="w-5 h-5" />
               </Button>
             </Link>
