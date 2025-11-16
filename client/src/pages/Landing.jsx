@@ -208,14 +208,10 @@ function VideoEmbed({ videoId }) {
 }
 /* --------------------------------------------------------------- */
 
-export default function Home() {
-  const { language } = useLanguage();
+// export default function Home() {
+//   const { language } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* -------------------- INSERTED INTRO VIDEO -------------------- */}
-      <VideoEmbed videoId="WGND5Fvt2NA" />
-
     <div className="min-h-screen bg-background text-foreground">
       <FirstTimeVisitorModal
         isOpen={showWelcomeModal}
@@ -232,6 +228,7 @@ export default function Home() {
       />
 
       <PathTransitionSection />
+      <VideoEmbed videoId="WGND5Fvt2NA" />
 
       <section id="ways-to-help" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
