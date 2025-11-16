@@ -595,7 +595,20 @@ export default function Profile() {
                       />
                     </div>
 
-                    {/* Name */}
+                    {/* Tooltip */}
+                    <div
+                      className="
+                        absolute bottom-[110%] left-1/2 -translate-x-1/2
+                        px-3 py-1 rounded-md text-xs
+                        bg-black text-white shadow-lg whitespace-nowrap
+                        opacity-0 pointer-events-none
+                        group-hover:opacity-100 group-hover:pointer-events-auto
+                        transition-opacity
+                      "
+                    >
+                      {badge.description[language]}
+                    </div>
+                    {/* Badge label */}
                     <p
                       className="
                         text-xs text-center leading-tight
