@@ -344,8 +344,10 @@ function VideoEmbed({ videoId }) {
       />
 
       <PathTransitionSection onAboutClick={() => setShowAboutModal(true)} />
-      {/* UPDATED VIDEO */}
-      <VideoEmbed videoId="jCCh1He0p24" />
+      {/* UPDATED VIDEO - hidden on mobile */}
+      <div className="hidden md:block">
+        <VideoEmbed videoId="jCCh1He0p24" />
+      </div>
 
       <MotionSection id="ways-to-help" className="py-20 bg-gray-50" variants={fromLeft}>
         <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">

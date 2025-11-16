@@ -57,7 +57,7 @@ export default function PathTransitionSection({ onAboutClick }) {
     offset: ["start start", "end start"],
   });
   const handlePathClick = (path) => {
-    navigate(`/path-results?path=${path}`);
+      navigate(`/path-results?path=${path}`);
   };
 
   // Triangles fade + move down as you scroll past hero
@@ -86,7 +86,7 @@ export default function PathTransitionSection({ onAboutClick }) {
       ref={sectionRef}
       className="relative min-h-[70vh] flex flex-col items-center bg-white overflow-hidden pt-24 pb-16"
     >
-      <div className="absolute top-6 left-6 z-20 max-w-md w-[min(100%,24rem)]">
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 md:left-4 md:transform-none z-20 max-w-xs w-[min(90%,18rem)] md:max-w-md md:w-[min(100%,24rem)]">
         <EventBanner />
       </div>
 
@@ -122,16 +122,79 @@ export default function PathTransitionSection({ onAboutClick }) {
         </div>
       </div>
 
-      {/* TRIANGLES (first state) */}
+      {/* MINIMIZED TRIANGLES (mobile only) */}
+      <div className="md:hidden relative w-full px-4 mt-8 -mb-8">
+        <div className="flex items-center justify-center -space-x-10">
+          {/* Wisdom - Small Triangle */}
+          <div
+            onClick={() => handlePathClick("WISDOM")}
+            className="relative w-40 h-40 cursor-pointer transition-transform duration-300 hover:scale-110 active:scale-95"
+            style={{
+              clipPath: "polygon(0% 30%, 21% 0, 100% 100%, 4% 75%)",
+              backgroundImage: `url(${wisdomImg})`,
+              backgroundSize: "cover",
+              backgroundPosition: "40% center",
+            }}
+          >
+            <div className="absolute inset-0 bg-highlight/20" />
+            <div className="absolute inset-0 flex items-center justify-start ml-6">
+              <Phone className="w-6 h-6 text-white drop-shadow-md" />
+            </div>
+          </div>
+
+          {/* Courage - Small Triangle */}
+          <div
+            onClick={() => handlePathClick("COURAGE")}
+            className="relative w-40 h-40 cursor-pointer transition-transform duration-300 hover:scale-110 active:scale-95 z-10"
+            style={{
+              clipPath: "polygon(16% 0%, 84% 0%, 100% 24%, 50% 100%, 2% 24%)",
+              backgroundImage: `url(${courageImg})`,
+              backgroundSize: "cover",
+              backgroundPosition: "60% center",
+            }}
+          >
+            <div className="absolute inset-0 bg-muted/20" />
+            <div className="absolute inset-0 flex items-start justify-center mt-4">
+              <Heart className="w-6 h-6 text-white drop-shadow-md" />
+            </div>
+          </div>
+
+          {/* Protection - Small Triangle */}
+          <div
+            onClick={() => handlePathClick("PROTECTION")}
+            className="relative w-40 h-40 cursor-pointer transition-transform duration-300 hover:scale-110 active:scale-95"
+            style={{
+              clipPath: "polygon(100% 30%, 79% 0, 0% 100%, 96% 75%)",
+              backgroundImage: `url(${protectionImg})`,
+              backgroundSize: "cover",
+              backgroundPosition: "15% center",
+            }}
+          >
+            <div className="absolute inset-0 bg-secondary/20" />
+            <div className="absolute inset-0 flex items-center justify-end mr-7">
+              <Shield className="w-6 h-6 text-white drop-shadow-md" />
+            </div>
+          </div>
+        </div>
+        
+        {/* Path Labels */}
+        <div className="flex items-center justify-center gap-4 mt-4">
+          <span className="text-xs font-medium text-highlight">Wisdom</span>
+          <span className="text-xs font-medium text-muted">Courage</span>
+          <span className="text-xs font-medium text-secondary">Protection</span>
+        </div>
+      </div>
+
+      {/* TRIANGLES (desktop only) */}
       <motion.div
         style={{ opacity: trianglesOpacity, y: trianglesY }}
         className="
+          hidden md:flex
           relative w-full -mt-56
-          flex items-end justify-center -gap-[1vw]
+          items-end justify-center -gap-[1vw]
         "
       >
-        {/*TODO: 
-        - Support mobile view (currently not implemented): Be warned, people have attempted this before you. People who lost their sanity counter: 2 people */}
+        {/* Mobile view implemented with cards above - triangles are desktop-only now */}
         {/* LEFT – Wisdom */}
         <div
             onClick={() => handlePathClick("WISDOM")}
@@ -230,10 +293,10 @@ export default function PathTransitionSection({ onAboutClick }) {
         </div>
       </motion.div>
 
-        {/* STRIPES + HOVER CARDS */}
+        {/* STRIPES + HOVER CARDS (desktop only) */}
         <motion.div
         style={{ opacity: stripesOpacity, x: stripesX }}
-        className="fixed left-6 top-1/3 z-10"
+        className="hidden md:block fixed left-6 top-1/3 z-10"
         >
         <div className="flex flex-col gap-3">
             {PATHS.map((path, index) => (
