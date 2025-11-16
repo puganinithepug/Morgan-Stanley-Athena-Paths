@@ -221,7 +221,7 @@ export default function PathTransitionSection() {
             <div
                 key={path.id}
                 className="group relative cursor-pointer"
-                onClick={() => handlePathClick(path.id)}     // ⬅️ moved here
+                onClick={() => handlePathClick(path.id)}   
             >
                 {/* The stripe itself */}
                 <motion.div
