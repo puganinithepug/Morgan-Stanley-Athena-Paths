@@ -14,22 +14,21 @@ import PathGoals from "../components/PathGoals";
 import DonationSuccessModal from "../components/DonationSuccessModal";
 import CommunityGoals from "../components/CommunityGoals";
 import FirstTimeVisitorModal from "../components/FirstTimeVisitorModal";
-import { checkAndAwardBadges } from "../components/BadgeChecker";
 import PathTransitionSection from "../components/PathTransitionSection";
 
 
 export default function Landing() {
   const { t, language } = useLanguage();
-  const { user, login } = useAuth();
+  const { user } = useAuth();
   const [donationAmount, setDonationAmount] = useState("");
   const [selectedPath, setSelectedPath] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [lastDonation, setLastDonation] = useState(null);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [pendingDonation, setPendingDonation] = useState(null); // { item, customAmount }
 
   const impactItems = dataService.getImpactItems();
-  const donations = dataService.getDonations();
 
   const [hasVisited, setHasVisited] = useState(false);
   const [referralCode, setReferralCode] = useState(null);
@@ -49,9 +48,11 @@ export default function Landing() {
     }
   }, [user, hasVisited]);
 
-  const handleDonate = async (item, customAmount = null) => {
-    if (!user) {
-      login({});
+  const handleDonate = async (item, customAmount = null, triggeredAfterLogin = false) => {
+    if (!user && !triggeredAfterLogin) {
+      // Remember what the user wanted to donate, then open login popup
+      setPendingDonation({ item, customAmount });
+      window.dispatchEvent(new CustomEvent("open-login-modal"));
       return;
     }
 
@@ -62,52 +63,28 @@ export default function Landing() {
     else if (item.path === "COURAGE") points = Math.floor(amount * 1.2);
 
     try {
-      dataService.createDonation({
-        user_id: user.id,
-        user_name: user.full_name || "Anonymous",
-        path: item.path,
-        amount: amount,
-        points_awarded: points,
-        impact_item_id: item.id,
-        impact_item_title: language === "fr" ? item.title_fr : item.title_en,
-      });
-
-      const newPoints = (user.total_points || 0) + points;
-      dataService.updateUser(user.id, {
-        total_points: newPoints,
-        primary_path: user.primary_path || item.path,
-      });
-
-      const userDonationsBefore = donations.filter(
-        (d) => d.user_id === user.id
-      );
-      if (referralCode && userDonationsBefore.length === 0) {
-        const referrer = dataService
-          .getAllUsers()
-          .find((u) => u.referral_code === referralCode);
-        if (referrer && referrer.id !== user.id) {
-          const referrerBonus = 10;
-          const referrerUpdated = {
-            ...referrer,
-            total_points: (referrer.total_points || 0) + referrerBonus,
-          };
-          dataService.updateUser(referrer.id, referrerUpdated);
-
-          dataService.createReferral({
-            referrer_id: referrer.id,
-            referred_id: user.id,
+      // Record donation in backend
+      try {
+        await fetch("http://localhost:8000/donate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            amount,
+            path: item.path,
+            uuid: user.id,
+            impact: points,
             referral_code: referralCode,
-            has_donated: true,
-          });
-
-          setReferralCode(null);
-        }
+          }),
+        });
+      } catch (err) {
+        console.error("Backend donation error:", err);
       }
 
-      const updatedUser = dataService.getCurrentUser();
-      if (updatedUser) {
-        checkAndAwardBadges(updatedUser);
-      }
+      // Donation is stored in backend only now; UI stats and badges
+      // will be driven from backend in future steps.
 
       setLastDonation({
         amount,
@@ -125,20 +102,45 @@ export default function Landing() {
     }
   };
 
-  const handleVolunteer = (hours = null) => {
+  const handleVolunteer = async (hours = null) => {
     if (!user) {
-      login({});
+      window.dispatchEvent(new CustomEvent("open-login-modal"));
       return;
     }
     
     if (hours) {
-      // Track volunteer hours
-      console.log(`Volunteering for ${hours} hours`);
+      // Record volunteer hours in backend
+      try {
+        await fetch("http://localhost:8000/volunteer", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ uuid: user.id, hours }),
+        });
+      } catch (err) {
+        console.error("Failed to record volunteer hours", err);
+      }
     }
     
     // Navigate to volunteer schedule page
     window.location.href = "/volunteer-schedule";
   };
+
+  // When login succeeds and there is a pending donation, resume it
+  useEffect(() => {
+    const handler = () => {
+      if (pendingDonation) {
+        const { item, customAmount } = pendingDonation;
+        setPendingDonation(null);
+        handleDonate(item, customAmount, true);
+      }
+    };
+
+    window.addEventListener("login-success", handler);
+    return () => window.removeEventListener("login-success", handler);
+  }, [pendingDonation]);
 
   const pathConfig = {
     WISDOM: {
@@ -186,6 +188,28 @@ export default function Landing() {
     },
   };
 
+/* -------------------- VIDEO EMBED COMPONENT -------------------- */
+function VideoEmbed({ videoId }) {
+  return (
+
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+        <iframe
+          src={`https://www.youtube.com/embed/${videoId}?autoplay=0`}
+          className="absolute top-0 left-0 w-full h-full rounded-xl shadow-xl"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
+    </div>
+  );
+}
+/* --------------------------------------------------------------- */
+
+// export default function Home() {
+//   const { language } = useLanguage();
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <FirstTimeVisitorModal
@@ -203,6 +227,7 @@ export default function Landing() {
       />
 
       <PathTransitionSection />
+      <VideoEmbed videoId="WGND5Fvt2NA" />
 
       <section id="ways-to-help" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -416,125 +441,6 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="py-20 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="inline-flex p-3 rounded-full bg-primary/10 mb-4">
-                <Shield className="w-8 h-8 text-primary" />
-              </div>
-              <h2 className="text-4xl font-bold text-foreground mb-6">
-                {language === "fr"
-                  ? "À propos de Shield of Athena"
-                  : "About Shield of Athena"}
-              </h2>
-              <p className="text-lg text-foreground/70 mb-6 leading-relaxed">
-                {language === "fr"
-                  ? "Depuis plus de 30 ans, Shield of Athena offre un refuge sûr et des services complets aux femmes et aux enfants fuyant la violence familiale à Montréal."
-                  : "For over 30 years, Shield of Athena has provided safe shelter and comprehensive services to women and children fleeing family violence in Montreal."}
-              </p>
-
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-4 border border-primary/30">
-                  <div className="text-3xl font-bold text-primary mb-1">
-                    2,000+
-                  </div>
-                  <div className="text-sm text-foreground/70">
-                    {language === "fr"
-                      ? "Femmes et enfants aidés/an"
-                      : "Women & children helped/year"}
-                  </div>
-                </div>
-                <div className="bg-gradient-to-br from-muted/10 to-muted/5 rounded-lg p-4 border border-muted/40">
-                  <div className="text-3xl font-bold text-muted mb-1">24/7</div>
-                  <div className="text-sm text-foreground/70">
-                    {language === "fr" ? "Ligne de crise" : "Crisis line"}
-                  </div>
-                </div>
-                <div className="bg-gradient-to-br from-highlight/20 to-highlight/10 rounded-lg p-4 border border-highlight/40">
-                  <div className="text-3xl font-bold text-highlight mb-1">
-                    30+
-                  </div>
-                  <div className="text-sm text-foreground/70">
-                    {language === "fr"
-                      ? "Années de service"
-                      : "Years of service"}
-                  </div>
-                </div>
-                <div className="bg-gradient-to-br from-accent/20 to-accent/10 rounded-lg p-4 border border-accent/50">
-                  <div className="text-3xl font-bold text-secondary mb-1">
-                    100%
-                  </div>
-                  <div className="text-sm text-foreground/70">
-                    {language === "fr" ? "Services gratuits" : "Free services"}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-4">
-                <Link to="/services">
-                  <Button
-                    size="lg"
-                    className="shadow-md hover:shadow-[0_0_20px_rgba(111,106,168,0.6)] hover:scale-[1.02] transition-all duration-200"
-                  >
-                    {language === "fr"
-                      ? "Découvrir Nos Services"
-                      : "Discover Our Services"}
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Button>
-                </Link>
-                <Link to="/find-your-path">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="border-primary/40 text-primary hover:border-primary hover:text-primary-dark"
-                  >
-                    {language === "fr" ? "Commencer à Aider" : "Start Helping"}
-                    <Heart className="ml-2 w-5 h-5" />
-                  </Button>
-                </Link>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative"
-            >
-              <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
-                <img
-                  src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&h=600&fit=crop"
-                  alt={
-                    language === "fr" ? "Shield of Athena" : "Shield of Athena"
-                  }
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/60 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <p className="text-lg font-semibold mb-2">
-                    {language === "fr"
-                      ? "Un refuge sûr pour chaque femme et enfant"
-                      : "A safe haven for every woman and child"}
-                  </p>
-                  <p className="text-sm opacity-90">
-                    {language === "fr"
-                      ? "Ensemble, nous créons un avenir sans violence"
-                      : "Together, we create a future free from violence"}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
       <ImpactMetrics />
 
       <PathGoals />
@@ -669,3 +575,4 @@ export default function Landing() {
     </div>
   );
 }
+
