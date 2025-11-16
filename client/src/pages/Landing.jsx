@@ -6,7 +6,7 @@ import dataService from "../services/dataService";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Card, CardContent } from "../components/ui/Card";
-import { Heart, Shield, Phone, Home, Quote, Users, HandHeart, ArrowRight } from "lucide-react";
+import { Heart, Shield, Phone, Home, Quote, Users, HandHeart, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import ImpactMetrics from "../components/ImpactMetrics";
 import ImpactStories from "../components/ImpactStories";
@@ -24,6 +24,243 @@ import protectionImg from "../assets/hero_protection.jpg";
 import courageImg from "../assets/hero_courage.jpeg";
 import aboutImg from "../assets/about_image.jpeg"
 
+const testimonials = [
+  {
+    quote: "Through our extensive network, 1,229 clients were helped in a single year at our Montreal and Laval centers. In addition, 100 women and children found refuge at Athena's House emergency shelter.",
+    author: "Shield of Athena Team",
+    impact: "1,229 clients helped in a single year",
+    number: "1,229"
+  },
+  {
+    quote: "Our multilingual services are offered by professional social workers, assisted by trained cultural intermediaries at our offices in Laval and Montréal. Every donation directly supports these critical services.",
+    author: "Program Director",
+    impact: "100 women & children at Athena's House",
+    number: "100"
+  },
+  {
+    quote: "For 34 years (founded in 1991), we have been helping victims of conjugal and family violence. Our community outreach reaches tens of thousands annually through education, awareness, information sessions, and media engagement.",
+    author: "Community Outreach Coordinator",
+    impact: "34 years of service (founded 1991)",
+    number: "34"
+  },
+  {
+    quote: "Our 24/7 crisis line is a lifeline for women in immediate danger. Last year, we answered over 3,000 crisis calls, providing immediate support, safety planning, and connecting callers with emergency resources when needed.",
+    author: "Crisis Line Coordinator",
+    impact: "3,000+ crisis calls answered annually",
+    number: "3,000+"
+  },
+  {
+    quote: "The children's support programs help young ones process trauma and rebuild their sense of safety. We provide age-appropriate therapy, art programs, and educational support to help children heal and thrive after experiencing violence.",
+    author: "Children's Services Manager",
+    impact: "Specialized programs for children",
+    number: "100%"
+  },
+  {
+    quote: "Legal advocacy is crucial for survivors seeking protection orders and navigating the justice system. Our team provides accompaniment, interpretation services, and helps women understand their rights in multiple languages.",
+    author: "Legal Advocacy Coordinator",
+    impact: "Comprehensive legal support services",
+    number: "10+"
+  }
+];
+
+function ImpactSlider({ currentSlide, setCurrentSlide }) {
+  const sliderRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [cardsToShow, setCardsToShow] = useState(3);
+  const totalCards = testimonials.length;
+
+  // Determine how many cards to show based on screen size
+  useEffect(() => {
+    const updateCardsToShow = () => {
+      if (window.innerWidth < 768) {
+        setCardsToShow(1);
+      } else if (window.innerWidth < 1024) {
+        setCardsToShow(2);
+      } else {
+        setCardsToShow(3);
+      }
+    };
+
+    updateCardsToShow();
+    window.addEventListener('resize', updateCardsToShow);
+    return () => window.removeEventListener('resize', updateCardsToShow);
+  }, []);
+
+  // Reset slide position if out of bounds when cardsToShow changes
+  useEffect(() => {
+    const maxSlide = Math.max(0, totalCards - cardsToShow);
+    if (currentSlide > maxSlide) {
+      setCurrentSlide(maxSlide);
+    }
+  }, [cardsToShow, totalCards, currentSlide, setCurrentSlide]);
+
+  // Auto-play when section is in view
+  useEffect(() => {
+    const currentRef = sliderRef.current;
+    if (!currentRef) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsPaused(false);
+          } else {
+            setIsPaused(true);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(currentRef);
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
+
+  // Auto-advance slider
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => {
+        const next = prev + 1;
+        // Don't go beyond the last card that would show all cardsToShow
+        const maxSlide = Math.max(0, totalCards - cardsToShow);
+        return next > maxSlide ? 0 : next;
+      });
+    }, 4000); // Change card every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [isPaused, totalCards, cardsToShow, setCurrentSlide]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => {
+      const next = prev + 1;
+      const maxSlide = Math.max(0, totalCards - cardsToShow);
+      return next > maxSlide ? 0 : next;
+    });
+    setIsPaused(true); // Pause when user manually navigates
+    setTimeout(() => setIsPaused(false), 10000); // Resume after 10 seconds
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => {
+      const maxSlide = Math.max(0, totalCards - cardsToShow);
+      const next = prev - 1;
+      return next < 0 ? maxSlide : next;
+    });
+    setIsPaused(true); // Pause when user manually navigates
+    setTimeout(() => setIsPaused(false), 10000); // Resume after 10 seconds
+  };
+
+  const goToSlide = (index) => {
+    const maxSlide = Math.max(0, totalCards - cardsToShow);
+    setCurrentSlide(Math.min(index, maxSlide));
+    setIsPaused(true); // Pause when user manually navigates
+    setTimeout(() => setIsPaused(false), 10000); // Resume after 10 seconds
+  };
+
+  // Calculate transform: each card takes 1/cardsToShow of the container width
+  // But we add some spacing, so cards are slightly wider
+  const cardWidth = 100 / cardsToShow; // Percentage width per card
+  const translateX = -(currentSlide * cardWidth);
+
+  return (
+    <div 
+      ref={sliderRef}
+      className="relative mb-12"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <div className="overflow-hidden px-4 sm:px-8 lg:px-12">
+        <div
+          className="flex transition-transform duration-700 ease-in-out"
+          style={{
+            transform: `translateX(${translateX}%)`
+          }}
+        >
+          {testimonials.map((testimonial, idx) => (
+            <div
+              key={idx}
+              className="flex-shrink-0"
+              style={{ 
+                width: `${100 / cardsToShow}%`,
+                paddingLeft: cardsToShow === 3 ? '0.5rem' : cardsToShow === 2 ? '0.75rem' : '0.25rem',
+                paddingRight: cardsToShow === 3 ? '0.5rem' : cardsToShow === 2 ? '0.75rem' : '0.25rem'
+              }}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false }}
+                transition={{ duration: 0.6 }}
+                className="h-full"
+              >
+                <Card className="bg-white/10 backdrop-blur-lg border-white/20 h-full">
+                  <CardContent className="p-6 sm:p-8 flex flex-col h-full">
+                    <Quote className="w-8 h-8 text-highlight/60 mb-4 mt-4" />
+                    <blockquote className="text-lg font-light leading-relaxed mb-6 italic flex-grow">
+                      "{testimonial.quote}"
+                    </blockquote>
+                    <div className="border-t border-white/20 pt-4">
+                      <p className="text-highlight font-semibold mb-2">
+                        {testimonial.author}
+                      </p>
+                      <div className="bg-white/20 px-4 py-2 rounded-full inline-block">
+                        <p className="text-sm font-semibold">
+                          {testimonial.impact}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Navigation Buttons */}
+      <div className="flex justify-center items-center gap-4 mt-8">
+        <button
+          onClick={prevSlide}
+          className="p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 transition-all"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft className="w-6 h-6 text-highlight" />
+        </button>
+        
+        {/* Slide Indicators */}
+        <div className="flex gap-2">
+          {testimonials.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => goToSlide(idx)}
+              className={`h-2 rounded-full transition-all ${
+                idx === currentSlide
+                  ? "w-8 bg-highlight"
+                  : "w-2 bg-white/30 hover:bg-white/50"
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+
+        <button
+          onClick={nextSlide}
+          className="p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 transition-all"
+          aria-label="Next slide"
+        >
+          <ChevronRight className="w-6 h-6 text-highlight" />
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function Landing() {
   const { t } = useLanguage();
@@ -41,6 +278,7 @@ export default function Landing() {
 
   const [hasVisited, setHasVisited] = useState(false);
   const [referralCode, setReferralCode] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
 
   const fadeUp = {
@@ -790,73 +1028,7 @@ function VideoEmbed({ videoId }) {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            {[
-              {
-                quote: "Through our extensive network, 1,229 clients were helped in a single year at our Montreal and Laval centers. In addition, 100 women and children found refuge at Athena's House emergency shelter.",
-                author: "Shield of Athena Team",
-                impact: "1,229 clients helped in a single year",
-                number: "1,229"
-              },
-              {
-                quote: "Our multilingual services are offered by professional social workers, assisted by trained cultural intermediaries at our offices in Laval and Montréal. Every donation directly supports these critical services.",
-                author: "Program Director",
-                impact: "100 women & children at Athena's House",
-                number: "100"
-              },
-              {
-                quote: "For 34 years (founded in 1991), we have been helping victims of conjugal and family violence. Our community outreach reaches tens of thousands annually through education, awareness, information sessions, and media engagement.",
-                author: "Community Outreach Coordinator",
-                impact: "34 years of service (founded 1991)",
-                number: "34"
-              },
-              {
-                quote: "Our 24/7 crisis line is a lifeline for women in immediate danger. Last year, we answered over 3,000 crisis calls, providing immediate support, safety planning, and connecting callers with emergency resources when needed.",
-                author: "Crisis Line Coordinator",
-                impact: "3,000+ crisis calls answered annually",
-                number: "3,000+"
-              },
-              {
-                quote: "The children's support programs help young ones process trauma and rebuild their sense of safety. We provide age-appropriate therapy, art programs, and educational support to help children heal and thrive after experiencing violence.",
-                author: "Children's Services Manager",
-                impact: "Specialized programs for children",
-                number: "100%"
-              },
-              {
-                quote: "Legal advocacy is crucial for survivors seeking protection orders and navigating the justice system. Our team provides accompaniment, interpretation services, and helps women understand their rights in multiple languages.",
-                author: "Legal Advocacy Coordinator",
-                impact: "Comprehensive legal support services",
-                number: "10+"
-              }
-            ].map((testimonial, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false }}
-                transition={{ duration: 0.6, delay: idx * 0.15 }}
-              >
-                <Card className="bg-white/10 backdrop-blur-lg border-white/20 h-full">
-                  <CardContent className="p-6 flex flex-col h-full">
-                    <Quote className="w-8 h-8 text-highlight/60 mb-4 mt-4" />
-                    <blockquote className="text-lg font-light leading-relaxed mb-6 italic flex-grow">
-                      "{testimonial.quote}"
-                    </blockquote>
-                    <div className="border-t border-white/20 pt-4">
-                      <p className="text-highlight font-semibold mb-2">
-                        {testimonial.author}
-                      </p>
-                      <div className="bg-white/20 px-4 py-2 rounded-full inline-block">
-                        <p className="text-sm font-semibold">
-                          {testimonial.impact}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+          <ImpactSlider currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} />
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
