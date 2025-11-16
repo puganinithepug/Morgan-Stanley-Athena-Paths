@@ -20,7 +20,8 @@ export default function AreYouAVictim() {
 
   // Quick Exit function
   const quickExit = () => {
-    window.location.href = 'https://google.com/';
+    window.open('https://www.google.com', '_blank', 'noopener,noreferrer');
+    window.location.replace('https://www.google.com');
   };
 
   // ESC keyboard shortcut
