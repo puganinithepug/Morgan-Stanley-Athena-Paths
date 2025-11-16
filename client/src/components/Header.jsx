@@ -172,7 +172,7 @@ export default function Header() {
 
             {/* Community dropdown */}
             <div className="relative group">
-              <button className="nav-link inline-flex items-center gap-1 cursor-pointer -translate-y-[2.3px]">
+              <button className="nav-link inline-flex items-center gap-1 cursor-pointer -translate-y-[4.5%]">
                 <span>Community</span>
                 <ChevronDown className="w-4 h-4" />
               </button>
