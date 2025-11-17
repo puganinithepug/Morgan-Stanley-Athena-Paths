@@ -5,13 +5,12 @@ import hashlib, base64, re, time, secrets, bcrypt
 from typing import Optional
 import pandas as pd
 import datetime
+import os
 
 salt = bcrypt.gensalt()
 
-origins = [
-    "http://localhost:3000",  # your React dev server
-    "http://127.0.0.1:3000",  # sometimes React uses 127.0.0.1
-]
+cors_origins_env = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000,http://localhost:80,http://localhost")
+origins = [origin.strip() for origin in cors_origins_env.split(",")]
 
 app = FastAPI()
 app.add_middleware(

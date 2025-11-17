@@ -6,6 +6,7 @@ import { Input } from "./ui/Input";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import { X } from "lucide-react";
 import dataService from "../services/dataService";
+import { API_URL } from "../config";
 
 const Login = ({ open, onClose, onSuccess }) => {
   const [mode, setMode] = useState("login"); // 'login' | 'signup'
@@ -55,8 +56,8 @@ const Login = ({ open, onClose, onSuccess }) => {
     try {
       const isSignup = mode === "signup";
       const endpoint = isSignup
-        ? "http://localhost:8000/signup"
-        : "http://localhost:8000/login";
+        ? `${API_URL}/signup`
+        : `${API_URL}/login`;
 
       const body = isSignup
         ? {

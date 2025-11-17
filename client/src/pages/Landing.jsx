@@ -18,6 +18,7 @@ import PathTransitionSection from "../components/PathTransitionSection";
 import AboutModal from "../components/AboutModal";
 import MotionSection from "../components/ui/MotionSection";
 import { BadgeMarqueeSection } from "../components/BadgeMarquee";
+import { API_URL } from "../config";
 
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";
@@ -339,7 +340,7 @@ export default function Landing() {
     try {
       try {
         if (item.path !== "SERVICE"){
-          await fetch("http://localhost:8000/donate", {
+          await fetch(`${API_URL}/donate`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

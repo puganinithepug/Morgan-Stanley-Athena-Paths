@@ -1,4 +1,5 @@
 import dataService from '../services/dataService';
+import { API_URL } from '../config';
 
 import firstStep from '../assets/badges/first_donation.png';
 import wisdomSupporter from '../assets/badges/wisdom_supporter.png';
@@ -122,7 +123,6 @@ export const BADGE_DEFINITIONS = {
   }
 };
 
-
 async function fetchJson(url) {
   const res = await fetch(url, { credentials: 'include' });
   if (!res.ok) throw new Error(`Request failed: ${res.status}`);
@@ -165,13 +165,13 @@ export async function checkAndAwardBadges(user) {
 
   // Online mode: Fetch current donations, referrals, and existing badges from backend
   const [donationsRes, referralsRes, userBadgesRes] = await Promise.all([
-    fetchJson(`http://localhost:8000/users/${user.id}/donations`),
-    fetchJson(`http://localhost:8000/users/${user.id}/referrals`),
-    fetchJson(`http://localhost:8000/users/${user.id}/badges`),
+    fetchJson(`${API_URL}/users/${user.id}/donations`),
+    fetchJson(`${API_URL}/users/${user.id}/referrals`),
+    fetchJson(`${API_URL}/users/${user.id}/badges`),
   ]);
 
   // Fetch user team:
-  const teamRes = await fetchJson(`http://localhost:8000/teams/${user.team_id}`);
+  const teamRes = await fetchJson(`${API_URL}/teams/${user.team_id}`);
   const teams = teamRes.team ? teamRes.team : {};
   
 
@@ -195,7 +195,7 @@ export async function checkAndAwardBadges(user) {
       if (meetsCondition && !hasBadge) {
         // Assign badge in backend
         try {
-          await fetch(`http://localhost:8000/users/${user.id}/badges`, {
+          await fetch(`${API_URL}/users/${user.id}/badges`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

@@ -11,6 +11,7 @@ import { PATH_STORIES, PATH_LEVEL_LABELS } from '../contexts/PathStories';
 import { computePathStats } from '../components/PathProgress';
 import dataService from '../services/dataService';
 import { Button } from '../components/ui/Button';
+import { API_URL } from '../config';
 
 export default function Profile() {
   const { user } = useAuth();
@@ -52,7 +53,7 @@ export default function Profile() {
           setTimeout(() => setShowBadgeNotification(false), 5000);
         }
 
-        const res = await fetch(`http://localhost:8000/users/${user.id}/badges`, {
+        const res = await fetch(`${API_URL}/users/${user.id}/badges`, {
           credentials: 'include',
         });
         if (!res.ok) return;
@@ -97,7 +98,7 @@ export default function Profile() {
           return;
         }
 
-        const res = await fetch(`http://localhost:8000/users/${user.id}/donations`, {
+        const res = await fetch(`${API_URL}/users/${user.id}/donations`, {
           credentials: 'include',
         });
         if (!res.ok) return;

@@ -9,6 +9,7 @@ import { Phone, Heart, Home, ArrowRight, HandHeart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import DonationSuccessModal from '../components/DonationSuccessModal';
 import CommunityGoals from '../components/CommunityGoals';
+import { API_URL } from '../config';
 
 const PATH_CONFIG = {
   WISDOM: {
@@ -71,7 +72,7 @@ export default function PathResults() {
 
     try {
       try {
-        await fetch("http://localhost:8000/donate", {
+        await fetch(`${API_URL}/donate`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

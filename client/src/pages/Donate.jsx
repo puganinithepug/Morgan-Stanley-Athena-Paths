@@ -8,6 +8,7 @@ import { Card, CardContent } from "../components/ui/Card";
 import { Heart, Shield, Phone, HandHeart, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import DonationSuccessModal from "../components/DonationSuccessModal";
+import { API_URL } from "../config";
 
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";
@@ -49,7 +50,7 @@ export default function Donate() {
 
     try {
       try {
-        await fetch("http://localhost:8000/donate", {
+        await fetch(`${API_URL}/donate`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -91,7 +92,7 @@ export default function Donate() {
     
     if (hours) {
       try {
-        await fetch("http://localhost:8000/volunteer", {
+        await fetch(`${API_URL}/volunteer`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -1,0 +1,17 @@
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.git/
+.gitignore
+*.log
+npm-debug.log*
+.DS_Store
+client/node_modules/
+backend/venv/
+backend/__pycache__/
+

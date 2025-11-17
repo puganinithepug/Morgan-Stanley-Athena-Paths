@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import dataService from '../services/dataService';
+import { API_URL } from '../config';
 
 const AuthContext = createContext();
 
@@ -34,7 +35,7 @@ function adaptBackendUserToFrontend(backendUser) {
 
 async function fetchCurrentUser() {
   try {
-    const res = await fetch('http://localhost:8000/me', {
+    const res = await fetch(`${API_URL}/me`, {
       credentials: 'include',
     });
     const data = await res.json();
@@ -122,7 +123,7 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     // Optionally call backend /logout to clear cookie
-    fetch('http://localhost:8000/logout', {
+    fetch(`${API_URL}/logout`, {
       method: 'POST',
       credentials: 'include',
     }).catch(() => {});
