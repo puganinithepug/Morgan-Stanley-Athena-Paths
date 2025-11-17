@@ -260,7 +260,7 @@ def donate(data: dict, response: Response):
         "path": path,
         "impact_points": impact,
         "hours": 0,
-        "created_at": datetime.datetime.now(datetime.UTC).isoformat(),
+        "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     }
     donations_df = pd.concat(
         [donations_df, pd.DataFrame([new_donation])], ignore_index=True
