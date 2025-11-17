@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import dataService from '../services/dataService';
 import { Card, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { Input } from '../components/ui/Input';
 import { Phone, Heart, Home, ArrowRight, HandHeart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import DonationSuccessModal from '../components/DonationSuccessModal';
@@ -58,6 +59,7 @@ export default function PathResults() {
   const [lastDonation, setLastDonation] = useState(null);
   const [pendingDonation, setPendingDonation] = useState(null); // { item, customAmount }
   const [donations, setDonations] = useState([]);
+  const [customAmount, setCustomAmount] = useState('');
 
   const config = PATH_CONFIG[path] || PATH_CONFIG.WISDOM;
   const Icon = config.icon;
@@ -321,11 +323,11 @@ export default function PathResults() {
                 transition={{ delay: idx * 0.1 }}
               >
                 <Card className="h-full hover:shadow-lg hover:-translate-y-1 transition-all">
-                  <CardContent className="pt-7 pb-6 px-6">
+                  <CardContent className="pt-7 pb-6 px-6 h-full flex flex-col">
                     <h3 className="font-bold text-lg text-foreground mb-2">
                       {language === 'fr' ? item.title_fr : item.title_en}
                     </h3>
-                    <p className="text-sm text-foreground/70 mb-4 leading-relaxed">
+                    <p className="text-sm text-foreground/70 mb-4 leading-relaxed flex-grow">
                       {language === 'fr'
                         ? item.description_fr
                         : item.description_en}
@@ -340,7 +342,7 @@ export default function PathResults() {
                     </div>
                     <Button
                       onClick={() => handleDonate(item)}
-                      className={`w-full bg-gradient-to-r ${config.color} hover:brightness-110 hover:shadow-md text-white transition-all duration-200`}
+                      className={`w-full bg-gradient-to-r ${config.color} hover:brightness-110 hover:shadow-md text-white transition-all duration-200 mt-auto`}
                     >
                       {language === 'fr' ? 'Donner Maintenant' : 'Donate Now'}
                       <ArrowRight className="ml-2 w-4 h-4" />
@@ -349,6 +351,55 @@ export default function PathResults() {
                 </Card>
               </motion.div>
             ))}
+            
+            {/* Custom Amount Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: impactItems.length * 0.1 }}
+            >
+              <Card className={`h-full ${config.bgColor} border-2 ${config.borderColor}`}>
+                <CardContent className="pt-7 pb-6 px-6 h-full flex flex-col">
+                  <h3 className="font-bold text-lg text-foreground mb-2">
+                    {language === 'fr' ? 'Montant Personnalisé' : 'Custom Amount'}
+                  </h3>
+                  <p className="text-sm text-foreground/70 mb-4 leading-relaxed flex-grow">
+                    {language === 'fr' 
+                      ? 'Choisissez votre propre montant pour soutenir cette cause'
+                      : 'Choose your own amount to support this cause'}
+                  </p>
+                  <div className="mb-4">
+                    <label className="text-sm font-medium text-foreground/80 block mb-2">
+                      {language === 'fr' ? 'Montant ($)' : 'Amount ($)'}
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/50">$</span>
+                      <Input
+                        type="number"
+                        placeholder="0"
+                        value={customAmount}
+                        onChange={(e) => setCustomAmount(e.target.value)}
+                        className="pl-7 border-foreground/20 focus:border-primary focus:ring-primary/30"
+                        min="1"
+                      />
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => {
+                      if (customAmount && impactItems[0]) {
+                        handleDonate(impactItems[0], parseInt(customAmount));
+                        setCustomAmount('');
+                      }
+                    }}
+                    disabled={!customAmount || parseInt(customAmount) < 1}
+                    className={`w-full bg-gradient-to-r ${config.color} hover:brightness-110 hover:shadow-md text-white transition-all duration-200 mt-auto`}
+                  >
+                    {language === 'fr' ? 'Donner maintenant' : 'Donate now'}
+                    <ArrowRight className="ml-2 w-4 h-4" />
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
           </div>
         </div>
 
