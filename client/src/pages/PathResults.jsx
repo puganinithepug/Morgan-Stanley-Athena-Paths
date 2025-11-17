@@ -9,7 +9,9 @@ import { Phone, Heart, Home, ArrowRight, HandHeart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import DonationSuccessModal from '../components/DonationSuccessModal';
 import CommunityGoals from '../components/CommunityGoals';
+import VideoEmbed from '../components/VideoEmbed';
 import { API_URL } from '../config';
+import { createGuestDonor } from '../utils/guestDonor';
 
 const PATH_CONFIG = {
   WISDOM: {
@@ -18,6 +20,7 @@ const PATH_CONFIG = {
     bgColor: 'bg-highlight/15',
     borderColor: 'border-highlight/40',
     textColor: 'text-highlight',
+    videoId: 'PY6ls0v6hu4',
   },
   COURAGE: {
     icon: Heart,
@@ -25,6 +28,7 @@ const PATH_CONFIG = {
     bgColor: 'bg-muted/15',
     borderColor: 'border-muted/40',
     textColor: 'text-muted',
+    videoId: 'HFqvJ_e_emw',
   },
   PROTECTION: {
     icon: Home,
@@ -32,6 +36,7 @@ const PATH_CONFIG = {
     bgColor: 'bg-secondary/15',
     borderColor: 'border-secondary/40',
     textColor: 'text-secondary',
+    videoId: '7eZvuWHRBKQ',
   },
   SERVICE : {
     icon: HandHeart,
@@ -39,6 +44,7 @@ const PATH_CONFIG = {
     bgColor: 'bg-accent/15',
     borderColor: 'border-accent/40',
     textColor: 'text-accent',
+    videoId: 'gawZBbcaA1M',
   }
 };
 
@@ -51,71 +57,108 @@ export default function PathResults() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [lastDonation, setLastDonation] = useState(null);
   const [pendingDonation, setPendingDonation] = useState(null); // { item, customAmount }
+  const [donations, setDonations] = useState([]);
 
   const config = PATH_CONFIG[path] || PATH_CONFIG.WISDOM;
   const Icon = config.icon;
   const impactItems = dataService.getImpactItems().filter((item) => item.path === path);
-  const donations = dataService.getDonations().filter((d) => d.path === path);
   const pathGoals = dataService.getGoals(true).filter((g) => g.path === path);
 
-  const handleDonate = useCallback(async (item, customAmount = null, triggeredAfterLogin = false) => {
-    if (!user && !triggeredAfterLogin) {
-      setPendingDonation({ item, customAmount });
-      window.dispatchEvent(new CustomEvent("open-login-modal"));
-      return;
-    }
 
-    const amount = customAmount || item.suggested_amount;
-    let points = amount;
-    if (path === 'PROTECTION') points = Math.floor(amount * 1.5);
-    else if (path === 'COURAGE') points = Math.floor(amount * 1.2);
+  const handleDonate = useCallback(
+    async (item, customAmount = null, options = {}) => {
+      const normalizedOptions =
+        typeof options === "boolean" ? { triggeredAfterLogin: options } : options;
+      const {
+        triggeredAfterLogin = false,
+        donorOverride = null,
+      } = normalizedOptions;
+      const actingDonor = donorOverride || user;
 
-    try {
-      try {
-        await fetch(`${API_URL}/donate`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            amount,
-            path,
-            uuid: user.id,
-            impact: points,
-          }),
-        });
-      } catch (err) {
-        console.error("Backend donation error:", err);
+      if (!actingDonor && !triggeredAfterLogin) {
+        setPendingDonation({ item, customAmount });
+        window.dispatchEvent(new CustomEvent("open-login-modal"));
+        return;
       }
 
-      dataService.createDonation({
-        user_id: user.id,
-        user_name: user.full_name || 'Anonymous',
-        path: path,
-        amount: amount,
-        points_awarded: points,
-        impact_item_id: item.id,
-        impact_item_title: language === 'fr' ? item.title_fr : item.title_en,
-      });
+      if (!actingDonor) {
+        console.warn("Donation attempted without donor context.");
+        return;
+      }
 
-      const newPoints = (user.total_points || 0) + points;
-      dataService.updateUser(user.id, {
-        total_points: newPoints,
-        primary_path: user.primary_path || path,
-      });
+      const amount = customAmount || item.suggested_amount;
+      let points = amount;
+      if (path === "PROTECTION") points = Math.floor(amount * 1.5);
+      else if (path === "COURAGE") points = Math.floor(amount * 1.2);
 
-      setLastDonation({
-        amount,
-        path: path,
-        points_awarded: points,
-      });
-      setShowSuccessModal(true);
-    } catch (error) {
-      console.error('Donation error:', error);
-      alert('Unable to process donation. Please try again.');
-    }
-  }, [user, path, language]);
+      try {
+        try {
+          await fetch(`${API_URL}/donate`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              amount,
+              path,
+              uuid: actingDonor.id,
+              impact: points,
+            }),
+          });
+        } catch (err) {
+          console.error("Backend donation error:", err);
+        }
+
+        const createdDonation = dataService.createDonation({
+          user_id: actingDonor.id,
+          user_name:
+            actingDonor.full_name ||
+            (actingDonor.is_guest ? "Guest Supporter" : "Anonymous"),
+          path: path,
+          amount: amount,
+          points_awarded: points,
+          impact_item_id: item.id,
+          impact_item_title: language === "fr" ? item.title_fr : item.title_en,
+        });
+
+        // Optimistically update local donations list so totals refresh immediately
+        setDonations((prev) => [...prev, createdDonation]);
+
+        if (!actingDonor.is_guest) {
+          const newPoints = (actingDonor.total_points || 0) + points;
+          dataService.updateUser(actingDonor.id, {
+            total_points: newPoints,
+            primary_path: actingDonor.primary_path || path,
+          });
+        }
+
+        setLastDonation({
+          amount,
+          path: path,
+          points_awarded: points,
+        });
+        setShowSuccessModal(true);
+
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("donation-recorded", {
+              detail: {
+                amount,
+                path,
+                timestamp: new Date().toISOString(),
+                source: "path-results",
+              },
+            })
+          );
+        }
+      } catch (error) {
+        console.error("Donation error:", error);
+        alert("Unable to process donation. Please try again.");
+      }
+    },
+    [user, path, language]
+  );
 
   useEffect(() => {
     const handler = () => {
@@ -130,7 +173,60 @@ export default function PathResults() {
     return () => window.removeEventListener("login-success", handler);
   }, [pendingDonation, handleDonate]);
 
-  const totalAmount = donations.reduce((sum, d) => sum + d.amount, 0);
+  useEffect(() => {
+    const handler = () => {
+      if (!pendingDonation) {
+        console.warn("Guest donation requested with no pending donation context.");
+        return;
+      }
+      const { item, customAmount } = pendingDonation;
+      setPendingDonation(null);
+      handleDonate(item, customAmount, {
+        donorOverride: createGuestDonor(),
+        triggeredAfterLogin: true,
+      });
+    };
+
+    window.addEventListener("guest-donation-request", handler);
+    return () => window.removeEventListener("guest-donation-request", handler);
+  }, [pendingDonation, handleDonate]);
+
+  // Load donations for this path from backend, with a fallback to local dataService
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadDonationsForPath() {
+      try {
+        const qs = path ? `?path=${path}` : '';
+        const res = await fetch(`http://localhost:8000/donations${qs}`, {
+          credentials: 'include',
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to load donations for path');
+        }
+
+        const data = await res.json();
+        if (!cancelled) {
+          setDonations(data.donations || []);
+        }
+      } catch (err) {
+        console.error('Failed to load donations for path from backend; falling back to local dataService', err);
+        const local = dataService.getDonations({ path }) || [];
+        if (!cancelled) {
+          setDonations(local);
+        }
+      }
+    }
+
+    loadDonationsForPath();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [path]);
+
+  const totalAmount = donations.reduce((sum, d) => sum + (d.amount || 0), 0);
   const totalDonations = donations.length;
 
   return (
@@ -195,6 +291,19 @@ export default function PathResults() {
             </CardContent>
           </Card>
         </div>
+
+{/* VIDEOS */}
+
+        {config.videoId && (
+          <div className="mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              {language === 'fr'
+                ? 'Découvrez ce parcours'
+                : 'Learn about this path'}
+            </h2>
+            <VideoEmbed videoId={config.videoId} />
+          </div>
+        )}
 
         {/* How you can help */}
         <div className="mb-12">

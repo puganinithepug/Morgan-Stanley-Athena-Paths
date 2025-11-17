@@ -20,6 +20,7 @@ const translations = {
     'paths.service.name': 'Service',
     'paths.service.desc': 'Keep every path alive by offering your time—taking shifts, helping at events, or supporting daily operations that protect women and children. Volunteers have no direct contacts with clients as they are in vulnerable state but the volunteers can help with Administrative, Office support, transportation, procuration of donations and at events.',
     'common.login': 'Log In',
+    'common.signup': 'Sign Up',
     'common.logout': 'Log Out',
     'common.loading': 'Loading...',
     'common.close': 'Close'
@@ -43,6 +44,7 @@ const translations = {
     'paths.service.name': 'Service',
     'paths.service.desc': 'Soutenez chaque parcours en offrant votre temps — en prenant des quarts, en aidant lors d’événements ou en appuyant les opérations quotidiennes qui protègent les femmes et les enfants.',
     'common.login': 'Se connecter',
+    'common.signup': 'S\'inscrire',
     'common.logout': 'Se déconnecter',
     'common.loading': 'Chargement...',
     'common.close': 'Fermer'

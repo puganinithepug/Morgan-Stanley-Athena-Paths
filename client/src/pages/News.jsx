@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { 
-  Calendar, 
-  Newspaper, 
-  Award, 
-  Users, 
+import {
+  Calendar,
+  Newspaper,
+  Award,
+  Users,
   Heart,
   ArrowRight,
   Clock,
@@ -15,170 +15,121 @@ import {
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
+const SHIELD_BASE_URL = 'http://shieldofathena.com';
+
+const newsItems = [
+  {
+    id: '2018-international-womens-day-showcase',
+    type: 'event',
+    title: 'International Women\'s Day Creative Art Showcase',
+    date: 'March 22, 2018',
+    category: 'Community Event',
+    description:
+      'The Shield of Athena Family Services would like to invite you to our event in honour of International Women\'s Day that will be held on the 22nd of March. The event will showcase the art of women victims of conjugal and family violence that has been done in creative art therapy groups. There will also be a presentation of work done by participants in various women\'s centers such as, Le Centre dynamique des femmes de Laval, l\'Association du troisieme age Filia and others. It would be lovely to see you there. As space is limited please RSVP with the number of people coming.',
+    image: `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u10/community-english.jpg`,
+    gallery: [
+      `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u10/victim-english.jpg`,
+      `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u10/english.jpg`,
+      `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u15/annonce_revisee._6368_n.jpg`
+    ]
+  },
+  {
+    id: '2018-united-nations-delegation',
+    type: 'recognition',
+    title: 'Canadian Women\'s Delegation Presents at the UN',
+    date: 'March 14, 2018',
+    category: 'Recognition',
+    description:
+      'We are so proud of our Executive Director, Melpa Kamateros, and Co-ordinator, Maud Pontel, for being part of the Canadian Women\'s Delegation and presenting on "Equality for Rural & remote Women in Canada" for the sixty-second session of the Commission on the Status of Women taking place at the United Nations Headquarters in New York from 12 to 23 March 2018.',
+    image: `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u15/melpa_maud._7024_n.jpg`,
+    gallery: [`${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u15/melpa._2256_n.jpg`]
+  },
+  {
+    id: '2018-volunteer-training',
+    type: 'news',
+    title: 'Volunteer Training Workshop',
+    date: 'February 08, 2018',
+    category: 'Community Support',
+    description:
+      'Thank you to all the participants of this year volunteer training workshop and your enthusiasm to volunteer your time and help out for the benefit of women and children victims of abuse.',
+    image: `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u15/20180208._vol_1.jpg`,
+    gallery: [
+      `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u15/20180208._vol_2.jpg`,
+      `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u15/20180208._vol_3.jpg`,
+      `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u15/20180208._vol_5.jpg`,
+      `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u15/20180208._vol_6.jpg`
+    ]
+  },
+  {
+    id: '2017-annual-art-auction',
+    type: 'event',
+    title: '23rd Annual Art Auction Thanks to Supporters',
+    date: 'November 13, 2017',
+    category: 'Fundraising',
+    description:
+      'We would like to thank Madame Sophie Gregoire Trudeau for her ongoing support and for the lovely wishes she sent us for our 23rd Annual Art auction. Thank you to Elias Makos and Breakfast Television, Global Television, and The Suburban for their support of our cause. The Shield\'s 23rd Annual Art Auction was a great event for a great cause. Thank you to everyone who supports us!',
+    image: `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u15/2017._auction._0032_n.jpg`
+  },
+  {
+    id: '2017-montreal-alouettes',
+    type: 'news',
+    title: 'Montreal Alouettes Workplace Presentation',
+    date: 'October 31, 2017',
+    category: 'Community Outreach',
+    description:
+      'Thank you to the Montreal Alouettes for inviting us to speak about family violence and its consequences even in the workplace. It was great to also present again with CFL player J.R. Larose.',
+    image: `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u15/2017._formation_alouette._2243_n.jpg`
+  },
+  {
+    id: '2017-city-of-laval-donation',
+    type: 'news',
+    title: 'City of Laval Donates $200,000',
+    date: 'June 09, 2017',
+    category: 'Partnership',
+    description:
+      'Thank you to the city of Laval for their amazing support and donation of $200,000 for the establishment of a 2nd step shelter for victims of family violence.',
+    image: `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u15/2017._maire_de_laval._don_de_200000._2741_n.jpg`,
+    link: 'http://www.lechodelaval.ca/actualites/politique/314672/200000$-de-soutien-pour-projet-le-bouclier-dathena'
+  },
+  {
+    id: '2017-swing-into-spring',
+    type: 'event',
+    title: '"Swing into Spring" at the Rialto Theatre',
+    date: 'May 19, 2017',
+    category: 'Campaign Launch',
+    description:
+      'Close to 240 people were gathered at the Shield of Athena\'s "Swing into Spring" event at the historic Rialto Theatre. The fabulous show, coordinated by Sheldon Kagan and replete with a Las Vegas dance, song, and musical revue, launched the beginning of the Capital Campaign for the new Second Step Resource for women and children in Laval.',
+    image: `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u15/photos._rialto._0351_n.jpg`,
+    link: 'https://www.youtube.com/watch?v=gUE3mZEhjp8&feature=youtu.be'
+  },
+  {
+    id: '2017-avon-canada-donation',
+    type: 'news',
+    title: 'Avon Canada Helps Replace Stolen Van',
+    date: 'April 14, 2017',
+    category: 'Partnership',
+    description:
+      'A special thank you to the Avon Team once again for their generosity, in particular Goran Petrovic, Natalie Laurence, and Elizabeth Munro. This was truly an unforgettable day as Avon Canada helped the Shield of Athena secure a new van for services to women and children.',
+    image: `${SHIELD_BASE_URL}/sites/shieldofathena.com/files/u15/2017._photo._donation_avon._0898_o.jpg`
+  }
+];
+
 export default function News() {
   const [activeTab, setActiveTab] = useState('all');
 
-  // Upcoming Events
-  const upcomingEvents = [
-    {
-      id: 'upcoming-1',
-      type: 'event',
-      title: '2025 Annual Lilac Gala',
-      date: 'November 29, 2025',
-      category: 'Upcoming Event',
-      description: 'Join us on November 29th, 2025 to celebrate 34 years of service and support women and children victims of family violence. This year, all funds raised at the event will go towards maintaining and expanding our services. We promise you an evening full of entertainment featuring an elegant dinner, a silent auction, and a raffle on the agenda.',
-      image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop',
-      link: '/lilac-gala',
-      isUpcoming: true
-    }
-  ];
+  const upcomingEvents = [];
 
-  // Past Events (from their website)
-  const pastEvents = [
-    {
-      id: 1,
-      type: 'event',
-      title: 'International Women\'s Day Celebration',
-      date: 'March 22, 2018',
-      description: 'The Shield of Athena Family Services would like to invite you to our event in honour of International Women\'s Day. The event showcased the art of women victims of conjugal and family violence that has been done in creative art therapy groups. There was also a presentation of work done by participants in various women\'s centers such as, Le Centre dynamique des femmes de Laval, l\'Association du troisième âge Filia and others.',
-      image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop',
-    },
-    {
-      id: 2,
-      type: 'event',
-      title: 'Volunteer Training Workshop',
-      date: 'February 08, 2018',
-      description: 'Thank you to all the participants of this year volunteer training workshop and your enthusiasm to volunteer your time and help out for the benefit of women and children victims of abuse.',
-      image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&h=600&fit=crop',
-    },
-    {
-      id: 3,
-      type: 'event',
-      title: '23rd Annual Art Auction',
-      date: 'November 12, 2017',
-      description: 'Over 400 people gathered at the Bonsecours Market in Old Montreal. The Shield of Athena held their 23rd annual Art Auction, under the High Patronage of His Excellency Orestis Kafopoulos; Consul general of Greece, and raised nearly $105,000 for their services to women and children.',
-      image: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=600&fit=crop',
-    },
-    {
-      id: 4,
-      type: 'event',
-      title: 'Swing into Spring 2017',
-      date: 'May 17, 2017',
-      description: 'Close to 240 people were gathered at the Shield of Athena\'s "Swing into Spring" event that was held at the historic Rialto Theatre. The fabulous show, coordinated by Sheldon Kagan and replete with a Las Vegas dance, song and musical revue, went until midnight. The event launched the beginning of the Capital Campaign for the new Second Step Resource, for women and children, in Laval.',
-      image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop',
-    }
-  ];
+  const sortedItems = [...newsItems].sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
+  );
 
-  // Recent News
-  const recentNews = [
-    {
-      id: 1,
-      type: 'news',
-      title: 'Shield of Athena Receives Excellence Award',
-      date: 'October 12, 2012',
-      category: 'Achievement',
-      description: 'The Shield of Athena\'s Multilingual Community Outreach Department received the 2012 Excellence Award from the Ministry of Health and Social Services of Québec, in the category "Support to vulnerable persons and groups".',
-      image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&h=600&fit=crop',
-      link: '#'
-    },
-    {
-      id: 2,
-      type: 'news',
-      title: 'Second Step Shelter Capital Campaign Launch',
-      date: 'May 17, 2017',
-      category: 'Campaign',
-      description: 'Close to 240 people gathered at the Shield of Athena\'s "Swing into Spring" event at the historic Rialto Theatre. The event launched the beginning of the Capital Campaign for the new Second Step Resource for women and children in Laval.',
-      image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop',
-      link: '#'
-    },
-    {
-      id: 3,
-      type: 'news',
-      title: 'City of Laval Donates $200,000 for Second Step Shelter',
-      date: 'June 9, 2017',
-      category: 'Partnership',
-      description: 'Thank you to the city of Laval for their amazing support and donation of $200,000 for the establishment of a 2nd step shelter for victims of family violence!',
-      image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop',
-      link: '#'
-    },
-    {
-      id: 4,
-      type: 'news',
-      title: 'Avon Canada Donates New Van',
-      date: 'April 13, 2017',
-      category: 'Partnership',
-      description: 'The Shield picked up their new van today! Thank you to Avon Canada for making this happen. We are so thankful and moved by your generosity.',
-      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
-      link: '#'
-    },
-    {
-      id: 5,
-      type: 'news',
-      title: '20th Anniversary Gala Raises $200,000',
-      date: 'November 20, 2011',
-      category: 'Achievement',
-      description: 'The Shield of Athena is pleased to announce that its 20th Anniversary Gala raised approximately $200,000 for its services to victims of family violence.',
-      image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop',
-      link: '#'
-    },
-    {
-      id: 6,
-      type: 'news',
-      title: 'Executive Director Presents at United Nations',
-      date: 'March 14, 2018',
-      category: 'Achievement',
-      description: 'We are so proud of our Executive Director, Melpa Kamateros & Co-ordinator, Maud Pontel for being part of the Canadian Women\'s Delegation and presenting on "Equality for Rural & remote Women in Canada" for the sixty-second session of the Commission on the Status of Women taking place at the United Nations Headquarters in New York from 12 to 23 March 2018.',
-      image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&h=600&fit=crop',
-      link: '#'
-    },
-    {
-      id: 7,
-      type: 'news',
-      title: 'Thank You to Sophie Grégoire Trudeau',
-      date: 'November 13, 2017',
-      category: 'Recognition',
-      description: 'We would like to thank Madame Sophie Grégoire Trudeau for her ongoing support and for the lovely wishes she sent us for our 23rd Annual Art auction.',
-      image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop',
-      link: '#'
-    },
-    {
-      id: 8,
-      type: 'news',
-      title: 'Thank You to Global Television and The Suburban',
-      date: 'November 13, 2017',
-      category: 'Partnership',
-      description: 'Thank You to Global Television and The Suburban for their support of our cause.',
-      image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop',
-      link: '#'
-    },
-    {
-      id: 9,
-      type: 'news',
-      title: 'COVID-19 Impact on Our Activities',
-      date: '2020-2024',
-      category: 'Announcement',
-      description: 'Community organizations like ours have suffered during this period as due to COVID-19 restrictions we have also been limited in our events and fundraising activities. The Board of the Shield has taken the perspective that we cannot subject people to possible contamination and have stopped all of these activities in the interests of public health.',
-      image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&h=600&fit=crop',
-      link: '#'
-    }
-  ];
-
-  // All items combined (upcoming events first, then sorted by date)
-  const allItems = [...upcomingEvents, ...pastEvents, ...recentNews].sort((a, b) => {
-    if (a.isUpcoming && !b.isUpcoming) return -1;
-    if (!a.isUpcoming && b.isUpcoming) return 1;
-    return new Date(b.date) - new Date(a.date);
+  const filteredItems = sortedItems.filter((item) => {
+    if (activeTab === 'all') return true;
+    if (activeTab === 'events') return item.type === 'event';
+    if (activeTab === 'news') return item.type === 'news';
+    if (activeTab === 'recognition') return item.type === 'recognition';
+    return true;
   });
-
-  const filteredItems = activeTab === 'all' 
-    ? allItems 
-    : activeTab === 'upcoming'
-    ? upcomingEvents
-    : activeTab === 'events' 
-    ? pastEvents 
-    : activeTab === 'news'
-    ? recentNews.filter(item => item.type === 'news')
-    : recentNews.filter(item => item.category === 'Achievement');
 
   return (
     <div className="min-h-screen bg-background">
@@ -205,10 +156,9 @@ export default function News() {
           <div className="flex gap-4 overflow-x-auto py-4">
             {[
               { id: 'all', label: 'All', icon: Newspaper },
-              { id: 'upcoming', label: 'Upcoming', icon: Sparkles },
-              { id: 'events', label: 'Past Events', icon: Calendar },
-              { id: 'news', label: 'News', icon: Newspaper },
-              { id: 'achievements', label: 'Achievements', icon: Award }
+              { id: 'events', label: 'Events', icon: Calendar },
+              { id: 'news', label: 'Updates', icon: Users },
+              { id: 'recognition', label: 'Recognition', icon: Award }
             ].map((tab) => {
               const Icon = tab.icon;
               return (
@@ -328,14 +278,42 @@ export default function News() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((item, idx) => {
             const isFeatured = idx === 0 && activeTab === 'all';
-            const Icon = item.isUpcoming ? Sparkles : (item.type === 'event' ? Calendar : Newspaper);
-            const isUpcoming = item.isUpcoming;
-            
-            const CardWrapper = item.link && item.link.startsWith('/') ? Link : 'div';
-            const cardProps = item.link && item.link.startsWith('/') 
-              ? { to: item.link } 
-              : {};
-            
+            const Icon =
+              item.type === 'event'
+                ? Calendar
+                : item.type === 'recognition'
+                ? Award
+                : Newspaper;
+            const isEvent = item.type === 'event';
+            const isRecognition = item.type === 'recognition';
+
+            const isInternalLink = item.link && item.link.startsWith('/');
+            const CardWrapper = isInternalLink ? Link : 'div';
+            const cardProps = isInternalLink && item.link ? { to: item.link } : {};
+
+            const badgeClasses = isEvent
+              ? 'bg-primary text-white'
+              : isRecognition
+              ? 'bg-yellow-100 text-yellow-900'
+              : 'bg-white/90 text-primary';
+            const badgeIconColor = isEvent
+              ? 'text-white'
+              : isRecognition
+              ? 'text-yellow-800'
+              : 'text-primary';
+
+            const handleExternalNav = (e) => {
+              if (isInternalLink || !item.link) {
+                return;
+              }
+              if (e) {
+                e.preventDefault();
+              }
+              if (typeof window !== 'undefined') {
+                window.open(item.link, '_blank', 'noopener,noreferrer');
+              }
+            };
+
             return (
               <motion.div
                 key={item.id}
@@ -345,7 +323,12 @@ export default function News() {
                 className={isFeatured ? 'md:col-span-2 lg:col-span-2 m-3' : ''}
               >
                 <CardWrapper {...cardProps}>
-                  <Card className={`overflow-hidden h-full flex flex-col hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group ${item.link ? 'cursor-pointer' : ''} ${isUpcoming ? 'border-2 border-purple-300 bg-gradient-to-br from-purple-50/50 to-pink-50/50' : ''}`}>
+                  <Card
+                    className={`overflow-hidden h-full flex flex-col hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group ${
+                      item.link ? 'cursor-pointer' : ''
+                    } ${isEvent ? 'border-2 border-primary/40 bg-primary/5' : ''}`}
+                    onClick={handleExternalNav}
+                  >
                     {item.image && (
                       <div 
                         className="relative h-48 md:h-56 overflow-hidden bg-cover bg-center group-hover:scale-105 transition-transform duration-300"
@@ -353,22 +336,13 @@ export default function News() {
                       >
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                         <div className="absolute top-4 left-4">
-                          <div className={`flex items-center gap-2 px-3 py-1.5 backdrop-blur-sm rounded-full ${isUpcoming ? 'bg-purple-500/90' : 'bg-white/90'}`}>
-                            <Icon className={`w-4 h-4 ${isUpcoming ? 'text-white' : 'text-primary'}`} />
-                            <span className={`text-xs font-semibold ${isUpcoming ? 'text-white' : 'text-primary'}`}>
+                          <div className={`flex items-center gap-2 px-3 py-1.5 backdrop-blur-sm rounded-full ${badgeClasses}`}>
+                            <Icon className={`w-4 h-4 ${badgeIconColor}`} />
+                            <span className="text-xs font-semibold">
                               {item.category || 'Event'}
                             </span>
                           </div>
                         </div>
-                        {isUpcoming && (
-                          <div className="absolute top-4 right-4">
-                            <div className="px-3 py-1.5 bg-yellow-400/90 backdrop-blur-sm rounded-full">
-                              <span className="text-xs font-bold text-yellow-900">
-                                UPCOMING
-                              </span>
-                            </div>
-                          </div>
-                        )}
                       </div>
                     )}
                     <CardContent className="p-6 flex-1 flex flex-col">
@@ -387,17 +361,12 @@ export default function News() {
                       {item.link && (
                         <Button 
                           variant="outline" 
-                          className={`w-full group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-colors ${isUpcoming ? 'border-purple-300 text-purple-700 hover:bg-purple-600 hover:text-white' : ''}`}
-                          onClick={(e) => {
-                            if (!item.link.startsWith('/')) {
-                              e.preventDefault();
-                            }
-                          }}
+                          className={`w-full group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-colors ${
+                            isEvent ? 'border-primary text-primary hover:bg-primary hover:text-white' : ''
+                          }`}
+                          onClick={handleExternalNav}
                         >
-                          {isUpcoming 
-                            ? 'Learn More'
-                            : 'Read More'
-                          }
+                          Learn More
                           <ExternalLink className="w-4 h-4 ml-2" />
                         </Button>
                       )}

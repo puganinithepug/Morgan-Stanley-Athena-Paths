@@ -171,9 +171,10 @@ export async function checkAndAwardBadges(user) {
   ]);
 
   // Fetch user team:
+
   const teamRes = await fetchJson(`${API_URL}/teams/${user.team_id}`);
   const teams = teamRes.team ? teamRes.team : {};
-  
+
 
   const donations = donationsRes.donations || [];
   const referrals = referralsRes.referrals || [];

@@ -1,9 +1,10 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Shield, Award, Heart, FileText, ArrowRight } from 'lucide-react';
+import { X, Shield, Award, Heart, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
 import { Link } from 'react-router-dom';
+import FinancialImpactGraph from './FinancialImpactGraph';
 
 export default function AboutModal({ isOpen, onClose }) {
   if (!isOpen) return null;
@@ -229,9 +230,9 @@ export default function AboutModal({ isOpen, onClose }) {
                     <h3 className="text-2xl font-bold text-foreground mb-8 text-center">Financial Transparency</h3>
                     <Card className="bg-gray-50 max-w-4xl mx-auto">
                       <CardContent className="!p-6 !pt-6">
-                        <div className="flex items-center justify-center gap-3 mb-5">
+                        {/* <div className="flex items-center justify-center gap-3 mb-5">
                           <FileText className="w-6 h-6 text-primary" />
-                        </div>
+                        </div> */}
                         <div className="grid md:grid-cols-2 gap-6">
                           <div>
                             <h4 className="font-semibold text-foreground mb-2 text-base">Registered Charity</h4>
@@ -251,6 +252,15 @@ export default function AboutModal({ isOpen, onClose }) {
                         </div>
                       </CardContent>
                     </Card>
+                  </div>
+
+                  {/* Impact Chart */}
+                  <div>
+                    <h3 className="text-2xl font-bold text-foreground mb-4 text-center">Impact financier récent</h3>
+                    <p className="text-foreground/70 text-center mb-8 max-w-3xl mx-auto">
+                      Visualisez l’évolution de nos revenus et la répartition des dépenses sur les cinq dernières années.
+                    </p>
+                    <FinancialImpactGraph />
                   </div>
 
                   {/* Call to Action Banner */}

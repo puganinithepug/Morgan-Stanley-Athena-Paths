@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, User, LogOut, LogIn } from 'lucide-react';
+import { ChevronDown, User, LogOut, LogIn, UserPlus } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import Avatar from './ui/Avatar';
@@ -12,17 +12,25 @@ const ProfileDropdown = () => {
   const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [loginMode, setLoginMode] = useState('login');
 
   // Allow other parts of the app to request opening the login popup
   useEffect(() => {
     const handler = () => {
       setIsOpen(false); // close dropdown if open
+      setLoginMode('login');
       setIsLoginOpen(true);
     };
 
     window.addEventListener('open-login-modal', handler);
     return () => window.removeEventListener('open-login-modal', handler);
   }, []);
+
+  const openLoginModal = (mode = 'login') => {
+    setLoginMode(mode);
+    setIsLoginOpen(true);
+    setIsOpen(false);
+  };
 
   // Called when the popup login succeeds
   const handleLoginSuccess = async () => {
@@ -157,14 +165,18 @@ const ProfileDropdown = () => {
               <div className="absolute right-0 mt-2 z-50 w-48 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
                 <div className="p-2">
                   <button
-                    onClick={() => {
-                      setIsLoginOpen(true);
-                      setIsOpen(false);
-                    }}
+                    onClick={() => openLoginModal('login')}
                     className="flex items-center gap-3 w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
                   >
                     <LogIn className="w-4 h-4 text-gray-500" />
                     {t("common.login")}
+                  </button>
+                  <button
+                    onClick={() => openLoginModal('signup')}
+                    className="flex items-center gap-3 w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                  >
+                    <UserPlus className="w-4 h-4 text-gray-500" />
+                    {t("common.signup")}
                   </button>
                 </div>
               </div>
@@ -176,8 +188,15 @@ const ProfileDropdown = () => {
       {/* Login popup backed by Python FastAPI */}
       <Login
         open={isLoginOpen}
-        onClose={() => setIsLoginOpen(false)}
-        onSuccess={handleLoginSuccess}
+        initialMode={loginMode}
+        onClose={() => {
+          setIsLoginOpen(false);
+          setLoginMode('login');
+        }}
+        onSuccess={(...args) => {
+          handleLoginSuccess(...args);
+          setLoginMode('login');
+        }}
       />
     </div>
   );

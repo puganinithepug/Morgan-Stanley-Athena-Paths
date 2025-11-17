@@ -9,6 +9,7 @@ import { Heart, Shield, Phone, HandHeart, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import DonationSuccessModal from "../components/DonationSuccessModal";
 import { API_URL } from "../config";
+import { createGuestDonor } from "../utils/guestDonor";
 
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";
@@ -24,6 +25,7 @@ export default function Donate() {
   const [lastDonation, setLastDonation] = useState(null);
   const [pendingDonation, setPendingDonation] = useState(null); // { item, customAmount }
   const [referralCode, setReferralCode] = useState(null);
+  const [confirmingDonation, setConfirmingDonation] = useState(null);
 
   const impactItems = dataService.getImpactItems();
 
@@ -35,54 +37,79 @@ export default function Donate() {
     }
   }, [user]);
 
-  const handleDonate = useCallback(async (item, customAmount = null, triggeredAfterLogin = false) => {
-    if (!user && !triggeredAfterLogin) {
-      setPendingDonation({ item, customAmount });
-      window.dispatchEvent(new CustomEvent("open-login-modal"));
-      return;
-    }
+  const handleDonate = useCallback(
+    async (item, customAmount = null, options = {}) => {
+      const normalizedOptions =
+        typeof options === "boolean" ? { triggeredAfterLogin: options } : options;
+      const {
+        triggeredAfterLogin = false,
+        donorOverride = null,
+        skipConfirmation = false,
+      } = normalizedOptions;
 
-    setProcessing(true);
-    const amount = customAmount || item.suggested_amount;
-    let points = amount;
-    if (item.path === "PROTECTION") points = Math.floor(amount * 1.5);
-    else if (item.path === "COURAGE") points = Math.floor(amount * 1.2);
-
-    try {
-      try {
-        await fetch(`${API_URL}/donate`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            amount,
-            path: item.path,
-            uuid: user.id,
-            impact: points,
-            referral_code: referralCode,
-          }),
-        });
-      } catch (err) {
-        console.error("Backend donation error:", err);
+      if (!skipConfirmation) {
+        setConfirmingDonation({ item, customAmount });
+        return;
       }
 
-      setLastDonation({
-        amount,
-        path: item.path,
-        points_awarded: points,
-      });
-      setShowSuccessModal(true);
-      setDonationAmount("");
-      setSelectedPath(null);
-    } catch (error) {
-      console.error("Donation error:", error);
-      alert("Unable to process donation. Please try again.");
-    } finally {
-      setProcessing(false);
-    }
-  }, [user, referralCode]);
+      const actingDonor = donorOverride || user;
+
+      if (!actingDonor && !triggeredAfterLogin) {
+        setPendingDonation({ item, customAmount });
+        window.dispatchEvent(new CustomEvent("open-login-modal"));
+        return;
+      }
+
+      if (!actingDonor) {
+        console.warn("Donation attempted without donor context.");
+        return;
+      }
+
+      setProcessing(true);
+      const amount = customAmount || item.suggested_amount;
+      let points = amount;
+      if (item.path === "PROTECTION") points = Math.floor(amount * 1.5);
+      else if (item.path === "COURAGE") points = Math.floor(amount * 1.2);
+
+      const referralForRequest = donorOverride ? null : referralCode;
+
+      try {
+        try {
+          await fetch(`${API_URL}/donate`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              amount,
+              path: item.path,
+              uuid: actingDonor.id,
+              impact: points,
+              referral_code: referralForRequest,
+            }),
+          });
+        } catch (err) {
+          console.error("Backend donation error:", err);
+        }
+
+        setLastDonation({
+          amount,
+          path: item.path,
+          points_awarded: points,
+        });
+        setShowSuccessModal(true);
+        setDonationAmount("");
+        setSelectedPath(null);
+      } catch (error) {
+        console.error("Donation error:", error);
+        alert("Unable to process donation. Please try again.");
+      } finally {
+        setProcessing(false);
+      }
+    },
+    [user, referralCode]
+  );
 
   const handleVolunteer = async (hours = null) => {
     if (!user) {
@@ -113,12 +140,31 @@ export default function Donate() {
       if (pendingDonation) {
         const { item, customAmount } = pendingDonation;
         setPendingDonation(null);
-        handleDonate(item, customAmount, true);
+        handleDonate(item, customAmount, { triggeredAfterLogin: true, skipConfirmation: true });
       }
     };
 
     window.addEventListener("login-success", handler);
     return () => window.removeEventListener("login-success", handler);
+  }, [pendingDonation, handleDonate]);
+
+  useEffect(() => {
+    const handler = () => {
+      if (!pendingDonation) {
+        console.warn("Guest donation requested with no pending donation context.");
+        return;
+      }
+      const { item, customAmount } = pendingDonation;
+      setPendingDonation(null);
+      handleDonate(item, customAmount, {
+        donorOverride: createGuestDonor(),
+        triggeredAfterLogin: true,
+        skipConfirmation: true,
+      });
+    };
+
+    window.addEventListener("guest-donation-request", handler);
+    return () => window.removeEventListener("guest-donation-request", handler);
   }, [pendingDonation, handleDonate]);
 
   const pathConfig = {
@@ -164,6 +210,17 @@ export default function Donate() {
     },
   };
 
+  const promptDonationConfirmation = (item, customAmount = null) => {
+    setConfirmingDonation({ item, customAmount });
+  };
+
+  const confirmDonation = () => {
+    if (!confirmingDonation) return;
+    const { item, customAmount } = confirmingDonation;
+    setConfirmingDonation(null);
+    handleDonate(item, customAmount, { skipConfirmation: true });
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground pt-20">
       <DonationSuccessModal
@@ -171,6 +228,47 @@ export default function Donate() {
         onClose={() => setShowSuccessModal(false)}
         donation={lastDonation}
       />
+
+      {confirmingDonation &&
+        (() => {
+          const amountToDonate =
+            confirmingDonation.customAmount ||
+            confirmingDonation.item.suggested_amount;
+          const pathName = t(
+            `paths.${confirmingDonation.item.path.toLowerCase()}.name`
+          );
+          const confirmationMessage =
+            language === "fr"
+              ? `Êtes-vous sûr de vouloir donner $${amountToDonate} pour le chemin ${pathName} ?`
+              : `Are you sure you want to donate $${amountToDonate} to the ${pathName} path?`;
+
+          return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
+                <h3 className="text-2xl font-semibold text-foreground mb-4">
+                  {language === "fr" ? "Confirmer le don" : "Confirm Donation"}
+                </h3>
+                <p className="text-foreground/80 mb-6">{confirmationMessage}</p>
+                <div className="flex gap-4 justify-center">
+                  <Button
+                    variant="outline"
+                    onClick={() => setConfirmingDonation(null)}
+                    className="flex-1"
+                  >
+                    {language === "fr" ? "Annuler" : "Cancel"}
+                  </Button>
+                  <Button
+                    onClick={confirmDonation}
+                    className="flex-1"
+                    disabled={processing}
+                  >
+                    {language === "fr" ? "Oui, continuer" : "Yes, continue"}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
       {/* Hero Section */}
       <div className="relative bg-gradient-to-br from-primary-dark via-primary to-secondary py-20 md:py-24">
@@ -284,7 +382,7 @@ export default function Donate() {
                               </div>
                               <Button
                                 variant="unstyled"
-                                onClick={() => handleDonate(item)}
+                                onClick={() => promptDonationConfirmation(item)}
                                 disabled={processing}
                                 className={`w-full ${config.color} text-foreground/70 shadow-md hover:brightness-80 ${config.shadowColor} ${config.hoverColor} transition-all hover:scale-[1.02] border-2 ${config.border} transition-all duration-200`}
                               >
@@ -320,7 +418,7 @@ export default function Donate() {
                                 onClick={() =>
                                   donationAmount &&
                                   pathItems[0] &&
-                                  handleDonate(
+                                  promptDonationConfirmation(
                                     pathItems[0],
                                     parseInt(donationAmount)
                                   )

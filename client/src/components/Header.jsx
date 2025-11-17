@@ -9,11 +9,12 @@ import GoogleTranslate from "./GoogleTranslate";
 import ProfileDropdown from "./ProfileDropdown";
 
 const languages = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
+  { code: 'en', name: 'English', flag: '🇨🇦' },
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
   { code: 'es', name: 'Español', flag: '🇪🇸' },
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
   { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+  { code: 'hy', name: 'Հայերեն', flag: '🇦🇲' },
   { code: 'pt', name: 'Português', flag: '🇵🇹' },
   { code: 'zh-CN', name: '中文', flag: '🇨🇳' },
   { code: 'ja', name: '日本語', flag: '🇯🇵' },
@@ -39,6 +40,8 @@ const languages = [
   { code: 'el', name: 'Ελληνικά', flag: '🇬🇷' },
   { code: 'he', name: 'עברית', flag: '🇮🇱' },
   { code: 'fa', name: 'فارسی', flag: '🇮🇷' },
+  { code: 'bn', name: 'বাংলা', flag: '🇧🇩' },
+  { code: 'ur', name: 'اردو', flag: '🇵🇰' },
 ];
 
 export default function Header() {
@@ -238,7 +241,9 @@ export default function Header() {
                 <div className="flex items-center gap-1 md:gap-2">
                   <Globe className="w-4 h-4" />
                   <span className="text-lg">{currentLanguage.flag}</span>
-                  <span className="hidden lg:inline text-sm font-medium">{currentLanguage.name}</span>
+                  <span className="hidden lg:inline text-sm font-medium notranslate" translate="no">
+                    {currentLanguage.name}
+                  </span>
                   <span className="lg:hidden text-xs font-medium uppercase">{currentLanguage.code}</span>
                 </div>
                 <ChevronDown className={`w-4 h-4 transition-transform ${isLanguageDropdownOpen ? 'rotate-180' : ''}`} />
@@ -261,7 +266,9 @@ export default function Header() {
                           }`}
                         >
                           <span className="text-xl">{lang.flag}</span>
-                          <span className="flex-1 text-left">{lang.name}</span>
+                          <span className="flex-1 text-left notranslate" translate="no">
+                            {lang.name}
+                          </span>
                           {selectedLanguage === lang.code && (
                             <span className="text-indigo-600">✓</span>
                           )}
