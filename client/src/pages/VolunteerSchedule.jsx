@@ -7,6 +7,7 @@ import { Calendar, Clock, MapPin, Users } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import dataService from "../services/dataService";
+import { API_URL } from "../config";
 
 const volunteerOpportunities = [
   {
@@ -86,7 +87,7 @@ export default function VolunteerSchedulePage() {
       // If this is a regular backend user, record hours via backend API as well
       if (user && user.id !== "offline-admin") {
         try {
-          await fetch("http://localhost:8000/volunteer", {
+          await fetch(`${API_URL}/volunteer`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

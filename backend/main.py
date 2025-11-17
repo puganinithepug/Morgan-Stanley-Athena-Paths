@@ -5,13 +5,12 @@ import hashlib, base64, re, time, secrets, bcrypt
 from typing import Optional
 import pandas as pd
 import datetime
+import os
 
 salt = bcrypt.gensalt()
 
-origins = [
-    "http://localhost:3000",  # your React dev server
-    "http://127.0.0.1:3000",  # sometimes React uses 127.0.0.1
-]
+cors_origins_env = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000,http://localhost:80,http://localhost")
+origins = [origin.strip() for origin in cors_origins_env.split(",")]
 
 app = FastAPI()
 app.add_middleware(
@@ -71,6 +70,142 @@ def load_has_badges():
         return pd.read_csv("hasBadges.csv")
     except FileNotFoundError:
         return pd.DataFrame(columns=["uuid", "badge_id"])
+
+
+MESSAGES_CSV = "hope_wall_messages.csv"
+MESSAGE_COLUMNS = [
+    "id",
+    "display_name",
+    "message",
+    "language",
+    "created_date",
+    "is_approved",
+]
+APPROVED_TRUE_VALUES = {"1", "true", "yes", "approved", "y"}
+
+
+def load_hope_wall_messages():
+    try:
+        df = pd.read_csv(MESSAGES_CSV)
+    except FileNotFoundError:
+        df = pd.DataFrame(columns=MESSAGE_COLUMNS)
+
+    for column in MESSAGE_COLUMNS:
+        if column not in df.columns:
+            df[column] = False if column == "is_approved" else ""
+
+    if df.empty:
+        return df
+
+    df["is_approved"] = (
+        df["is_approved"]
+        .astype(str)
+        .str.strip()
+        .str.lower()
+        .isin(APPROVED_TRUE_VALUES)
+    )
+
+    return df
+
+
+DEFAULT_HOPE_WALL_MESSAGES = [
+    {
+        "id": "default-msg-1",
+        "display_name": "Anonymous",
+        "message": "You are stronger than you know. Keep moving forward, one step at a time.",
+        "language": "en",
+        "created_date": (
+            datetime.datetime.now(datetime.timezone.utc)
+            - datetime.timedelta(days=5)
+        ).isoformat(),
+        "is_approved": True,
+    },
+    {
+        "id": "default-msg-2",
+        "display_name": "Hope Giver",
+        "message": "Your courage inspires us all. You are not alone in this journey.",
+        "language": "en",
+        "created_date": (
+            datetime.datetime.now(datetime.timezone.utc)
+            - datetime.timedelta(days=4)
+        ).isoformat(),
+        "is_approved": True,
+    },
+    {
+        "id": "default-msg-3",
+        "display_name": "Community Supporter",
+        "message": "We stand with you. Your story matters, and your future holds so much hope.",
+        "language": "en",
+        "created_date": (
+            datetime.datetime.now(datetime.timezone.utc)
+            - datetime.timedelta(days=2)
+        ).isoformat(),
+        "is_approved": True,
+    },
+    {
+        "id": "default-msg-4",
+        "display_name": "Anonymous",
+        "message": "Your children will see your strength and learn from your courage. You are their hero.",
+        "language": "en",
+        "created_date": (
+            datetime.datetime.now(datetime.timezone.utc)
+            - datetime.timedelta(days=1)
+        ).isoformat(),
+        "is_approved": True,
+    },
+    {
+        "id": "default-msg-5",
+        "display_name": "Hope Warrior",
+        "message": "Your resilience is inspiring. Keep fighting for the life you deserve.",
+        "language": "en",
+        "created_date": (
+            datetime.datetime.now(datetime.timezone.utc)
+            - datetime.timedelta(days=8)
+        ).isoformat(),
+        "is_approved": True,
+    },
+    {
+        "id": "default-msg-6",
+        "display_name": "Strength Seeker",
+        "message": "Every step you take toward safety is a victory. You are worthy of peace and happiness.",
+        "language": "en",
+        "created_date": (
+            datetime.datetime.now(datetime.timezone.utc)
+            - datetime.timedelta(days=3)
+        ).isoformat(),
+        "is_approved": True,
+    },
+]
+
+
+def combine_hope_wall_messages():
+    persisted = load_hope_wall_messages()
+    persisted_records = []
+
+    if not persisted.empty:
+        persisted = persisted.copy()
+        if "is_approved" not in persisted.columns:
+            persisted["is_approved"] = False
+
+        persisted["is_approved"] = (
+            persisted["is_approved"]
+            .astype(str)
+            .str.strip()
+            .str.lower()
+            .isin(APPROVED_TRUE_VALUES)
+        )
+
+        approved = persisted[persisted["is_approved"]]
+        if not approved.empty:
+            approved = approved.fillna("")
+            persisted_records = approved.to_dict(orient="records")
+
+    combined = DEFAULT_HOPE_WALL_MESSAGES + persisted_records
+    combined.sort(
+        key=lambda m: pd.to_datetime(m.get("created_date"), errors="coerce"),
+        reverse=True,
+    )
+    return combined
 
 
 def check_user_exists(email: str, password: str) -> str:
@@ -328,6 +463,46 @@ def donate(data: dict, response: Response):
                 donations_df.to_csv("donations.csv", index=False)
 
     return {"status": "ok", "message": "Donation recorded!"}
+
+
+@app.get("/hope_wall/messages")
+def get_hope_wall_messages(limit: Optional[int] = None):
+    """Return Hope Wall messages, combining defaults with persisted entries."""
+    messages = combine_hope_wall_messages()
+    if limit:
+        messages = messages[:limit]
+    return {"messages": messages}
+
+
+@app.post("/hope_wall/messages")
+def create_hope_wall_message(data: dict):
+    """Persist a new Hope Wall message to CSV storage."""
+    display_name = (data.get("display_name") or "").strip() or "Anonymous"
+    message_text = (data.get("message") or "").strip()
+    language = (data.get("language") or "en").strip() or "en"
+
+    if not message_text:
+        raise HTTPException(status_code=400, detail="message is required")
+    if len(message_text) > 250:
+        raise HTTPException(status_code=400, detail="message cannot exceed 250 characters")
+    if len(display_name) > 50:
+        raise HTTPException(status_code=400, detail="display_name cannot exceed 50 characters")
+
+    created_date = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    new_message = {
+        "id": gen_uuid(12),
+        "display_name": display_name,
+        "message": message_text,
+        "language": language,
+        "created_date": created_date,
+        "is_approved": False,
+    }
+
+    messages_df = load_hope_wall_messages()
+    messages_df = pd.concat([messages_df, pd.DataFrame([new_message])], ignore_index=True)
+    messages_df.to_csv(MESSAGES_CSV, index=False)
+
+    return {"status": "ok", "message": new_message}
 
 
 @app.get("/users/{uuid}/badges")

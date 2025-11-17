@@ -6,9 +6,10 @@ import { Input } from "./ui/Input";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import { X } from "lucide-react";
 import dataService from "../services/dataService";
+import { API_URL } from "../config";
 
-const Login = ({ open, onClose, onSuccess }) => {
-  const [mode, setMode] = useState("login"); // 'login' | 'signup'
+const Login = ({ open, onClose, onSuccess, initialMode = "login" }) => {
+  const [mode, setMode] = useState(initialMode); // 'login' | 'signup'
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -21,7 +22,7 @@ const Login = ({ open, onClose, onSuccess }) => {
   // Reset form when popup closes
   useEffect(() => {
     if (!open) {
-      setMode("login");
+      setMode(initialMode);
       setEmail("");
       setPassword("");
       setConfirmPassword("");
@@ -31,7 +32,13 @@ const Login = ({ open, onClose, onSuccess }) => {
       setSuccess(false);
       setOfflineModeAvailable(false);
     }
-  }, [open]);
+  }, [open, initialMode]);
+
+  useEffect(() => {
+    if (open) {
+      setMode(initialMode);
+    }
+  }, [open, initialMode]);
 
   useEffect(() => {
     let timer;
@@ -46,6 +53,13 @@ const Login = ({ open, onClose, onSuccess }) => {
 
   if (!open) return null;
 
+  const handleGuestDonation = () => {
+    window.dispatchEvent(new CustomEvent("guest-donation-request"));
+    if (onClose) {
+      onClose();
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -55,8 +69,8 @@ const Login = ({ open, onClose, onSuccess }) => {
     try {
       const isSignup = mode === "signup";
       const endpoint = isSignup
-        ? "http://localhost:8000/signup"
-        : "http://localhost:8000/login";
+        ? `${API_URL}/signup`
+        : `${API_URL}/login`;
 
       const body = isSignup
         ? {
@@ -281,6 +295,23 @@ const Login = ({ open, onClose, onSuccess }) => {
                   </button>
                 </span>
               )}
+            </div>
+
+            <div className="pt-5 mt-5 border-t border-dashed border-foreground/10 text-center space-y-3">
+              <p className="text-xs text-foreground/70">
+                Just want to make a quick gift? Continue as a guest—no account needed.
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full h-10 text-sm font-semibold"
+                onClick={handleGuestDonation}
+              >
+                Give without signing in
+              </Button>
+              <p className="text-[11px] text-foreground/50">
+                We&apos;ll process your pending donation anonymously.
+              </p>
             </div>
           </CardContent>
         </Card>

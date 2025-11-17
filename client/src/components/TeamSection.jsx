@@ -4,6 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
 import { Button } from './ui/Button';
 import { Users, Crown } from 'lucide-react';
+import { API_URL } from '../config';
 
 export default function TeamSection() {
   const { user, login } = useAuth();
@@ -36,7 +37,7 @@ export default function TeamSection() {
       setLoadingTeam(true);
       resetStatus();
       try {
-        const res = await fetch(`http://localhost:8000/teams/${user.team_id}`, {
+        const res = await fetch(`${API_URL}/teams/${user.team_id}`, {
           credentials: 'include',
         });
         if (!res.ok) {
@@ -77,7 +78,7 @@ export default function TeamSection() {
     resetStatus();
     setSubmitting(true);
     try {
-      const res = await fetch('http://localhost:8000/create_team', {
+      const res = await fetch(`${API_URL}/create_team`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,7 +120,7 @@ export default function TeamSection() {
     resetStatus();
     setSubmitting(true);
     try {
-      const res = await fetch('http://localhost:8000/join_team', {
+      const res = await fetch(`${API_URL}/join_team`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -141,7 +142,7 @@ export default function TeamSection() {
 
       // Load the team details for the joined team
       const teamRes = await fetch(
-        `http://localhost:8000/teams/${joinCode.trim()}`,
+        `${API_URL}/teams/${joinCode.trim()}`,
         { credentials: 'include' }
       );
       if (teamRes.ok) {
@@ -177,7 +178,7 @@ export default function TeamSection() {
     resetStatus();
     setSubmitting(true);
     try {
-      const res = await fetch('http://localhost:8000/leave_team', {
+      const res = await fetch(`${API_URL}/leave_team`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

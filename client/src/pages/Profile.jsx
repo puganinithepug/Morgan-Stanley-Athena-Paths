@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { User, Award, Trophy, Heart, Phone, Home, Sparkles, HandHeart } from 'lucide-react';
+import { User, Award, Trophy, Heart, Phone, Home, Sparkles, HandHeart, Instagram, Facebook, Twitter, Share2 } from 'lucide-react';
 import { BADGE_DEFINITIONS, checkAndAwardBadges } from '../components/BadgeChecker';
 import ReferralSection from '../components/ReferralSection';
 import TeamSection from '../components/TeamSection';
@@ -11,6 +11,7 @@ import { PATH_STORIES, PATH_LEVEL_LABELS } from '../contexts/PathStories';
 import { computePathStats } from '../components/PathProgress';
 import dataService from '../services/dataService';
 import { Button } from '../components/ui/Button';
+import { API_URL } from '../config';
 
 export default function Profile() {
   const { user } = useAuth();
@@ -21,6 +22,7 @@ export default function Profile() {
   const [backendBadges, setBackendBadges] = useState([]);
   const [donations, setDonations] = useState([]);
   const [donationPathFilter, setDonationPathFilter] = useState('ALL');
+  const [shareStatus, setShareStatus] = useState('');
 
   useEffect(() => {
     if (!userId) return;
@@ -52,7 +54,7 @@ export default function Profile() {
           setTimeout(() => setShowBadgeNotification(false), 5000);
         }
 
-        const res = await fetch(`http://localhost:8000/users/${user.id}/badges`, {
+        const res = await fetch(`${API_URL}/users/${user.id}/badges`, {
           credentials: 'include',
         });
         if (!res.ok) return;
@@ -97,7 +99,7 @@ export default function Profile() {
           return;
         }
 
-        const res = await fetch(`http://localhost:8000/users/${user.id}/donations`, {
+        const res = await fetch(`${API_URL}/users/${user.id}/donations`, {
           credentials: 'include',
         });
         if (!res.ok) return;
@@ -116,6 +118,12 @@ export default function Profile() {
       cancelled = true;
     };
   }, [userId, user?.id]);
+
+  useEffect(() => {
+    if (!shareStatus) return;
+    const timer = setTimeout(() => setShareStatus(''), 4000);
+    return () => clearTimeout(timer);
+  }, [shareStatus]);
 
   if (!user) {
     return (
@@ -173,6 +181,81 @@ export default function Profile() {
     .filter(Boolean);
 
   const pathStats = computePathStats(donations);
+
+  const profileShareUrl =
+    typeof window !== 'undefined' && window.location
+      ? `${window.location.origin}/profile`
+      : 'https://shieldofathena.com/profile';
+
+  const shareMessageBase = user.full_name
+    ? `${user.full_name} is tracking their impact with Shield of Athena and Code-to-Give.`
+    : 'I am tracking my impact with Shield of Athena and Code-to-Give.';
+
+  const sharePayload = `${shareMessageBase} Join me in supporting survivors: ${profileShareUrl}`;
+
+  const handleShare = async (platform) => {
+    const encodedUrl = encodeURIComponent(profileShareUrl);
+    const encodedText = encodeURIComponent(sharePayload);
+    const openWindow = (url) => {
+      if (typeof window !== 'undefined') {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+    };
+
+    if (platform === 'facebook') {
+      openWindow(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`);
+      setShareStatus('Opening Facebook share dialog...');
+      return;
+    }
+
+    if (platform === 'x') {
+      openWindow(`https://twitter.com/intent/tweet?text=${encodedText}`);
+      setShareStatus('Opening X (Twitter) composer in a new tab...');
+      return;
+    }
+
+    if (platform === 'instagram') {
+      let copied = false;
+      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        try {
+          await navigator.clipboard.writeText(sharePayload);
+          copied = true;
+        } catch (err) {
+          console.warn('Unable to copy share text', err);
+        }
+      }
+      openWindow('https://www.instagram.com/');
+      setShareStatus(
+        copied
+          ? 'Copied your message—paste it into your Instagram story, Reel, or DM.'
+          : `Copy this message manually:\n${sharePayload}`
+      );
+    }
+  };
+
+  const shareOptions = [
+    {
+      id: 'instagram',
+      label: 'Instagram',
+      description: 'Copy a story-ready blurb and open Instagram.',
+      icon: Instagram,
+      gradient: 'from-pink-500 via-purple-500 to-yellow-400'
+    },
+    {
+      id: 'facebook',
+      label: 'Facebook',
+      description: 'Launch the Facebook share dialog with one click.',
+      icon: Facebook,
+      gradient: 'from-blue-600 to-blue-400'
+    },
+    {
+      id: 'x',
+      label: 'X (Twitter)',
+      description: 'Preload a post that invites friends to join.',
+      icon: Twitter,
+      gradient: 'from-slate-900 to-slate-700'
+    }
+  ];
 
   const donationPathOptions = [
     { id: 'ALL', labelEn: 'All', labelFr: 'Tous', color: 'bg-primary/80', border: 'border-primary', hover: 'hover:bg-primary/40' },
@@ -294,6 +377,46 @@ export default function Profile() {
             </Card>
           </motion.div>
         </div>
+
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Share2 className="w-5 h-5 text-primary" />
+              Share Your Impact
+            </CardTitle>
+            <p className="text-sm text-foreground/70">
+              Let your community know how you are helping survivors—pick a platform below to spread the word.
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {shareOptions.map((option) => {
+                const Icon = option.icon;
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => handleShare(option.id)}
+                    className="flex flex-col items-start gap-3 rounded-2xl border border-border p-4 text-left transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg"
+                  >
+                    <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${option.gradient} flex items-center justify-center text-white`}>
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">Share on {option.label}</p>
+                      <p className="text-xs text-foreground/70 mt-1">{option.description}</p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            {shareStatus && (
+              <p className="text-xs text-foreground/70 mt-4 whitespace-pre-line">
+                {shareStatus}
+              </p>
+            )}
+          </CardContent>
+        </Card>
 
         <div className="mb-8">
           <TeamSection />

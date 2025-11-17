@@ -4,6 +4,7 @@ import { Button } from "./ui/Button";
 import { Phone, Heart, Shield, HandHeart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import EventBanner from "./EventBanner";
+import ShopBanner from "./ShopBanner";
 
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";
@@ -86,8 +87,22 @@ export default function PathTransitionSection({ onAboutClick }) {
       ref={sectionRef}
       className="relative min-h-[70vh] flex flex-col items-center bg-white overflow-hidden pt-24 pb-16"
     >
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 md:left-4 md:transform-none z-20 max-w-xs w-[min(90%,18rem)] md:max-w-md md:w-[min(100%,24rem)]">
-        <EventBanner />
+      {/* Mobile stacked banners */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[min(95%,20rem)] z-20 md:hidden">
+        <div className="flex flex-col gap-4">
+          <EventBanner />
+          <ShopBanner />
+        </div>
+      </div>
+
+      {/* Desktop split banners */}
+      <div className="hidden md:block">
+        <div className="absolute top-4 left-4 z-20 max-w-md w-[min(100%,24rem)]">
+          <EventBanner />
+        </div>
+        <div className="absolute top-4 right-4 z-20 max-w-md w-[min(100%,24rem)] flex justify-end">
+          <ShopBanner />
+        </div>
       </div>
 
       {/* TEXT + CTA */}

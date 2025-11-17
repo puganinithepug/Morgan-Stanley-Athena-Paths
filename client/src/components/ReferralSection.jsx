@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { motion } from 'framer-motion';
 import dataService from '../services/dataService';
+import { API_URL } from '../config';
 
 export default function ReferralSection() {
   const { user } = useAuth();
@@ -34,7 +35,7 @@ export default function ReferralSection() {
           return;
         }
 
-        const res = await fetch(`http://localhost:8000/users/${user.id}/referrals`, {
+        const res = await fetch(`${API_URL}/users/${user.id}/referrals`, {
           credentials: 'include',
         });
         if (!res.ok) return;

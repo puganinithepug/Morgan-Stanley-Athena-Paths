@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: athena-app
+    ports:
+      - "3000:80"
+      - "8000:8000"
+    volumes:
+      - ./backend/users.csv:/app/backend/users.csv
+      - ./backend/donations.csv:/app/backend/donations.csv
+      - ./backend/referrals.csv:/app/backend/referrals.csv
+      - ./backend/teams.csv:/app/backend/teams.csv
+      - ./backend/hasBadges.csv:/app/backend/hasBadges.csv
+      - ./backend/badges.csv:/app/backend/badges.csv
+    environment:
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:80,http://localhost
+    restart: unless-stopped

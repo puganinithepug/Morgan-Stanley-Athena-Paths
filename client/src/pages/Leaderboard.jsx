@@ -5,6 +5,7 @@ import { Card, CardContent } from '../components/ui/Card';
 import { Trophy, Crown, Shield, Phone, Heart, Home, HandHeart, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 import TeamSection from '../components/TeamSection';
+import { API_URL } from '../config';
 
 const PATH_ICONS = {
   WISDOM: Phone,
@@ -34,10 +35,10 @@ export default function Leaderboard() {
       try {
         const qs = selectedPath && selectedPath !== 'ALL' ? `?path=${selectedPath}` : '';
         const [supportersRes, teamsRes] = await Promise.all([
-          fetch(`http://localhost:8000/leaderboard/supporters${qs}`, {
+          fetch(`${API_URL}/leaderboard/supporters${qs}`, {
             credentials: 'include',
           }),
-          fetch('http://localhost:8000/leaderboard/teams', {
+          fetch(`${API_URL}/leaderboard/teams`, {
             credentials: 'include',
           }),
         ]);

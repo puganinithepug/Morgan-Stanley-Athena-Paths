@@ -6,11 +6,9 @@ import dataService from "../services/dataService";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Card, CardContent } from "../components/ui/Card";
-import { Heart, Shield, Phone, Home, Quote, Users, HandHeart, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Heart, Shield, Phone, Quote, HandHeart, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import ImpactMetrics from "../components/ImpactMetrics";
-import ImpactStories from "../components/ImpactStories";
-import PathGoals from "../components/PathGoals";
 import DonationSuccessModal from "../components/DonationSuccessModal";
 import CommunityGoals from "../components/CommunityGoals";
 import FirstTimeVisitorModal from "../components/FirstTimeVisitorModal";
@@ -19,6 +17,9 @@ import AboutModal from "../components/AboutModal";
 import MotionSection from "../components/ui/MotionSection";
 import { BadgeMarqueeSection } from "../components/BadgeMarquee";
 import VideoEmbed from "../components/VideoEmbed";
+import CommunityConnectSection from "../components/CommunityConnectSection";
+import { API_URL } from "../config";
+import { createGuestDonor } from "../utils/guestDonor";
 
 import wisdomImg from "../assets/hero_wisdom.jpg";
 import protectionImg from "../assets/hero_protection.jpg";
@@ -264,7 +265,7 @@ function ImpactSlider({ currentSlide, setCurrentSlide }) {
 }
 
 export default function Landing() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { user } = useAuth();
   const [donationAmount, setDonationAmount] = useState("");
   const [selectedPath, setSelectedPath] = useState(null);
@@ -280,6 +281,7 @@ export default function Landing() {
   const [hasVisited, setHasVisited] = useState(false);
   const [referralCode, setReferralCode] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [confirmingDonation, setConfirmingDonation] = useState(null);
 
 
   const fadeUp = {
@@ -324,83 +326,122 @@ export default function Landing() {
     }
   }, [user, hasVisited]);
 
-  const handleDonate = useCallback(async (item, customAmount = null, triggeredAfterLogin = false) => {
-    if (!user && !triggeredAfterLogin) {
-      setPendingDonation({ item, customAmount });
-      window.dispatchEvent(new CustomEvent("open-login-modal"));
-      return;
-    }
+  const handleDonate = useCallback(
+    async (item, customAmount = null, options = {}) => {
+      const normalizedOptions =
+        typeof options === "boolean"
+          ? { triggeredAfterLogin: options, skipConfirmation: true }
+          : options;
+      const {
+        triggeredAfterLogin = false,
+        donorOverride = null,
+        skipConfirmation = false,
+      } = normalizedOptions;
 
-    setProcessing(true);
-    const amount = customAmount || item.suggested_amount;
-    let points = amount;
-    if (item.path === "PROTECTION") points = Math.floor(amount * 1.5);
-    else if (item.path === "COURAGE") points = Math.floor(amount * 1.2);
-
-    try {
-      try {
-        if (item.path !== "SERVICE"){
-          await fetch("http://localhost:8000/donate", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-              amount,
-              path: item.path,
-              uuid: user.id,
-              impact: points,
-              referral_code: referralCode,
-            }),
-          });
-        }
-      } catch (err) {
-        console.error("Backend donation error:", err);
-
-        // If we're in offline demo admin mode, also record the donation locally
-        if (user && user.id === "offline-admin") {
-          try {
-            dataService.createDonation({
-              user_id: user.id,
-              user_name: user.full_name || "Admin (Offline Demo)",
-              path: item.path,
-              amount,
-              points_awarded: points,
-              impact_item_id: item.id,
-              impact_item_title:
-                item.title_en,
-            });
-
-            const newPoints = (user.total_points || 0) + points;
-            dataService.updateUser(user.id, {
-              total_points: newPoints,
-              primary_path: user.primary_path || item.path,
-            });
-          } catch (localErr) {
-            console.error("Failed to record offline admin donation locally", localErr);
-          }
-        }
+      if (!skipConfirmation) {
+        setConfirmingDonation({ item, customAmount });
+        return;
       }
 
-      // Donation is stored in backend only now (and in-memory for offline admin);
-      // UI stats and badges will be driven from backend where available.
+      const actingDonor = donorOverride || user;
 
-      setLastDonation({
-        amount,
-        path: item.path,
-        points_awarded: points,
-      });
-      setShowSuccessModal(true);
-      setDonationAmount("");
-      setSelectedPath(null);
-    } catch (error) {
-      console.error("Donation error:", error);
-      alert("Unable to process donation. Please try again.");
-    } finally {
-      setProcessing(false);
-    }
-  }, [user, referralCode]);
+      if (!actingDonor && !triggeredAfterLogin) {
+        setPendingDonation({ item, customAmount });
+        window.dispatchEvent(new CustomEvent("open-login-modal"));
+        return;
+      }
+
+      if (!actingDonor) {
+        console.warn("Donation attempted without donor context.");
+        return;
+      }
+
+      setProcessing(true);
+      const amount = customAmount || item.suggested_amount;
+      let points = amount;
+      if (item.path === "PROTECTION") points = Math.floor(amount * 1.5);
+      else if (item.path === "COURAGE") points = Math.floor(amount * 1.2);
+
+      const referralForRequest = donorOverride ? null : referralCode;
+
+      try {
+        try {
+          if (item.path !== "SERVICE") {
+            await fetch(`${API_URL}/donate`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+              body: JSON.stringify({
+                amount,
+                path: item.path,
+                uuid: actingDonor.id,
+                impact: points,
+                referral_code: referralForRequest,
+              }),
+            });
+          }
+        } catch (err) {
+          console.error("Backend donation error:", err);
+
+          // If we're in offline demo admin mode, also record the donation locally
+          if (actingDonor && actingDonor.id === "offline-admin") {
+            try {
+              dataService.createDonation({
+                user_id: actingDonor.id,
+                user_name: actingDonor.full_name || "Admin (Offline Demo)",
+                path: item.path,
+                amount,
+                points_awarded: points,
+                impact_item_id: item.id,
+                impact_item_title: item.title_en,
+              });
+
+              const newPoints = (actingDonor.total_points || 0) + points;
+              dataService.updateUser(actingDonor.id, {
+                total_points: newPoints,
+                primary_path: actingDonor.primary_path || item.path,
+              });
+            } catch (localErr) {
+              console.error("Failed to record offline admin donation locally", localErr);
+            }
+          }
+        }
+
+        // Donation is stored in backend only now (and in-memory for offline admin);
+        // UI stats and badges will be driven from backend where available.
+
+        setLastDonation({
+          amount,
+          path: item.path,
+          points_awarded: points,
+        });
+        setShowSuccessModal(true);
+        setDonationAmount("");
+        setSelectedPath(null);
+
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("donation-recorded", {
+              detail: {
+                amount,
+                path: item.path,
+                timestamp: new Date().toISOString(),
+                source: "landing",
+              },
+            })
+          );
+        }
+      } catch (error) {
+        console.error("Donation error:", error);
+        alert("Unable to process donation. Please try again.");
+      } finally {
+        setProcessing(false);
+      }
+    },
+    [user, referralCode]
+  );
 
   const handleVolunteer = async (hours = null) => {
     if (!user) {
@@ -416,12 +457,31 @@ export default function Landing() {
       if (pendingDonation) {
         const { item, customAmount } = pendingDonation;
         setPendingDonation(null);
-        handleDonate(item, customAmount, true);
+        handleDonate(item, customAmount, { triggeredAfterLogin: true, skipConfirmation: true });
       }
     };
 
     window.addEventListener("login-success", handler);
     return () => window.removeEventListener("login-success", handler);
+  }, [pendingDonation, handleDonate]);
+
+  useEffect(() => {
+    const handler = () => {
+      if (!pendingDonation) {
+        console.warn("Guest donation requested with no pending donation context.");
+        return;
+      }
+      const { item, customAmount } = pendingDonation;
+      setPendingDonation(null);
+      handleDonate(item, customAmount, {
+        donorOverride: createGuestDonor(),
+        triggeredAfterLogin: true,
+        skipConfirmation: true,
+      });
+    };
+
+    window.addEventListener("guest-donation-request", handler);
+    return () => window.removeEventListener("guest-donation-request", handler);
   }, [pendingDonation, handleDonate]);
 
   const pathConfig = {
@@ -472,6 +532,55 @@ export default function Landing() {
 
 
 
+  const confirmDonation = () => {
+    if (!confirmingDonation) return;
+    const { item, customAmount } = confirmingDonation;
+    setConfirmingDonation(null);
+    handleDonate(item, customAmount, { skipConfirmation: true });
+  };
+
+  const cancelConfirmation = () => setConfirmingDonation(null);
+
+  const renderConfirmationModal = () => {
+    if (!confirmingDonation) return null;
+    const amountToDonate =
+      confirmingDonation.customAmount || confirmingDonation.item.suggested_amount;
+    const pathName = t(
+      `paths.${confirmingDonation.item.path.toLowerCase()}.name`
+    );
+    const confirmationMessage =
+      language === "fr"
+        ? `Êtes-vous sûr de vouloir donner $${amountToDonate} pour le chemin ${pathName} ?`
+        : `Are you sure you want to donate $${amountToDonate} to the ${pathName} path?`;
+
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
+          <h3 className="text-2xl font-semibold text-foreground mb-4">
+            {language === "fr" ? "Confirmer le don" : "Confirm Donation"}
+          </h3>
+          <p className="text-foreground/80 mb-6">{confirmationMessage}</p>
+          <div className="flex gap-4 justify-center">
+            <Button
+              variant="outline"
+              onClick={cancelConfirmation}
+              className="flex-1"
+            >
+              {language === "fr" ? "Annuler" : "Cancel"}
+            </Button>
+            <Button
+              onClick={confirmDonation}
+              className="flex-1"
+              disabled={processing}
+            >
+              {language === "fr" ? "Oui, continuer" : "Yes, continue"}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <FirstTimeVisitorModal
@@ -487,6 +596,8 @@ export default function Landing() {
         onClose={() => setShowSuccessModal(false)}
         donation={lastDonation}
       />
+
+      {renderConfirmationModal()}
 
       <AboutModal
         isOpen={showAboutModal}
@@ -836,23 +947,25 @@ export default function Landing() {
         <ImpactMetrics />
       </MotionSection>
 
-      <MotionSection variants={fadeUp}>                
+      {/* <MotionSection variants={fadeUp}>                
         <PathGoals />
-      </MotionSection>
+      </MotionSection> */}
 
-      <MotionSection variants={fromLeft}>   
+      {/* <MotionSection variants={fromLeft}>   
         <ImpactStories />
-      </MotionSection>
+      </MotionSection> */}
 
       <MotionSection variants={fromRight}>
         <CommunityGoals
-          onDonate={(goal) => {
+          onDonate={() => {
             document
               .getElementById("ways-to-help")
               ?.scrollIntoView({ behavior: "smooth" });
           }}
         />
       </MotionSection>
+
+      <CommunityConnectSection />
 
       <MotionSection className="py-20 bg-gradient-to-br from-foreground via-primary-dark to-primary text-white" variants={fadeUp}>
         <div className="max-w-[95%] xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -881,7 +994,7 @@ export default function Landing() {
 
           <ImpactSlider currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} />
 
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false }}
@@ -918,7 +1031,7 @@ export default function Landing() {
                 );
               })}
             </div>
-          </motion.div>
+          </motion.div> */}
         </div>
       </MotionSection>
     </div>

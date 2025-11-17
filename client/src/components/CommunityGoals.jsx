@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Card, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
 import { Progress } from './ui/Progress';
 import { motion } from 'framer-motion';
 import { Users, Phone, Heart, Home, HandHeart, UtensilsCrossed, Moon, BookOpen, Shield, CheckCircle2, TrendingUp, Clock } from 'lucide-react';
 import dataService from '../services/dataService';
+import { API_URL } from '../config';
 
 // Real human stories for each impact item
 const impactStories = {
@@ -34,34 +35,31 @@ const empatheticButtons = {
   SERVICE: "Support a Family"
 };
 
+const COMMUNITY_GOAL_TARGET = 100000;
+const COMMUNITY_NIGHTS_GOAL = 1000;
+
 export default function CommunityGoals({ onDonate }) {
   const impactItems = dataService.getImpactItems();
-  
-  // Calculate total community goal with purpose
-  const communityTotal = useMemo(() => {
-    const totalRaised = impactItems.reduce((sum, item) => {
-      const itemIdNum = parseInt(item.id) || 1;
-      const estimatedContributions = (itemIdNum * 15) + 20;
-      return sum + (item.suggested_amount * estimatedContributions);
-    }, 0);
-    
-    const communityGoal = 100000;
-    const nightsNeeded = 1000; // 1,000 nights of shelter
-    const nightsProvided = Math.floor(totalRaised / 100); // Every $100 = 1 night
-    
-    return {
-      raised: totalRaised,
-      goal: communityGoal,
-      progress: Math.min((totalRaised / communityGoal) * 100, 100),
-      nightsNeeded,
-      nightsProvided
-    };
-  }, [impactItems]);
-
-  const recentDonations = useMemo(() => {
-    const names = ['Melissa from Montreal', 'David from Laval', 'Sarah from Quebec', 'Ahmed from Montreal'];
-    return names.slice(0, 3);
-  }, []);
+  const fallbackRecentDonations = useMemo(
+    () => [
+      { label: 'Melissa from Montreal', timeAgo: '2 hours ago' },
+      { label: 'David from Laval', timeAgo: '5 hours ago' },
+      { label: 'Sarah from Quebec', timeAgo: 'yesterday' },
+    ],
+    []
+  );
+  const [communityTotal, setCommunityTotal] = useState({
+    raised: 0,
+    goal: COMMUNITY_GOAL_TARGET,
+    progress: 0,
+    nightsNeeded: COMMUNITY_NIGHTS_GOAL,
+    nightsProvided: 0,
+    supporters: 0,
+    donationCount: 0,
+  });
+  const [recentDonations, setRecentDonations] = useState(fallbackRecentDonations);
+  const [loadingTotals, setLoadingTotals] = useState(true);
+  const [totalsError, setTotalsError] = useState(null);
 
   const pathIcons = {
     WISDOM: Phone,
@@ -104,6 +102,156 @@ export default function CommunityGoals({ onDonate }) {
   };
 
   const displayItems = impactItems.slice(0, 6);
+
+  const formatRelativeTime = useCallback((dateString) => {
+    if (!dateString) return "recently";
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) return "recently";
+
+    const diffMs = Date.now() - date.getTime();
+    const diffMinutes = Math.floor(diffMs / 60000);
+
+    if (diffMinutes < 1) return "just now";
+    if (diffMinutes < 60) {
+      return `${diffMinutes} minute${diffMinutes === 1 ? "" : "s"} ago`;
+    }
+
+    const diffHours = Math.floor(diffMinutes / 60);
+    if (diffHours < 24) {
+      return `${diffHours} hour${diffHours === 1 ? "" : "s"} ago`;
+    }
+
+    const diffDays = Math.floor(diffHours / 24);
+    if (diffDays < 7) {
+      return `${diffDays} day${diffDays === 1 ? "" : "s"} ago`;
+    }
+
+    const diffWeeks = Math.floor(diffDays / 7);
+    return `${diffWeeks} week${diffWeeks === 1 ? "" : "s"} ago`;
+  }, []);
+
+  const computeTotalsFromDonations = useCallback((donationList = []) => {
+    const safeList = Array.isArray(donationList) ? donationList : [];
+    const raised = safeList.reduce(
+      (sum, donation) => sum + (parseFloat(donation.amount) || 0),
+      0
+    );
+
+    const supporterIds = new Set(
+      safeList
+        .map(
+          (donation) =>
+            donation.uuid ||
+            donation.user_id ||
+            donation.userId ||
+            donation.userID
+        )
+        .filter(Boolean)
+    );
+
+    const nightsProvided = Math.floor(raised / 100);
+
+    return {
+      raised,
+      goal: COMMUNITY_GOAL_TARGET,
+      progress: Math.min(
+        COMMUNITY_GOAL_TARGET
+          ? (raised / COMMUNITY_GOAL_TARGET) * 100
+          : 0,
+        100
+      ),
+      nightsNeeded: COMMUNITY_NIGHTS_GOAL,
+      nightsProvided,
+      supporters: supporterIds.size || safeList.length,
+      donationCount: safeList.length,
+    };
+  }, []);
+
+  const buildRecentDonationList = useCallback(
+    (donationList = []) => {
+      const safeList = Array.isArray(donationList) ? donationList : [];
+      return safeList
+        .map((donation, index) => {
+          const rawDate =
+            donation.created_at ||
+            donation.created_date ||
+            donation.createdAt ||
+            donation.createdDate;
+          const label =
+            donation.user_name ||
+            donation.userName ||
+            (donation.uuid
+              ? `Supporter ${String(donation.uuid).slice(0, 4).toUpperCase()}`
+              : `Community Supporter ${index + 1}`);
+
+          return {
+            label,
+            rawDate,
+          };
+        })
+        .sort(
+          (a, b) =>
+            new Date(b.rawDate || 0).getTime() -
+            new Date(a.rawDate || 0).getTime()
+        )
+        .slice(0, 3)
+        .map((entry) => ({
+          label: entry.label,
+          timeAgo: formatRelativeTime(entry.rawDate),
+        }));
+    },
+    [formatRelativeTime]
+  );
+
+  const loadCommunityTotals = useCallback(async () => {
+    setLoadingTotals(true);
+    let donations = [];
+
+    try {
+      const response = await fetch(`${API_URL}/donations`, {
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch donations from backend');
+      }
+
+      const data = await response.json();
+      donations = Array.isArray(data?.donations) ? data.donations : [];
+      setTotalsError(null);
+    } catch (error) {
+      console.error('Community goal totals failed to load; using local demo data', error);
+      setTotalsError('offline');
+      donations = dataService.getDonations() || [];
+    }
+
+    const totals = computeTotalsFromDonations(donations);
+    setCommunityTotal(totals);
+
+    const donationList = buildRecentDonationList(donations);
+    setRecentDonations(
+      donationList.length ? donationList : fallbackRecentDonations
+    );
+
+    setLoadingTotals(false);
+  }, [computeTotalsFromDonations, buildRecentDonationList, fallbackRecentDonations]);
+
+  useEffect(() => {
+    loadCommunityTotals();
+  }, [loadCommunityTotals]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const handleDonationRecorded = () => {
+      loadCommunityTotals();
+    };
+
+    window.addEventListener('donation-recorded', handleDonationRecorded);
+    return () => {
+      window.removeEventListener('donation-recorded', handleDonationRecorded);
+    };
+  }, [loadCommunityTotals]);
 
   return (
     <section className="py-16 md:py-24 bg-gradient-to-br from-background via-background to-primary/5">
@@ -166,14 +314,14 @@ export default function CommunityGoals({ onDonate }) {
               <div className="space-y-4">
                 <div className="flex justify-between items-baseline">
                   <span className="text-4xl font-bold text-foreground">
-                    ${communityTotal.raised.toLocaleString()}
+                    {loadingTotals ? '—' : `$${Math.round(communityTotal.raised).toLocaleString()}`}
                   </span>
                   <span className="text-lg text-foreground/60">
                     of ${communityTotal.goal.toLocaleString()}
                   </span>
                 </div>
                 
-                <Progress value={communityTotal.progress} className="h-4" />
+                <Progress value={communityTotal.progress || 0} className="h-4" />
                 
                 <div className="flex justify-between items-center text-sm">
                   <span className="font-semibold text-primary text-lg">
@@ -181,10 +329,18 @@ export default function CommunityGoals({ onDonate }) {
                   </span>
                   <div className="flex items-center gap-2 text-foreground/70">
                     <Users className="w-4 h-4" />
-                    <span>{Math.floor(communityTotal.raised / 50)} supporters</span>
+                    <span>
+                      {Math.max(communityTotal.supporters, 0).toLocaleString()} supporters
+                    </span>
                   </div>
                 </div>
               </div>
+
+              {totalsError && (
+                <p className="text-xs text-foreground/60 mt-4">
+                  Showing demo totals while offline.
+                </p>
+              )}
 
               <div className="mt-6 pt-6 border-t border-primary/20">
                 <div className="flex items-center gap-2 text-sm text-foreground/70">
@@ -227,20 +383,26 @@ export default function CommunityGoals({ onDonate }) {
             <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-foreground/80">
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-primary" />
-                <span className="font-semibold">12 donations today</span>
+                <span className="font-semibold">
+                  {Math.max(communityTotal.donationCount, 0).toLocaleString()} donations recorded
+                </span>
               </div>
               <span className="text-foreground/40">•</span>
               <div className="flex items-center gap-2">
                 <Users className="w-4 h-4 text-primary" />
-                <span>Join 572 supporters helping families restart safely</span>
+                <span>
+                  Join {Math.max(communityTotal.supporters, 1).toLocaleString()} supporters helping families restart safely
+                </span>
               </div>
             </div>
             {/* Second row: 16px top margin, 12px gap between items */}
             <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-xs text-foreground/60">
-              {recentDonations.map((name, idx) => (
+              {recentDonations.map((donation, idx) => (
                 <div key={idx} className="flex items-center gap-2">
                   <span className="text-primary">⭐</span>
-                  <span>{name} donated {idx === 0 ? '2 hours ago' : idx === 1 ? '5 hours ago' : 'yesterday'}</span>
+                  <span>
+                    {donation.label} donated {donation.timeAgo}
+                  </span>
                 </div>
               ))}
             </div>
@@ -249,15 +411,14 @@ export default function CommunityGoals({ onDonate }) {
 
         {/* Individual Donation Items with Stories */}
         {/* Spacing: 64px top margin for section separation, no bottom margin (last section) */}
-        <div className="mt-16">
-          {/* Section title: 32px bottom margin */}
-          <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-8 text-center">
-            Choose Your Impact
-          </h3>
-          
-          {/* Grid: 24px gap between cards, responsive columns */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {displayItems.map((item, idx) => {
+        {false && (
+          <div className="mt-16">
+            <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-8 text-center">
+              Choose Your Impact
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {displayItems.map((item, idx) => {
               const PathIcon = pathIcons[item.path];
               const colors = pathColors[item.path];
               const ItemIcon = itemIcons[item.impact_unit] || PathIcon;
@@ -326,9 +487,10 @@ export default function CommunityGoals({ onDonate }) {
                   </Card>
                 </motion.div>
               );
-            })}
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
