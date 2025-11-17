@@ -1,0 +1,49 @@
+name: Trigger auto deployment for athenapaths
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ prod ]
+    paths:
+    - '**'
+    - '.github/workflows/athenapaths-AutoDeployTrigger-b87d0fe0-ff70-4337-8521-ccc59d67b48f.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:      
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions: 
+      id-token: write #This is required for requesting the OIDC JWT Token
+      contents: read #Required when GH token is used to authenticate with private repo
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.ATHENAPATHS_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.ATHENAPATHS_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.ATHENAPATHS_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }}
+          _dockerfilePathKey_: _dockerfilePath_
+          _targetLabelKey_: _targetLabel_
+          registryUrl: athenapaths.azurecr.io
+          registryUsername: ${{ secrets.ATHENAPATHS_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.ATHENAPATHS_REGISTRY_PASSWORD }}
+          containerAppName: athenapaths
+          resourceGroup: Test
+          imageToBuild: athenapaths.azurecr.io/athenapaths:${{ github.sha }}
+          _buildArgumentsKey_: |
+            _buildArgumentsValues_
+
+
