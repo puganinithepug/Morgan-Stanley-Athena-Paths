@@ -12,7 +12,7 @@ Prerequisites:
   - Terraform
 
 Install Terraform (Kali-Linux):
-bash```
+```bash
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
@@ -21,17 +21,18 @@ sudo apt install terraform
 ```
 
 Verify:
-  terraform -version
-
+```bash
+terraform -version
+```
 Configure AWS Credentials:
-bash```
+```bash
 export AWS_ACCESS_KEY_ID=****
 export AWS_SECRET_ACCESS_KEY=****
 export AWS_DEFAULT_REGION=us-east-1
 ```
 
 Run Terraform commands from directory containing *.tf files:
-bash ```
+```bash
 cd infrastructure
 terraform init
 terraform apply
@@ -42,4 +43,6 @@ After deployment, Terraform outputs:
   - Application URL
 
 Destroy Infrastructure:
-  terraform destroy
+```bash
+terraform destroy
+```
