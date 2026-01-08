@@ -1,4 +1,4 @@
-# TEAM 9 – CodeToGive 2025
+CodeToGive 2025 Finalist Project
 
 ## Shield of Athena
 
