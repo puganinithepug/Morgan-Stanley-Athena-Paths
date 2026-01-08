@@ -1,4 +1,4 @@
-CodeToGive 2025 Finalist Project
+CodeToGive 2025 Winning Project
 
 ## Shield of Athena
 
