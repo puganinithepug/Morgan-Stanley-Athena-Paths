@@ -31,5 +31,9 @@ Run Terraform commands from directory containing *.tf files:
   terraform init
   terraform apply
 
+After deployment, Terraform outputs:
+  - Public IP
+  - Application URL
+
 Destroy Infrastructure:
   terraform destroy
