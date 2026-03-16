@@ -1,6 +1,6 @@
 CodeToGive 2025 Winning Project
 
-## Shield of Athena
+## Athena Paths
 
 This repository contains the frontend (React + TailwindCSS) and the backend (FastAPI) for the Athena Paths project.
 The backend uses CSV files as its data source. There is also an added wrapping layer of IaC, which was not originally part of the hakathon deliverable (see "Use IaC" for instructions).
