@@ -78,7 +78,7 @@ This script performs the following:
   - Public IP: this is the public IP address of the EC2 where the Athena Paths web application is running
   - Application URL: Unless the domain has been configured, is the IP address for accessing the Athena Paths web application
 
-## Destroy Infrastructure:
+Destroy Infrastructure:
 ```bash
 terraform destroy
 ```
