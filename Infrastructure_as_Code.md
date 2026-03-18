@@ -2,7 +2,9 @@
 
 ## Infrastructure directory organization:
   infrastructure/
+  
   ├── *.tf
+  
   └── user_data.sh
 
 Prerequisites:
