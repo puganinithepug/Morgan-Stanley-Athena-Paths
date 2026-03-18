@@ -1,6 +1,6 @@
-Infrastructure as Code
+# Infrastructure as Code
 
-Infrastructure directory organization:
+## Infrastructure directory organization:
   infrastructure/
   ├── *.tf
   └── user_data.sh
@@ -11,7 +11,7 @@ Prerequisites:
   - AWS credentials configured locally
   - Terraform
 
-Install Terraform (Kali Linux):
+_Install Terraform (Kali Linux)🥈
 ```bash
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
@@ -71,7 +71,7 @@ This script performs the following:
 ## 4. Elastic IP is associated with the EC2 instance for static access
 - The instance does not have a public IP initially, via _compute.tf_ the instance gets an elastic IP associated with it for access via static IP 
 
-## 5 After deployment, Terraform outputs:
+## 5. After deployment, Terraform outputs:
 - the outputs are defined in the _outputs.tf_ configuration
   - Public IP: this is the public IP address of the EC2 where the Athena Paths web application is running
   - Application URL: Unless the domain has been configured, is the IP address for accessing the Athena Paths web application
